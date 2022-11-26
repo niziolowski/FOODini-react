@@ -10,9 +10,14 @@
 }
 
 /* § MOBILE */
-.plan.mobile {
-  display: flex;
-  overflow-x: scroll;
-  justify-content: flex-start;
-  padding: 0 10px 10px 10px;
+.mobile {
+  width: 100vw;
+  flex: 1 0 auto;
+}
+
+/* Mobile Swiper */
+.swiper {
+  width: 85%;
+  height: 95%;
+  overflow: visible !important;
 }

@@ -11,7 +11,6 @@ export const Provider = ({ children }) => {
   useEffect(() => {
     window.addEventListener("resize", (e) => {
       const width = window.innerWidth;
-
       setIsMobile(width < breakPoint);
     });
   }, []);

@@ -4,7 +4,7 @@ import { FiPlus } from "react-icons/fi";
 import { useContext } from "react";
 import LayoutContext from "../../../contexts/layout";
 
-function Day() {
+function Day({ title }) {
   const { isMobile } = useContext(LayoutContext);
 
   const btnAdd = (
@@ -13,15 +13,31 @@ function Day() {
     </Button>
   );
 
+  const classes = `${styles.day} ${isMobile && styles.mobile}`;
+
   return (
-    <div className={`${styles.wrapper} ${isMobile && styles.mobile}`}>
-      <div className={styles.day}>
-        <div className={styles.title}>Poniedziałek</div>
-        <ul className={styles.list}>
-          <li>item</li>
-        </ul>
-        {isMobile && btnAdd}
-      </div>
+    <div className={classes}>
+      <div className={styles.title}>{title}</div>
+      <ul className={styles.list}>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+        <li>item</li>
+      </ul>
+      {isMobile && btnAdd}
     </div>
   );
 }
