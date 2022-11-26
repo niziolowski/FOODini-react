@@ -3,10 +3,10 @@ import {
   FiSettings,
   FiList,
   FiHome,
-  FiSidebar,
-  FiClipboard,
   FiChevronLeft,
   FiChevronRight,
+  FiBookOpen,
+  FiShoppingBag,
 } from "react-icons/fi";
 import { useState } from "react";
 import NavMobileTab from "./NavMobileTab";
@@ -18,20 +18,20 @@ function NavMobile() {
   // Set of tabs and respective icons
   const tabs = [
     {
-      name: "sidebar",
-      icon: <FiSidebar />,
+      name: "ingredients",
+      icon: <FiList />,
     },
     {
-      name: "plan",
-      icon: <FiClipboard />,
+      name: "recipes",
+      icon: <FiBookOpen />,
     },
     {
       name: "home",
       icon: <FiHome />,
     },
     {
-      name: "list",
-      icon: <FiList />,
+      name: "shopping-list",
+      icon: <FiShoppingBag />,
     },
     {
       name: "settings",

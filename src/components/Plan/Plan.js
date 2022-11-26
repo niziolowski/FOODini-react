@@ -54,7 +54,7 @@ function Plan() {
           onSwiper={(swiper) => console.log(swiper)}
         >
           {fakeData.map((day) => (
-            <SwiperSlide>
+            <SwiperSlide key={day.title}>
               <Day title={day.title} />
             </SwiperSlide>
           ))}
@@ -67,7 +67,7 @@ function Plan() {
     return (
       <div className={styles.plan}>
         {fakeData.map((day) => (
-          <Day title={day.title} />
+          <Day key={day.title} title={day.title} />
         ))}
       </div>
     );
