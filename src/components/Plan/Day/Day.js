@@ -23,19 +23,6 @@ function Day({ title }) {
         <li>item</li>
         <li>item</li>
         <li>item</li>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
       </ul>
       {isMobile && btnAdd}
     </div>

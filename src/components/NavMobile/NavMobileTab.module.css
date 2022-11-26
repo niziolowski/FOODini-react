@@ -1,12 +1,13 @@
 .tab {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 1;
   height: 50px;
-  border: 2px solid transparent;
+  border: none;
   background-color: #fff;
-  color: var(--accent-color);
+  color: var(--grey-color);
 }
 
 .tab svg {
@@ -14,6 +15,14 @@
 }
 
 .tab.active {
-  border: 2px solid var(--accent-color);
-  border-radius: 15px;
+  color: var(--accent-color);
+}
+.tab.active:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--accent-color);
 }
