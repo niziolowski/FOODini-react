@@ -1,2 +1,12 @@
 .app {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* § MOBILE */
+.app.mobile {
+  padding-bottom: 50px;
 }

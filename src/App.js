@@ -1,36 +1,19 @@
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import styles from "./App.module.css";
 import Nav from "./components/Nav/Nav";
 import NavMobile from "./components/NavMobile/NavMobile";
+import Plan from "./components/Plan/Plan";
+import LayoutContext from "./contexts/layout";
 
 function App() {
-  // Get client width for responsive layout
-  const breakPoint = 520;
-  const [isMobile, setIsMobile] = useState(window.innerWidth < breakPoint);
+  const { isMobile } = useContext(LayoutContext);
 
-  // Update width whenever user resizes the window
-  useEffect(() => {
-    window.addEventListener("resize", (e) => {
-      const width = window.innerWidth;
-
-      setIsMobile(width < breakPoint);
-    });
-  }, []);
-
-  if (isMobile) {
-    return (
-      <div className={styles.app}>
-        <NavMobile></NavMobile>
-      </div>
-    );
-  }
-  if (!isMobile) {
-    return (
-      <div className={styles.app}>
-        <Nav></Nav>
-      </div>
-    );
-  }
+  return (
+    <div className={`${styles.app} ${isMobile ? styles.mobile : ""}`}>
+      {!isMobile ? <Nav /> : <NavMobile />}
+      <Plan />
+    </div>
+  );
 }
 
 export default App;

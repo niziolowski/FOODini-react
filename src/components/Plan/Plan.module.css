@@ -1,0 +1,18 @@
+.plan {
+  position: relative;
+  flex: 1;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(4, minmax(150px, 200px));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding: 40px;
+}
+
+/* § MOBILE */
+.plan.mobile {
+  display: flex;
+  overflow-x: scroll;
+  justify-content: flex-start;
+  padding: 0 10px 10px 10px;
+}
