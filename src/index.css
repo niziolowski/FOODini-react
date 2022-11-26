@@ -50,3 +50,17 @@
 
   --shadow-inset: inset rgba(0, 0, 0, 0.1) 0 0 5px;
 }
+
+h1 {
+  font-weight: 200;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  font-size: 2rem;
+}
+
+h2 {
+  font-weight: 300;
+  text-transform: uppercase;
+  color: var(--font-color);
+  font-size: 1rem;
+}

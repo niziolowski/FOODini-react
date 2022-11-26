@@ -1,4 +1,37 @@
 .nav {
   display: flex;
+  height: 100px;
   padding: 20px;
+  padding-right: 164px;
+  justify-content: space-between;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.title {
+  text-align: center;
+  align-self: center;
+  height: 40px;
+  margin: 0 20px;
+}
+
+.title h1 {
+  font-size: 5vmin;
+}
+
+.title h2 {
+  font-size: 2.5vmin;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  align-self: center;
+}
+
+.controls button:nth-child(2) {
+  scale: 1.2;
 }

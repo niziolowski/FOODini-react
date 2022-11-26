@@ -1,7 +1,13 @@
 import React from "react";
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiHome,
+  FiSettings,
+  FiSidebar,
+  FiShoppingBag,
+} from "react-icons/fi";
 import Button from "./../UI/Button.js";
-import { FiSidebar, FiSettings } from "react-icons/fi";
-
 import styles from "./Nav.module.css";
 
 /**
@@ -9,14 +15,36 @@ import styles from "./Nav.module.css";
  */
 function Nav() {
   return (
-    <div className={styles.nav}>
-      <Button round>
-        <FiSidebar />
-      </Button>
-      <Button round>
-        <FiSettings />
-      </Button>
-    </div>
+    <nav className={styles.nav}>
+      <div className={styles.actions}>
+        <Button round>
+          <FiSidebar />
+        </Button>
+        <Button round>
+          <FiSettings />
+        </Button>
+      </div>
+      <div className={styles.title}>
+        <h1>PLAN POSIŁKÓW</h1>
+        <h2>BIEŻĄCY TYDZIEŃ</h2>
+      </div>
+      <div className={styles.actions}>
+        <div className={styles.controls}>
+          <Button round mini>
+            <FiChevronLeft />
+          </Button>
+          <Button round mini>
+            <FiHome />
+          </Button>
+          <Button round mini>
+            <FiChevronRight />
+          </Button>
+        </div>
+        <Button round>
+          <FiShoppingBag />
+        </Button>
+      </div>
+    </nav>
   );
 }
 
