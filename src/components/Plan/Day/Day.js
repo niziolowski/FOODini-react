@@ -3,6 +3,7 @@ import Button from "../../UI/Button";
 import { FiPlus } from "react-icons/fi";
 import { useContext } from "react";
 import LayoutContext from "../../../contexts/layout";
+import Meal from "./Meal/Meal";
 
 function Day({ title }) {
   const { isMobile } = useContext(LayoutContext);
@@ -19,10 +20,7 @@ function Day({ title }) {
     <div className={classes}>
       <div className={styles.title}>{title}</div>
       <ul className={styles.list}>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
-        <li>item</li>
+        <Meal title="Jajecznica" />
       </ul>
       {isMobile && btnAdd}
     </div>

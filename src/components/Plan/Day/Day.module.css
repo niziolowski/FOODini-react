@@ -23,10 +23,13 @@
 }
 
 .list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   list-style: none;
 }
 
-.day button:last-child {
+.day > button:last-child {
   margin-top: auto;
   margin-bottom: 10px;
 }

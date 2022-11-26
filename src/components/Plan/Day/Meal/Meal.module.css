@@ -1,0 +1,9 @@
+.meal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 15px;
+  border: 1px solid var(--grey-color);
+  border-radius: 5px;
+}

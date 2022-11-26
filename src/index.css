@@ -49,6 +49,8 @@
     0px 9.9px 11.1px -2.5px rgba(0, 0, 0, 0.1);
 
   --shadow-inset: inset rgba(0, 0, 0, 0.1) 0 0 5px;
+
+  color: var(--font-color);
 }
 
 h1 {
