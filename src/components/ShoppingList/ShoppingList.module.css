@@ -51,8 +51,37 @@
   translate: -10%;
 }
 
+.btn-add {
+  padding: 0 15px;
+  margin: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 8px;
+  color: var(--grey-color);
+  font-weight: 300;
+  font-size: 0.8rem;
+  height: 45px;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+.btn-add:hover {
+  color: var(--accent-color);
+}
+
+.btn-submit {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  translate: -50%;
+  width: 90%;
+}
+
 /* § MOBILE */
 
 .shopping-list.mobile {
   width: 100%;
+  height: calc(100vh - var(--mobile-nav-bar-size));
 }

@@ -1,7 +1,7 @@
 import styles from "./ShoppingList.module.css";
 import Button from "../UI/Button";
-import { FiX } from "react-icons/fi";
-import { useState, useRef, useContext } from "react";
+import { FiPlus, FiX } from "react-icons/fi";
+import { useRef, useContext } from "react";
 import LayoutContext from "../../contexts/layout";
 import stateContext from "../../contexts/state";
 
@@ -65,12 +65,12 @@ function ShoppingList() {
         <ul id="list-sync" className="shopping-list-content sync"></ul>
 
         <ul id="list-user" className="shopping-list-content">
-          <button className="shopping-list__btn-add">
-            <i data-feather="plus"></i>Dodaj
+          <button className={styles["btn-add"]}>
+            <FiPlus /> Dodaj
           </button>
-          <button className="shopping-list__btn-submit btn btn-outline">
+          <Button className={styles["btn-submit"]}>
             Przenieś zakupy do spiżarni
-          </button>
+          </Button>
         </ul>
       </form>
     </aside>

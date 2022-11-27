@@ -4,14 +4,11 @@
   justify-content: center;
   align-items: center;
   flex: 1;
-  height: 50px;
+  height: var(--mobile-nav-bar-size);
   border: none;
   background-color: #fff;
   color: var(--grey-color);
-}
-
-.tab svg {
-  scale: 1.2;
+  font-size: 24px;
 }
 
 .tab.active {

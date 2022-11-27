@@ -8,14 +8,15 @@ import {
   FiBookOpen,
   FiShoppingBag,
 } from "react-icons/fi";
-import { useContext, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
+import ReactDOM from "react-dom";
 import NavMobileTab from "./NavMobileTab";
 import Button from "../UI/Button";
 import stateContext from "../../contexts/state";
 
 function NavMobile() {
   const [activeTab, setActiveTab] = useState("home");
-  const { setIsShoppingListActive } = useContext(stateContext);
+  const { setIsShoppingListActive, hideAll } = useContext(stateContext);
   // Set of tabs and respective icons
   const tabs = [
     {
@@ -41,37 +42,47 @@ function NavMobile() {
   ];
 
   function handleTabClick(tab) {
+    // Set tab as active
     setActiveTab(tab);
+
+    // Hide all tabs
+    hideAll();
+
+    // Show clicked tab
     if (tab === "shopping-list") {
       setIsShoppingListActive(true);
     }
   }
-
-  return (
-    <div className={styles.nav}>
-      <div className={styles["top-nav"]}>
-        <Button round mini>
-          <FiChevronLeft />
-        </Button>
-        <div className={styles.title}>
-          <h1>PLAN POSIŁKÓW</h1>
-          <h2>BIEŻĄCY TYDZIEŃ</h2>
-        </div>
-        <Button round mini>
-          <FiChevronRight />
-        </Button>
-      </div>
-      <div className={styles.tabs}>
-        {tabs.map((tab) => (
-          <NavMobileTab
-            key={tab.name}
-            tab={tab}
-            onTabClick={handleTabClick}
-            active={activeTab === tab.name}
-          />
-        ))}
-      </div>
+  const tabsEl = (
+    <div className={styles.tabs}>
+      {tabs.map((tab) => (
+        <NavMobileTab
+          key={tab.name}
+          tab={tab}
+          onTabClick={handleTabClick}
+          active={activeTab === tab.name}
+        />
+      ))}
     </div>
+  );
+  return (
+    <Fragment>
+      <div className={styles.nav}>
+        <div className={styles["top-nav"]}>
+          <Button round mini>
+            <FiChevronLeft />
+          </Button>
+          <div className={styles.title}>
+            <h1>PLAN POSIŁKÓW</h1>
+            <h2>BIEŻĄCY TYDZIEŃ</h2>
+          </div>
+          <Button round mini>
+            <FiChevronRight />
+          </Button>
+        </div>
+      </div>
+      {ReactDOM.createPortal(tabsEl, document.getElementById("mobile-nav-bar"))}
+    </Fragment>
   );
 }
 

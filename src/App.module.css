@@ -1,12 +1,19 @@
 .app {
+  position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  -webkit-overflow: hidden;
   display: flex;
   flex-direction: column;
+  background-color: var(--bg-color);
 }
 
 /* § MOBILE */
 .app.mobile {
-  padding-bottom: 50px;
+  padding-bottom: var(--mobile-nav-bar-size);
+  border-radius: 10px;
+
+  /*? This is a fix for safari. The overflow: hidden property doesn't work for children elements but if we add z-index, it works. MAGIC! */
+  z-index: 0;
 }

@@ -37,11 +37,11 @@
 
   /* Font */
   font-family: "Montserrat", sans-serif;
-  font-size: 20px;
 }
 
 /* STYLES */
 :root {
+  font-size: 20px;
   /* Shadow presets */
   --shadow: 0px 0.5px 0.6px rgba(0, 0, 0, 0.1),
     0px 1.6px 1.8px -0.8px rgba(0, 0, 0, 0.1),
@@ -50,7 +50,16 @@
 
   --shadow-inset: inset rgba(0, 0, 0, 0.1) 0 0 5px;
 
+  /* Some other constants */
+  --mobile-nav-bar-size: 50px;
+
   color: var(--font-color);
+}
+
+body {
+  background-color: black;
+  /* This is for mobile devices, to disable scrolling effect that shifts the entire app */
+  position: fixed;
 }
 
 h1 {

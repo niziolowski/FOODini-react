@@ -22,5 +22,5 @@
 
   /*? This is external library, i don't know how to fix this in a different way */
   overflow: visible !important;
-  z-index: -1 !important;
+  z-index: 0 !important;
 }

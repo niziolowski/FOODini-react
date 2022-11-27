@@ -3,6 +3,7 @@
   padding: 5vmin;
   justify-content: center;
 }
+
 .top-nav {
   display: flex;
   align-items: center;
@@ -31,4 +32,6 @@
   width: 100%;
   border-top: 1px solid var(--grey-color);
   background-color: var(--bg-color);
+  overflow: hidden;
+  border-radius: 0 0 10px 10px;
 }
