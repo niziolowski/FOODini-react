@@ -8,13 +8,14 @@ import {
   FiBookOpen,
   FiShoppingBag,
 } from "react-icons/fi";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import NavMobileTab from "./NavMobileTab";
 import Button from "../UI/Button";
+import stateContext from "../../contexts/state";
 
 function NavMobile() {
   const [activeTab, setActiveTab] = useState("home");
-
+  const { setIsShoppingListActive } = useContext(stateContext);
   // Set of tabs and respective icons
   const tabs = [
     {
@@ -41,6 +42,9 @@ function NavMobile() {
 
   function handleTabClick(tab) {
     setActiveTab(tab);
+    if (tab === "shopping-list") {
+      setIsShoppingListActive(true);
+    }
   }
 
   return (

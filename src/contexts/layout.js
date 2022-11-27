@@ -2,7 +2,7 @@ import { createContext, useState, useEffect } from "react";
 
 const LayoutContext = createContext();
 
-export const Provider = ({ children }) => {
+export const LayoutProvider = ({ children }) => {
   // Get client width for responsive layout
   const breakPoint = 520;
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakPoint);

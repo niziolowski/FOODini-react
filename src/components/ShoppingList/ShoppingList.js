@@ -1,33 +1,65 @@
 import styles from "./ShoppingList.module.css";
 import Button from "../UI/Button";
 import { FiX } from "react-icons/fi";
-import { useState } from "react";
+import { useState, useRef, useContext } from "react";
+import LayoutContext from "../../contexts/layout";
+import stateContext from "../../contexts/state";
 
 function ShoppingList() {
-  const [isActive, setIsActive] = useState(false);
+  const { isMobile } = useContext(LayoutContext);
+
+  const {
+    isShoppingListActive: isActive,
+    setIsShoppingListActive: setIsActive,
+  } = useContext(stateContext);
+
+  const parentEl = useRef(null);
+  const btnToggle = useRef(null);
 
   function toggleActive() {
     setIsActive(!isActive);
   }
 
-  function handleHover() {}
+  function handleMouseEnter(e) {
+    if (!isActive) {
+      parentEl.current.classList.add(styles.peek);
+      btnToggle.current.classList.add(styles.peek);
+    }
+  }
+  function handleMouseLeave(e) {
+    if (!isActive) {
+      parentEl.current.classList.remove(styles.peek);
+      btnToggle.current.classList.remove(styles.peek);
+    }
+  }
+
+  const btnToggleEl = (
+    <button
+      ref={btnToggle}
+      onClick={toggleActive}
+      className={`${styles["btn-toggle"]} ${isActive ? styles.active : ""}`}
+    >
+      Lista zakupów
+    </button>
+  );
+
   return (
     <aside
-      className={`${styles["shopping-list"]} ${isActive && styles.active}`}
+      ref={parentEl}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`${styles["shopping-list"]} ${isActive ? styles.active : ""} ${
+        isMobile ? styles.mobile : ""
+      }`}
     >
       <div className={styles.header}>
-        <Button
-          onClick={toggleActive}
-          onHover={handleHover}
-          className={styles["btn-toggle"]}
-          fill
-        >
-          Lista zakupów
-        </Button>
+        {!isMobile && btnToggleEl}
 
-        <Button onClick={toggleActive} round>
-          <FiX />
-        </Button>
+        {!isMobile && (
+          <Button onClick={toggleActive} round>
+            <FiX />
+          </Button>
+        )}
       </div>
       <form id="shopping-list-form">
         <ul id="list-sync" className="shopping-list-content sync"></ul>

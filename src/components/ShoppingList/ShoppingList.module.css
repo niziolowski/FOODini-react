@@ -22,13 +22,37 @@
 
 .btn-toggle {
   position: absolute;
+  padding: 0 15px;
+  height: 40px;
+  color: var(--font-negative-color);
+  background-color: var(--accent-color);
+  font-size: 0.8rem;
+  font-weight: 400;
+  border: none;
+  border-radius: 5px;
   left: 0;
-  transform: translate(-100%);
-  transition: var(
-    --transition
-  ) !important; /* Used !important because there is a universal .btn class with different transition time */
+  translate: -100%;
+  transition: var(--transition);
 }
 
 .shopping-list.active {
   translate: 0;
+}
+
+.shopping-list.peek {
+  translate: 80%;
+}
+
+.btn-toggle.peek {
+  translate: -80%;
+}
+
+.btn-toggle.active {
+  translate: -10%;
+}
+
+/* § MOBILE */
+
+.shopping-list.mobile {
+  width: 100%;
 }
