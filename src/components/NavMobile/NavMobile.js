@@ -10,7 +10,7 @@ import {
 } from "react-icons/fi";
 import React, { Fragment, useContext, useState } from "react";
 import ReactDOM from "react-dom";
-import NavMobileTab from "./NavMobileTab";
+import NavMobileBar from "./NavMobileBar";
 import Button from "../UI/Button";
 import stateContext from "../../contexts/state";
 
@@ -56,7 +56,7 @@ function NavMobile() {
   const tabsEl = (
     <div className={styles.tabs}>
       {tabs.map((tab) => (
-        <NavMobileTab
+        <NavMobileBar
           key={tab.name}
           tab={tab}
           onTabClick={handleTabClick}

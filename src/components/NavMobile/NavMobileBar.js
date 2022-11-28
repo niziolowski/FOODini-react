@@ -1,6 +1,6 @@
-import styles from "./NavMobileTab.module.css";
+import styles from "./NavMobileBar.module.css";
 
-function NavMobileTab({ tab, onTabClick, active }) {
+function NavMobileBar({ tab, onTabClick, active }) {
   const classes = `${styles.tab} ${active ? styles.active : ""}`;
   function handleClick() {
     onTabClick(tab.name);
@@ -13,4 +13,4 @@ function NavMobileTab({ tab, onTabClick, active }) {
   );
 }
 
-export default NavMobileTab;
+export default NavMobileBar;
