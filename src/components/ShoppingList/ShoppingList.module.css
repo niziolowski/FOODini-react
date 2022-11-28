@@ -36,7 +36,7 @@
 }
 
 .shopping-list.active {
-  translate: 0;
+  translate: 0%;
 }
 
 .shopping-list.peek {
@@ -84,4 +84,5 @@
 .shopping-list.mobile {
   width: 100%;
   height: calc(100vh - var(--mobile-nav-bar-size));
+  transition: 0s;
 }

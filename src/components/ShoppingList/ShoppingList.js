@@ -1,23 +1,19 @@
 import styles from "./ShoppingList.module.css";
 import Button from "../UI/Button";
 import { FiPlus, FiX } from "react-icons/fi";
-import { useRef, useContext } from "react";
+import { useRef, useContext, useState } from "react";
 import LayoutContext from "../../contexts/layout";
-import stateContext from "../../contexts/state";
 
 function ShoppingList() {
-  const { isMobile } = useContext(LayoutContext);
+  const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
 
-  const {
-    isShoppingListActive: isActive,
-    setIsShoppingListActive: setIsActive,
-  } = useContext(stateContext);
+  const isActive = isVisible.shoppingList;
 
   const parentEl = useRef(null);
   const btnToggle = useRef(null);
 
   function toggleActive() {
-    setIsActive(!isActive);
+    dispatchIsVisible({ type: "shopping-list", mode: "toggle" });
   }
 
   function handleMouseEnter(e) {

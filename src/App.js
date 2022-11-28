@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useReducer, useState } from "react";
 import styles from "./App.module.css";
 import Nav from "./components/Nav/Nav";
 import NavMobile from "./components/NavMobile/NavMobile";

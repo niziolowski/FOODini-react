@@ -12,11 +12,13 @@ import React, { Fragment, useContext, useState } from "react";
 import ReactDOM from "react-dom";
 import NavMobileBar from "./NavMobileBar";
 import Button from "../UI/Button";
-import stateContext from "../../contexts/state";
+import LayoutContext from "../../contexts/layout";
 
 function NavMobile() {
   const [activeTab, setActiveTab] = useState("home");
-  const { setIsShoppingListActive, hideAll } = useContext(stateContext);
+
+  const { dispatchIsVisible } = useContext(LayoutContext);
+
   // Set of tabs and respective icons
   const tabs = [
     {
@@ -45,16 +47,12 @@ function NavMobile() {
     // Set tab as active
     setActiveTab(tab);
 
-    // Hide all tabs
-    hideAll();
-
     // Show clicked tab
-    if (tab === "shopping-list") {
-      setIsShoppingListActive(true);
-    }
+    dispatchIsVisible({ type: tab, mode: "switch" });
   }
-  const tabsEl = (
-    <div className={styles.tabs}>
+
+  const navBarEl = (
+    <div className={styles.navbar}>
       {tabs.map((tab) => (
         <NavMobileBar
           key={tab.name}
@@ -65,6 +63,7 @@ function NavMobile() {
       ))}
     </div>
   );
+
   return (
     <Fragment>
       <div className={styles.nav}>
@@ -81,7 +80,10 @@ function NavMobile() {
           </Button>
         </div>
       </div>
-      {ReactDOM.createPortal(tabsEl, document.getElementById("mobile-nav-bar"))}
+      {ReactDOM.createPortal(
+        navBarEl,
+        document.getElementById("mobile-nav-bar")
+      )}
     </Fragment>
   );
 }
