@@ -6,18 +6,23 @@ import Plan from "./components/Plan/Plan";
 import ShoppingList from "./components/ShoppingList/ShoppingList";
 import LayoutContext from "./contexts/layout";
 import Settings from "./components/Settings/Settings";
+import Sidebar from "./components/Sidebar/Sidebar";
 
 function App() {
-  const { isMobile } = useContext(LayoutContext);
+  const { isMobile, isVisible } = useContext(LayoutContext);
 
-  const modalRoot = document.getElementById("modal");
+  const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;
   return (
-    <div className={`${styles.app} ${isMobile ? styles.mobile : ""}`}>
-      {!isMobile ? <Nav /> : <NavMobile />}
-      <Plan />
+    <div className={classes}>
+      <div
+        className={`${styles.wrapper} ${isVisible.sidebar ? styles.shift : ""}`}
+      >
+        {!isMobile ? <Nav /> : <NavMobile />}
+        <Plan />
+      </div>
       <ShoppingList />
-
-      <Settings></Settings>
+      <Settings />
+      <Sidebar />
     </div>
   );
 }

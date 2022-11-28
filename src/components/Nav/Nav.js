@@ -19,15 +19,21 @@ function Nav() {
   function handleClick(e) {
     const btn = e.target.closest("button");
 
+    // Settings
     if (btn.classList.contains("js-btn-settings")) {
       dispatchIsVisible({ type: "settings", mode: "toggle" });
+    }
+
+    // Sidebar
+    if (btn.classList.contains("js-btn-sidebar")) {
+      dispatchIsVisible({ type: "sidebar", mode: "toggle" });
     }
   }
 
   return (
     <nav className={styles.nav}>
       <div className={styles.actions}>
-        <Button round>
+        <Button className="js-btn-sidebar" onClick={handleClick} round>
           <FiSidebar />
         </Button>
         <Button className="js-btn-settings" onClick={handleClick} round>

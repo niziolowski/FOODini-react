@@ -1,0 +1,17 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 400px;
+  height: 100vh;
+  translate: -100%;
+  border-right: var(--border);
+  background-color: var(--bg-color);
+  transition: var(--transition);
+}
+
+.sidebar.active {
+  translate: 0;
+}

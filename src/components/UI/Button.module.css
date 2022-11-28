@@ -52,6 +52,7 @@
 }
 
 .round svg {
+  vertical-align: middle;
   width: 24px;
   height: 24px;
   transition: var(--btn-transition);

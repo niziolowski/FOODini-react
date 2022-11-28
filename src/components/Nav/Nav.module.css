@@ -19,11 +19,11 @@
 }
 
 .title h1 {
-  font-size: 5vmin;
+  font-size: 4vmin;
 }
 
 .title h2 {
-  font-size: 2.5vmin;
+  font-size: 2.2vmin;
 }
 
 .controls {
@@ -33,5 +33,7 @@
 }
 
 .controls button:nth-child(2) {
+  width: 40px;
+  height: 40px;
   scale: 1.2;
 }

@@ -25,6 +25,11 @@ function visibilityReducer(state, action) {
           ...state,
           settings: !state.settings,
         };
+      case "sidebar":
+        return {
+          ...state,
+          sidebar: !state.sidebar,
+        };
 
       default:
         return { ...state };
