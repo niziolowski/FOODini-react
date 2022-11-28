@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   FiChevronLeft,
   FiChevronRight,
@@ -7,6 +7,7 @@ import {
   FiSidebar,
   FiShoppingBag,
 } from "react-icons/fi";
+import LayoutContext from "../../contexts/layout.js";
 import Button from "./../UI/Button.js";
 import styles from "./Nav.module.css";
 
@@ -14,13 +15,22 @@ import styles from "./Nav.module.css";
  * Main navigation bar component
  */
 function Nav() {
+  const { dispatchIsVisible } = useContext(LayoutContext);
+  function handleClick(e) {
+    const btn = e.target.closest("button");
+
+    if (btn.classList.contains("js-btn-settings")) {
+      dispatchIsVisible({ type: "settings", mode: "toggle" });
+    }
+  }
+
   return (
     <nav className={styles.nav}>
       <div className={styles.actions}>
         <Button round>
           <FiSidebar />
         </Button>
-        <Button round>
+        <Button className="js-btn-settings" onClick={handleClick} round>
           <FiSettings />
         </Button>
       </div>

@@ -1,6 +1,6 @@
 .plan {
   position: relative;
-  flex: 1;
+
   display: grid;
   justify-content: center;
   grid-template-columns: repeat(4, minmax(150px, 200px));

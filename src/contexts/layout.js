@@ -15,21 +15,29 @@ const visibilityInitialState = {
 };
 
 function visibilityReducer(state, action) {
+  // For desktop modals and sidebars
   if (action.mode === "toggle") {
     switch (action.type) {
       case "shopping-list":
         return { ...state, shoppingList: !state.shoppingList };
+      case "settings":
+        return {
+          ...state,
+          settings: !state.settings,
+        };
 
       default:
         return { ...state };
     }
   }
 
+  // For mobile tabs
   if (action.mode === "switch") {
     switch (action.type) {
       case "shopping-list":
         return { ...visibilityInitialState, shoppingList: true };
-
+      case "settings":
+        return { ...visibilityInitialState, settings: true };
       default:
         return { ...visibilityInitialState };
     }
