@@ -64,7 +64,7 @@ function ShoppingList() {
           <button className={styles["btn-add"]}>
             <FiPlus /> Dodaj
           </button>
-          <Button className={styles["btn-submit"]}>
+          <Button className={styles["btn-submit"]} fill={isMobile}>
             Przenieś zakupy do spiżarni
           </Button>
         </ul>
