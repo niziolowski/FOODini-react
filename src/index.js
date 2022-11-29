@@ -7,6 +7,8 @@ import { LayoutProvider } from "./contexts/layout";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <LayoutProvider>
-    <App />
+    <div className="wrapper">
+      <App />
+    </div>
   </LayoutProvider>
 );

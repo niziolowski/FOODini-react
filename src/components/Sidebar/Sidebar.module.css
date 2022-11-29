@@ -8,7 +8,6 @@
   height: 100vh;
   translate: -100%;
   border-right: var(--border);
-  background-color: var(--bg-color);
   transition: var(--transition);
 }
 

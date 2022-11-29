@@ -6,7 +6,7 @@
   right: 0;
   translate: 101%;
   width: 350px;
-  height: 100vh;
+  height: 100%;
   border-left: 1px solid var(--grey-color);
   backdrop-filter: blur(10px);
   transition: var(--transition);
