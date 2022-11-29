@@ -14,3 +14,43 @@
 .sidebar.active {
   translate: 0;
 }
+
+.tabs {
+  width: 100%;
+  display: flex;
+  /* border-bottom: 1px solid var(--grey-color); */
+  height: 55px;
+}
+
+.tab {
+  position: relative;
+  flex: 1;
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--font-color);
+  transition: var(--btn-transition);
+  box-shadow: inset rgba(0, 0, 0, 0.1) 0 -5px 15px;
+  border: var(--border);
+}
+
+.tab:hover {
+  background-color: #f9f9f9;
+}
+.tab:active {
+  background-color: var(--hover-color);
+  box-shadow: inset rgba(0, 0, 0, 0.1) 0 0 5px;
+}
+
+.tab:nth-child(2) {
+  /* divider */
+  border-left: 1px solid var(--grey-color);
+}
+
+.tab.active {
+  font-weight: 400;
+  color: var(--accent-color);
+  /* border-bottom: 5px solid var(--accent-color); */
+  background-color: var(--bg-color);
+  box-shadow: none;
+  border: none;
+}
