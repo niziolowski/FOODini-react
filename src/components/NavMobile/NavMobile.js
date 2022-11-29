@@ -22,7 +22,7 @@ function NavMobile() {
   // Set of tabs and respective icons
   const tabs = [
     {
-      name: "ingredients",
+      name: "storage",
       icon: <FiList />,
     },
     {

@@ -12,9 +12,12 @@ const LayoutContext = createContext();
 const visibilityInitialState = {
   shoppingList: false,
   settings: false,
+  storage: false,
+  recipes: false,
 };
 
 function visibilityReducer(state, action) {
+  console.log(state, action);
   // For desktop modals and sidebars
   if (action.mode === "toggle") {
     switch (action.type) {
@@ -43,6 +46,10 @@ function visibilityReducer(state, action) {
         return { ...visibilityInitialState, shoppingList: true };
       case "settings":
         return { ...visibilityInitialState, settings: true };
+      case "storage":
+        return { ...visibilityInitialState, storage: true };
+      case "recipes":
+        return { ...visibilityInitialState, recipes: true };
       default:
         return { ...visibilityInitialState };
     }
