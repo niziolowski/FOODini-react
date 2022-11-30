@@ -8,7 +8,7 @@ function StorageItem() {
       <Button className={styles.bookmark} round mini>
         <FiStar />
       </Button>
-      <a className={styles.title}>Jajka</a>
+      <div className={styles.title}>Jajka</div>
       <div className={styles.amount}>10</div>
       <div className={styles.unit}>szt.</div>
       <div className={styles.expiry}>

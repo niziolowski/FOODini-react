@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import LayoutContext from "../../contexts/layout";
 import FilterOptions from "../UI/FilterOptions/FilterOptions";
+import RecipeItem from "./RecipeItem/RecipeItem";
 import styles from "./RecipeList.module.css";
 
 function RecipeList() {
@@ -10,7 +11,7 @@ function RecipeList() {
       className={`${styles["recipe-list"]} ${isMobile ? styles.mobile : ""}`}
     >
       <FilterOptions />
-      RecipesList
+      <RecipeItem />
     </div>
   );
 }
