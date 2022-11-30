@@ -8,7 +8,12 @@ function Button(props) {
   } `;
 
   return (
-    <button onClick={props.onClick} className={classes}>
+    <button
+      form={props.form}
+      type={props.type}
+      onClick={props.onClick}
+      className={classes}
+    >
       {props.children}
     </button>
   );

@@ -1,9 +1,10 @@
 import { useContext } from "react";
-import { FiEdit, FiPlus, FiStar, FiTrash, FiX } from "react-icons/fi";
+import { FiPlus, FiStar, FiX } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout";
 import styles from "./Catalog.module.css";
 import Button from "../UI/Button";
 import SearchBar from "../UI/SearchBar/SearchBar";
+import CatalogItem from "./CatalogItem/CatalogItem";
 
 function Catalog() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
@@ -17,6 +18,18 @@ function Catalog() {
   function handleAddProduct() {
     dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
   }
+
+  const testData = [
+    {
+      id: 415567,
+      name: "drożdze",
+      unit: "g",
+      group: "suche",
+      amount: "1000",
+      expiry: "1000",
+      bookmark: false,
+    },
+  ];
 
   return (
     <>
@@ -52,30 +65,9 @@ function Catalog() {
                     <th></th>
                     <th></th>
                   </tr>
-                  <tr>
-                    <td>
-                      <Button round mini>
-                        <FiStar />
-                      </Button>
-                    </td>
-                    <td>name</td>
-                    <td>amount</td>
-                    <td>unit</td>
-                    <td>
-                      <div>group</div>
-                    </td>
-                    <td>10 dni</td>
-                    <td>
-                      <Button round mini>
-                        <FiEdit />
-                      </Button>
-                    </td>
-                    <td>
-                      <Button round mini>
-                        <FiTrash />
-                      </Button>
-                    </td>
-                  </tr>
+                  {testData.map((item) => (
+                    <CatalogItem key={item.id} item={item} />
+                  ))}
                 </tbody>
               </table>
             </div>

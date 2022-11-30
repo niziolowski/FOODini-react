@@ -1,12 +1,16 @@
-import {
-  createContext,
-  useState,
-  useEffect,
-  useReducer,
-  useContext,
-} from "react";
+import { createContext, useState, useEffect, useReducer } from "react";
 
 const LayoutContext = createContext();
+
+const visibilityInitialState = {
+  shoppingList: false,
+  settings: false,
+  storage: false,
+  recipes: false,
+  sidebar: false,
+  catalog: false,
+  addCatalog: false,
+};
 
 /**
  * Manages components visibility state
@@ -14,16 +18,7 @@ const LayoutContext = createContext();
  * @param {Object} action {type: 'component-name', mode: 'toggle/switch' }
  * @returns
  */
-
-const visibilityInitialState = {
-  shoppingList: false,
-  settings: false,
-  storage: false,
-  recipes: false,
-};
-
 function visibilityReducer(state, action) {
-  console.log(state, action);
   // For desktop modals and sidebars
   if (action.mode === "toggle") {
     switch (action.type) {

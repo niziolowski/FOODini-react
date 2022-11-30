@@ -52,7 +52,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  row-gap: 10px;
+  row-gap: 15px;
 }
 
 .col label {
@@ -94,6 +94,12 @@
 
 .form li:hover {
   background-color: var(--bg-color);
+}
+
+.btn-expiry {
+  position: absolute;
+  right: 0;
+  top: -7px;
 }
 
 @media (max-width: 950px) {

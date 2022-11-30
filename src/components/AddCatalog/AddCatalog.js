@@ -1,16 +1,24 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import ReactDOM from "react-dom";
 import { FiX } from "react-icons/fi";
+import { TbInfinity } from "react-icons/tb";
 import LayoutContext from "../../contexts/layout";
 import Button from "../UI/Button";
 import styles from "./AddCatalog.module.css";
 
 function AddCatalog() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
+  const [isExpiry, setIsExpiry] = useState(true);
   const isActive = isVisible.addCatalog;
 
   function handleClose() {
     dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
+  }
+
+  function handleSubmit(e) {}
+
+  function handleBtnExpiry() {
+    setIsExpiry(!isExpiry);
   }
 
   const root = document.getElementById("modal");
@@ -25,7 +33,7 @@ function AddCatalog() {
             <FiX />
           </Button>
         </header>
-        <form className={styles.form}>
+        <form id="addCatalog" onSubmit={handleSubmit} className={styles.form}>
           <div className={styles["row-1"]}>
             <div className={styles.col}>
               <label>Produkt</label>
@@ -33,7 +41,7 @@ function AddCatalog() {
                 name="name"
                 className="add-to-catalog-content__form__product"
                 type="text"
-                autocomplete="off"
+                autoComplete="off"
               />
 
               <ul className="suggestions"></ul>
@@ -57,6 +65,7 @@ function AddCatalog() {
                 name="amount"
                 className="add-to-catalog-content__form__amount"
                 type="number"
+                maxLength={5}
               />
             </div>
             <div className={styles.col}>
@@ -79,11 +88,24 @@ function AddCatalog() {
                 className="add-to-catalog-content__form__expiry"
                 type="number"
                 placeholder="ilość dni"
+                disabled={!isExpiry}
               />
+              <Button
+                onClick={handleBtnExpiry}
+                className={`${styles["btn-expiry"]}`}
+                type="button"
+                round
+                mini
+                warning={!isExpiry}
+              >
+                <TbInfinity />
+              </Button>
             </div>
           </div>
         </form>
-        <Button>Zapisz</Button>
+        <Button form="addCatalog" type="submit">
+          Zapisz
+        </Button>
       </div>
     </>
   );
