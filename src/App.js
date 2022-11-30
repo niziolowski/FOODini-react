@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import styles from "./App.module.css";
 import Nav from "./components/Nav/Nav";
 import NavMobile from "./components/NavMobile/NavMobile";
@@ -13,7 +13,12 @@ import Catalog from "./components/Catalog/Catalog";
 import AddCatalog from "./components/AddCatalog/AddCatalog";
 
 function App() {
-  const { isMobile, isVisible } = useContext(LayoutContext);
+  const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
+
+  // Testing
+  useEffect(() => {
+    dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
+  }, []);
 
   const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;
   return (
@@ -22,6 +27,7 @@ function App() {
         className={`${styles.wrapper} ${isVisible.sidebar ? styles.shift : ""}`}
       >
         {!isMobile ? <Nav /> : <NavMobile />}
+
         <Plan />
       </div>
       <ShoppingList />

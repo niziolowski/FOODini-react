@@ -11,7 +11,7 @@ function RecipeItem() {
           src="https://www.seriouseats.com/thmb/WzQz05gt5witRGeOYKTcTqfe1gs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/butter-basted-pan-seared-steaks-recipe-hero-06-03b1131c58524be2bd6c9851a2fbdbc3.jpg"
           alt="recipe"
         />
-        <div className={styles.tag}>obiad</div>
+        <div className={styles.tag}>śniadanie</div>
       </div>
 
       <div className={styles.col}>

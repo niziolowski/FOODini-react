@@ -5,11 +5,14 @@ import { TbInfinity } from "react-icons/tb";
 import LayoutContext from "../../contexts/layout";
 import Button from "../UI/Button";
 import styles from "./AddCatalog.module.css";
+import Input from "../UI/Input/Input";
 
 function AddCatalog() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
   const [isExpiry, setIsExpiry] = useState(true);
   const isActive = isVisible.addCatalog;
+
+  const [inputName, setInputName] = useState("");
 
   function handleClose() {
     dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
@@ -19,6 +22,12 @@ function AddCatalog() {
 
   function handleBtnExpiry() {
     setIsExpiry(!isExpiry);
+  }
+
+  function handleInputName(e) {
+    const val = e.target.value.trimStart();
+    setInputName(val);
+    //!THIS IS WHERE YOU LEFT OF WORK ON INPUT CONTROLLER
   }
 
   const root = document.getElementById("modal");
@@ -37,21 +46,20 @@ function AddCatalog() {
           <div className={styles["row-1"]}>
             <div className={styles.col}>
               <label>Produkt</label>
-              <input
-                name="name"
-                className="add-to-catalog-content__form__product"
+              <Input
+                value={inputName}
+                onChange={handleInputName}
                 type="text"
-                autoComplete="off"
+                name="name"
+                maxLength={100}
+                autocomplete="off"
               />
 
               <ul className="suggestions"></ul>
             </div>
             <div className={styles.col}>
               <label>Grupa</label>
-              <select
-                name="group"
-                className="add-to-catalog-content__form__group"
-              >
+              <select name="group">
                 <option>świeże</option>
                 <option>suche</option>
                 <option>mrożone</option>
@@ -61,19 +69,11 @@ function AddCatalog() {
           <div className={styles["row-2"]}>
             <div className={styles.col}>
               <label>Ilość</label>
-              <input
-                name="amount"
-                className="add-to-catalog-content__form__amount"
-                type="number"
-                maxLength={5}
-              />
+              <Input name="amount" type="number" autocomplete="off" min={0} />
             </div>
             <div className={styles.col}>
               <label>Jedn.</label>
-              <select
-                name="unit"
-                className="add-to-catalog-content__form__unit"
-              >
+              <select name="unit">
                 <option>szt.</option>
                 <option>kg</option>
                 <option>ml</option>
@@ -85,7 +85,6 @@ function AddCatalog() {
               <label>Wazność</label>
               <input
                 name="expiry"
-                className="add-to-catalog-content__form__expiry"
                 type="number"
                 placeholder="ilość dni"
                 disabled={!isExpiry}

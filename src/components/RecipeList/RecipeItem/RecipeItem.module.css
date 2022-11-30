@@ -61,6 +61,7 @@
 .info {
   font-size: 0.6rem;
   display: flex;
+  column-gap: 15px;
   justify-content: space-around;
 }
 
@@ -116,13 +117,7 @@
   background-color: var(--tag-3-color);
 }
 
-@media (max-width: 380px) {
-  .recipe-item .col:nth-child(3) {
-    display: none;
-  }
-}
-
-@media (max-width: 310px) {
+@media (max-width: 340px) {
   .image-wrapper {
     display: none;
   }
