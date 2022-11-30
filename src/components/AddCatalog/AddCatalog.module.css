@@ -1,11 +1,5 @@
 .add-catalog {
-  background-color: var(--bg-color);
-  border: 1px solid var(--hover-color);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
-  z-index: 1;
-
-  position: absolute;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,12 +7,18 @@
   width: fit-content;
   padding: 20px;
   row-gap: 20px;
+  background-color: var(--bg-color);
+  border: 1px solid var(--hover-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  z-index: 1;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  align-self: stretch;
 }
 
 .form {
@@ -31,7 +31,7 @@
   font-weight: 300;
   column-gap: 20px;
   row-gap: 15px;
-  max-width: min-content;
+  max-width: max-content;
 }
 
 .row-1 {
@@ -94,4 +94,10 @@
 
 .form li:hover {
   background-color: var(--bg-color);
+}
+
+@media (max-width: 950px) {
+  .form {
+    max-width: min-content;
+  }
 }
