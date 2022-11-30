@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { FiX } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
@@ -6,6 +6,7 @@ import LayoutContext from "../../contexts/layout";
 import Button from "../UI/Button";
 import styles from "./AddCatalog.module.css";
 import Input from "../UI/Input/Input";
+import Select from "../UI/Select/Select";
 
 function AddCatalog() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
@@ -13,8 +14,10 @@ function AddCatalog() {
   const isActive = isVisible.addCatalog;
 
   const [inputName, setInputName] = useState("");
+  const [inputAmount, setInputAmount] = useState(1);
+  const [inputGroup, setInputGroup] = useState("świeże");
 
-  function handleClose() {
+  function handleClose(e) {
     dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
   }
 
@@ -27,7 +30,14 @@ function AddCatalog() {
   function handleInputName(e) {
     const val = e.target.value.trimStart();
     setInputName(val);
-    //!THIS IS WHERE YOU LEFT OF WORK ON INPUT CONTROLLER
+  }
+  function handleInputAmount(e) {
+    const val = e.target.value.trimStart();
+    setInputAmount(val);
+  }
+  function handleInputGroup(e) {
+    const val = e.target.value;
+    setInputGroup(val);
   }
 
   const root = document.getElementById("modal");
@@ -53,37 +63,41 @@ function AddCatalog() {
                 name="name"
                 maxLength={100}
                 autocomplete="off"
+                placeholder="Jajka od Pana Stefana"
               />
 
               <ul className="suggestions"></ul>
             </div>
             <div className={styles.col}>
               <label>Grupa</label>
-              <select name="group">
-                <option>świeże</option>
-                <option>suche</option>
-                <option>mrożone</option>
-              </select>
+              <Select
+                options={["świeże", "suche", "mrożone"]}
+                name="group"
+                onChange={handleInputGroup}
+                value={inputGroup}
+              />
             </div>
           </div>
           <div className={styles["row-2"]}>
             <div className={styles.col}>
               <label>Ilość</label>
-              <Input name="amount" type="number" autocomplete="off" min={0} />
+              <Input
+                name="amount"
+                type="number"
+                value={inputAmount}
+                onChange={handleInputAmount}
+                autocomplete="off"
+                min={0}
+              />
             </div>
             <div className={styles.col}>
               <label>Jedn.</label>
-              <select name="unit">
-                <option>szt.</option>
-                <option>kg</option>
-                <option>ml</option>
-                <option>g</option>
-              </select>
+              <Select name="unit" options={["szt.", "kg", "ml", "g"]} />
             </div>
 
             <div className={styles.col}>
               <label>Wazność</label>
-              <input
+              <Input
                 name="expiry"
                 type="number"
                 placeholder="ilość dni"
