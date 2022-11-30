@@ -1,4 +1,10 @@
-import { createContext, useState, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useState,
+  useEffect,
+  useReducer,
+  useContext,
+} from "react";
 
 const LayoutContext = createContext();
 
@@ -32,6 +38,11 @@ function visibilityReducer(state, action) {
         return {
           ...state,
           sidebar: !state.sidebar,
+        };
+      case "catalog":
+        return {
+          ...state,
+          catalog: !state.catalog,
         };
 
       default:

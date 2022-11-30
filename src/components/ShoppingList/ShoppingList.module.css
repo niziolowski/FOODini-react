@@ -13,7 +13,7 @@
 }
 
 .header {
-  margin: 20px 20px 0 0;
+  padding: 20px;
   position: relative;
   display: flex;
   justify-content: flex-end;
@@ -85,4 +85,12 @@
   width: 100%;
   height: calc(100vh - var(--mobile-nav-bar-size));
   transition: 0s;
+}
+
+.shopping-list.mobile .header {
+  justify-content: center;
+}
+
+.shopping-list.mobile h1 {
+  font-size: 9vmin;
 }

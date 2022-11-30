@@ -1,7 +1,7 @@
 import styles from "./ShoppingList.module.css";
 import Button from "../UI/Button";
 import { FiPlus, FiX } from "react-icons/fi";
-import { useRef, useContext, useState } from "react";
+import { useRef, useContext } from "react";
 import LayoutContext from "../../contexts/layout";
 
 function ShoppingList() {
@@ -48,7 +48,7 @@ function ShoppingList() {
         isMobile ? styles.mobile : ""
       }`}
     >
-      <div className={styles.header}>
+      <header className={styles.header}>
         {!isMobile && btnToggleEl}
 
         {!isMobile && (
@@ -56,7 +56,8 @@ function ShoppingList() {
             <FiX />
           </Button>
         )}
-      </div>
+        {isMobile && <h1>Lista zakupów</h1>}
+      </header>
       <form id="shopping-list-form">
         <ul id="list-sync" className="shopping-list-content sync"></ul>
 

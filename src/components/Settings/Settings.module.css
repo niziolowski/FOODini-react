@@ -8,6 +8,20 @@
   z-index: 1;
 }
 
+.settings .content {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+/* § MOBILE */
 .settings.mobile {
   position: absolute;
   width: 100%;
@@ -15,4 +29,12 @@
   top: 0;
   left: 0;
   border: none;
+}
+
+.settings.mobile .header {
+  justify-content: center;
+}
+
+.settings.mobile h1 {
+  font-size: 9vmin;
 }

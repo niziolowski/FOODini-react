@@ -2,6 +2,8 @@ import { useContext } from "react";
 import LayoutContext from "../../contexts/layout";
 import ReactDOM from "react-dom";
 import styles from "./Settings.module.css";
+import Button from "../UI/Button";
+import { FiX } from "react-icons/fi";
 
 function Settings() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
@@ -11,26 +13,37 @@ function Settings() {
     dispatchIsVisible({ type: "settings", mode: "toggle" });
   }
 
+  function handleCatalog() {
+    dispatchIsVisible({ type: "catalog", mode: "toggle" });
+    dispatchIsVisible({ type: "settings", mode: "toggle" });
+  }
+
   const root = document.getElementById("modal");
-  const desktopJSX = (
+  const content = (
     <>
-      <div onClick={handleClose} id="backdrop"></div>
-      <div className={styles.settings}>settings</div>
+      {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
+      <div className={`${styles.settings} ${isMobile ? styles.mobile : " "}`}>
+        <header className={styles.header}>
+          <h1>USTAWIENIA</h1>
+          {!isMobile && (
+            <Button onClick={handleClose} round>
+              <FiX />
+            </Button>
+          )}
+        </header>
+        <div className={styles.content}>
+          <Button onClick={handleCatalog}>Katalog produktów</Button>
+        </div>
+      </div>
     </>
   );
 
   if (isMobile) {
-    return (
-      <>
-        {isActive && (
-          <div className={`${styles.settings} ${styles.mobile}`}>settings</div>
-        )}
-      </>
-    );
+    return <>{isActive && content}</>;
   }
 
   if (!isMobile) {
-    return <>{isActive && ReactDOM.createPortal(desktopJSX, root)}</>;
+    return <>{isActive && ReactDOM.createPortal(content, root)}</>;
   }
 }
 
