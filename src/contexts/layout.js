@@ -44,6 +44,11 @@ function visibilityReducer(state, action) {
           ...state,
           catalog: !state.catalog,
         };
+      case "addCatalog":
+        return {
+          ...state,
+          addCatalog: !state.addCatalog,
+        };
 
       default:
         return { ...state };
@@ -69,7 +74,7 @@ function visibilityReducer(state, action) {
 
 export const LayoutProvider = ({ children }) => {
   // Get client width for responsive layout
-  const breakPoint = 520;
+  const breakPoint = 770;
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakPoint);
 
   // Components visibility state

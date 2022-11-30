@@ -10,6 +10,7 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import StorageList from "./components/StorageList/StorageList";
 import RecipeList from "./components/RecipeList/RecipeList";
 import Catalog from "./components/Catalog/Catalog";
+import AddCatalog from "./components/AddCatalog/AddCatalog";
 
 function App() {
   const { isMobile, isVisible } = useContext(LayoutContext);
@@ -29,6 +30,7 @@ function App() {
       {isVisible.storage && <StorageList />}
       {isVisible.recipes && <RecipeList />}
       <Catalog />
+      <AddCatalog />
     </div>
   );
 }

@@ -1,0 +1,97 @@
+.add-catalog {
+  background-color: var(--bg-color);
+  border: 1px solid var(--hover-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  z-index: 1;
+
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 500px;
+  width: fit-content;
+  padding: 20px;
+  row-gap: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  color: var(--font-color);
+  font-size: 0.8rem;
+  font-weight: 300;
+  column-gap: 20px;
+  row-gap: 15px;
+  max-width: min-content;
+}
+
+.row-1 {
+  display: grid;
+  grid-template-columns: minmax(150px, 280px) 120px;
+  column-gap: 20px;
+  min-width: min-content;
+}
+
+.row-2 {
+  display: grid;
+  grid-template-columns: 120px 120px 120px;
+  column-gap: 20px;
+  min-width: min-content;
+}
+
+.col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+.col label {
+  margin: 0 5px;
+}
+
+.form input,
+.form select {
+  height: 40px;
+  border: 1px solid var(--grey-color);
+  background-color: var(--bg-color);
+  padding: 0 10px;
+  border-radius: 5px;
+}
+
+/* § Suggestions / autocomplete */
+
+.form ul {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  list-style: none;
+  border-left: var(--border);
+  border-right: var(--border);
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  z-index: 1;
+}
+
+.form li {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 10px;
+  border-bottom: var(--border);
+}
+
+.form li:hover {
+  background-color: var(--bg-color);
+}

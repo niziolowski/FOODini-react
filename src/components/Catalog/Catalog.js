@@ -14,6 +14,10 @@ function Catalog() {
     dispatchIsVisible({ type: "settings", mode: "toggle" });
   }
 
+  function handleAddProduct() {
+    dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
+  }
+
   return (
     <>
       {isActive && (
@@ -26,51 +30,53 @@ function Catalog() {
           </header>
           <div className={styles.content}>
             <div className={styles.options}>
-              <Button round mini>
+              <Button onClick={handleAddProduct} round mini>
                 <FiPlus />
               </Button>
               <SearchBar />
             </div>
             <div className={styles["table-wrapper"]}>
               <table className={styles.table}>
-                <tr>
-                  <th>
-                    <Button round mini>
-                      <FiStar />
-                    </Button>
-                  </th>
-                  <th>Produkt</th>
-                  <th>Ilość</th>
-                  <th>Jend.</th>
-                  <th>Grupa</th>
-                  <th>Ważność</th>
-                  <th></th>
-                  <th></th>
-                </tr>
-                <tr>
-                  <td>
-                    <Button round mini>
-                      <FiStar />
-                    </Button>
-                  </td>
-                  <td>name</td>
-                  <td>amount</td>
-                  <td>unit</td>
-                  <td>
-                    <div>group</div>
-                  </td>
-                  <td>10 dni</td>
-                  <td>
-                    <Button round mini>
-                      <FiEdit />
-                    </Button>
-                  </td>
-                  <td>
-                    <Button round mini>
-                      <FiTrash />
-                    </Button>
-                  </td>
-                </tr>
+                <tbody>
+                  <tr>
+                    <th>
+                      <Button round mini>
+                        <FiStar />
+                      </Button>
+                    </th>
+                    <th>Produkt</th>
+                    <th>Ilość</th>
+                    <th>Jend.</th>
+                    <th>Grupa</th>
+                    <th>Ważność</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <Button round mini>
+                        <FiStar />
+                      </Button>
+                    </td>
+                    <td>name</td>
+                    <td>amount</td>
+                    <td>unit</td>
+                    <td>
+                      <div>group</div>
+                    </td>
+                    <td>10 dni</td>
+                    <td>
+                      <Button round mini>
+                        <FiEdit />
+                      </Button>
+                    </td>
+                    <td>
+                      <Button round mini>
+                        <FiTrash />
+                      </Button>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </div>
