@@ -1,8 +1,7 @@
 import { useContext } from "react";
 import LayoutContext from "../../contexts/layout";
 import styles from "./StorageList.module.css";
-import Button from "../UI/Button";
-import { FiMaximize2, FiPlus, FiSearch, FiStar } from "react-icons/fi";
+import StorageItem from "./StorageItem/StorageItem";
 import FilterOptions from "../UI/FilterOptions/FilterOptions";
 
 function StorageList() {
@@ -13,7 +12,7 @@ function StorageList() {
       className={`${styles["storage-list"]} ${isMobile ? styles.mobile : ""}`}
     >
       <FilterOptions />
-      Storage List
+      <StorageItem />
     </div>
   );
 }
