@@ -78,20 +78,20 @@
 
 .warning {
   color: var(--font-negative-color);
-  background-color: var(--indicator-red-color);
+  background-color: var(--warning-red-color);
   box-shadow: var(--shadow-inset);
 }
 
 .warning:hover {
   filter: brightness(105%);
   color: var(--font-negative-color);
-  background-color: var(--indicator-red-color);
+  background-color: var(--warning-red-color);
   box-shadow: var(--shadow);
 }
 
 .warning:active {
   filter: brightness(95%);
   color: var(--font-negative-color);
-  background-color: var(--indicator-red-color);
+  background-color: var(--warning-red-color);
   box-shadow: var(--shadow-inset);
 }

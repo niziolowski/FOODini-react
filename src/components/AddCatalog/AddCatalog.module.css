@@ -59,15 +59,6 @@
   margin: 0 5px;
 }
 
-/* .form input, */
-.form select {
-  height: 40px;
-  border: 1px solid var(--grey-color);
-  background-color: var(--bg-color);
-  padding: 0 10px;
-  border-radius: 5px;
-}
-
 /* § Suggestions / autocomplete */
 
 .form ul {

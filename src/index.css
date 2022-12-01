@@ -12,8 +12,8 @@
   --font-negative-color: #eee;
 
   /* UI static colors */
-  --indicator-orange-color: orange;
-  --indicator-red-color: rgb(255, 68, 0);
+  --warning-orange-color: orange;
+  --warning-red-color: orangered;
   --grey-color: #cccccc;
   --hover-color: #dddddd;
 

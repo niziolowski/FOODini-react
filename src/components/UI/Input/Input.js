@@ -1,10 +1,11 @@
+import { useState } from "react";
 import styles from "./Input.module.css";
 
 function Input(props) {
   return (
     <input
       //? This component and all its props is just for the styles... Is it worth it?
-      className={styles.input}
+      className={`${styles.input} ${!props.isValid ? styles.invalid : ""}`}
       value={props.value}
       onChange={props.onChange}
       name={props.name}

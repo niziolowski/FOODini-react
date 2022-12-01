@@ -11,14 +11,13 @@ import StorageList from "./components/StorageList/StorageList";
 import RecipeList from "./components/RecipeList/RecipeList";
 import Catalog from "./components/Catalog/Catalog";
 import AddCatalog from "./components/AddCatalog/AddCatalog";
-import Input from "./components/UI/Input/Input";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
 
-  useEffect(() => {
-    dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
-  }, []);
+  // useEffect(() => {
+  //   dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
+  // }, []);
 
   const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;
   return (

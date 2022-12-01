@@ -5,9 +5,11 @@ import styles from "./Catalog.module.css";
 import Button from "../UI/Button";
 import SearchBar from "../UI/SearchBar/SearchBar";
 import CatalogItem from "./CatalogItem/CatalogItem";
+import UserDataContext from "../../contexts/user-data";
 
 function Catalog() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
+  const { catalog } = useContext(UserDataContext);
   const isActive = isVisible.catalog;
 
   function handleClose() {
@@ -65,7 +67,7 @@ function Catalog() {
                     <th></th>
                     <th></th>
                   </tr>
-                  {testData.map((item) => (
+                  {catalog.map((item) => (
                     <CatalogItem key={item.id} item={item} />
                   ))}
                 </tbody>
