@@ -9,8 +9,8 @@ import Input from "../UI/Input/Input";
 import Select from "../UI/Select/Select";
 import UserDataContext from "../../contexts/user-data";
 
-function AddCatalog() {
-  const { setCatalog } = useContext(UserDataContext);
+function AddCatalog({ data }) {
+  const { catalog, setCatalog } = useContext(UserDataContext);
 
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
   const [isExpiry, setIsExpiry] = useState(true);
@@ -27,6 +27,12 @@ function AddCatalog() {
 
   function handleClose(e) {
     dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
+    setInputName("");
+    setInputAmount(1);
+    setInputGroup("świeże");
+    setInputUnit("szt.");
+    setInputExpiry(1);
+    setInitialRender(true);
   }
 
   function handleSubmit(e) {
@@ -35,7 +41,7 @@ function AddCatalog() {
 
     if (formIsValid) {
       const newProduct = {
-        id: Math.floor(Math.random() * 9999),
+        id: data.id || Math.floor(Math.random() * 9999),
         name: inputName,
         amount: inputAmount,
         group: inputGroup,
@@ -44,17 +50,39 @@ function AddCatalog() {
         bookmark: false,
       };
 
-      setCatalog((prevState) => [...prevState, newProduct]);
+      // Check if Editing
+      if (data) {
+        const catalogUpdated = catalog.map((item) => {
+          if (item.id === data.id) return newProduct;
+          else return item;
+        });
+        setCatalog([...catalogUpdated]);
+      }
+
+      if (!data) {
+        setCatalog((current) => [...current, newProduct]);
+      }
     }
   }
 
   // This skips useEffect on first render
   const [initialRender, setInitialRender] = useState(true);
 
+  // Validate the form on input change
   useEffect(() => {
     if (!initialRender) validateForm();
     else setInitialRender(false);
   }, [inputName]);
+
+  // On render update the form using props.data or use default values
+  useEffect(() => {
+    setInputName(data.name || "");
+    setInputAmount(data.amount || 1);
+    setInputGroup(data.group || "świeże");
+    setInputUnit(data.unit || "szt.");
+    setInputExpiry(data.expiry || 1);
+    setInitialRender(true);
+  }, [data]);
 
   function validateForm() {
     if (inputName.length === 0) {
@@ -79,7 +107,8 @@ function AddCatalog() {
 
   function handleInputAmount(e) {
     const val = +e.target.value;
-    setInputAmount(val);
+
+    setInputAmount(val === 0 ? "" : val);
   }
 
   function handleInputGroup(e) {

@@ -1,7 +1,11 @@
 import { FiEdit, FiStar, FiTrash } from "react-icons/fi";
 import Button from "../../UI/Button";
 
-function CatalogItem({ item }) {
+function CatalogItem({ item, onEdit }) {
+  function handleEdit() {
+    onEdit(item);
+  }
+
   return (
     <tr>
       <td>
@@ -17,7 +21,7 @@ function CatalogItem({ item }) {
       </td>
       <td>{item.expiry} dni</td>
       <td>
-        <Button round mini>
+        <Button onClick={handleEdit} round mini>
           <FiEdit />
         </Button>
       </td>

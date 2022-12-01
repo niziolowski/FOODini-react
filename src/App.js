@@ -35,7 +35,6 @@ function App() {
       {isVisible.storage && <StorageList />}
       {isVisible.recipes && <RecipeList />}
       <Catalog />
-      <AddCatalog />
     </div>
   );
 }

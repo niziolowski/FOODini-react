@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { FiPlus, FiStar, FiX } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout";
 import styles from "./Catalog.module.css";
@@ -6,10 +6,13 @@ import Button from "../UI/Button";
 import SearchBar from "../UI/SearchBar/SearchBar";
 import CatalogItem from "./CatalogItem/CatalogItem";
 import UserDataContext from "../../contexts/user-data";
+import AddCatalog from "../AddCatalog/AddCatalog";
 
 function Catalog() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
   const { catalog } = useContext(UserDataContext);
+  // Product data for editing inside the form
+  const [productData, setProductData] = useState(false);
   const isActive = isVisible.catalog;
 
   function handleClose() {
@@ -18,20 +21,15 @@ function Catalog() {
   }
 
   function handleAddProduct() {
+    setProductData(false);
     dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
   }
 
-  const testData = [
-    {
-      id: 415567,
-      name: "drożdze",
-      unit: "g",
-      group: "suche",
-      amount: "1000",
-      expiry: "1000",
-      bookmark: false,
-    },
-  ];
+  function handleEditProduct(item) {
+    console.log(item);
+    setProductData(item);
+    dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
+  }
 
   return (
     <>
@@ -68,7 +66,11 @@ function Catalog() {
                     <th></th>
                   </tr>
                   {catalog.map((item) => (
-                    <CatalogItem key={item.id} item={item} />
+                    <CatalogItem
+                      onEdit={handleEditProduct}
+                      key={item.id}
+                      item={item}
+                    />
                   ))}
                 </tbody>
               </table>
@@ -76,6 +78,7 @@ function Catalog() {
           </div>
         </div>
       )}
+      <AddCatalog data={productData} />
     </>
   );
 }
