@@ -23,6 +23,13 @@
   filter: brightness(90%);
 }
 
+button:disabled,
+button[disabled] {
+  border: 1px solid var(--grey-color);
+  color: var(--grey-color);
+  pointer-events: none;
+}
+
 .fill {
   color: var(--font-negative-color);
   background-color: var(--accent-color);

@@ -21,7 +21,7 @@
   --border-radius: 10px;
   --transition: 0.2s ease-in-out;
   --btn-transition: 0.05s ease-out;
-  --mobile-breakpoint: 550px;
+  --mobile-breakpoint: 770px;
 
   /* Tags */
   --tag-0-color: #ffe047;
@@ -113,7 +113,7 @@ h2 {
   height: 100vh;
 }
 
-@media (min-width: 1400px) {
+@media (min-width: 1800px) {
   body {
     background-image: radial-gradient(
       circle farthest-corner at 10% 20%,
@@ -126,7 +126,7 @@ h2 {
     position: absolute;
     top: 10%;
     height: 90%;
-    width: 1300px;
+    width: 1700px;
     border-radius: var(--border-radius);
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;

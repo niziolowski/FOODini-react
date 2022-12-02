@@ -16,7 +16,7 @@ function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
 
   useEffect(() => {
-    dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
+    dispatchIsVisible({ type: "catalog", mode: "toggle" });
   }, [dispatchIsVisible]);
 
   const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;

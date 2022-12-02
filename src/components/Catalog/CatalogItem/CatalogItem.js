@@ -5,16 +5,25 @@ import Button from "../../UI/Button";
 import styles from "./CatalogItem.module.css";
 
 function CatalogItem({ item, onEdit }) {
-  const { tags } = useContext(UserDataContext);
-
+  const { tags, deleteProduct, editProduct } = useContext(UserDataContext);
   function handleEdit() {
     onEdit(item);
+  }
+
+  function handleDelete() {
+    deleteProduct(item.id);
+  }
+
+  function handleBookmark() {
+    const updatedProduct = { ...item, bookmark: !item.bookmark };
+
+    editProduct(updatedProduct);
   }
 
   return (
     <tr>
       <td>
-        <Button round mini>
+        <Button onClick={handleBookmark} round mini fill={item.bookmark}>
           <FiStar />
         </Button>
       </td>
@@ -38,7 +47,7 @@ function CatalogItem({ item, onEdit }) {
         </Button>
       </td>
       <td>
-        <Button round mini>
+        <Button onClick={handleDelete} round mini>
           <FiTrash />
         </Button>
       </td>

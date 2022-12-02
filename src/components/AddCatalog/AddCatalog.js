@@ -76,7 +76,7 @@ const formReducer = (state, action) => {
       const results = validateField(state, action.field);
       return { ...state, ...results };
 
-    case "SUBMIT_FORM":
+    case "VALIDATE_FORM":
       const result = validateForm(state);
       return { ...state, ...result };
 
@@ -101,12 +101,14 @@ function AddCatalog() {
   };
 
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
-  const { catalog, setCatalog, tags } = useContext(UserDataContext);
+  const { tags, addProduct } = useContext(UserDataContext);
   const [isExpiry, setIsExpiry] = useState(true);
   const isActive = isVisible.addCatalog;
   const [form, dispatchForm] = useReducer(formReducer, initialState);
 
-  // const { payload, setPayload } = useContext(AddCatalogContext);
+  function handleClose(e) {
+    dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
+  }
 
   // toggle no expiry date
   function handleBtnExpiry() {
@@ -143,136 +145,30 @@ function AddCatalog() {
   // handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatchForm({
-      type: "SUBMIT_FORM",
-    });
+    if (form.isNameValid && form.isAmountValid && form.isExpiryValid) {
+      const newProduct = {
+        id: Math.floor(Math.random() * 9999),
+        name: form.name,
+        amount: form.amount,
+        group: form.tag,
+        unit: form.unit,
+        expiry: form.expiry,
+        bookmark: false,
+      };
+
+      addProduct(newProduct);
+    }
   };
-
-  // const [inputName, setInputName] = useState("");
-  // const [inputAmount, setInputAmount] = useState(1);
-  // const [inputGroup, setInputGroup] = useState(tags[0]);
-  // const [inputUnit, setInputUnit] = useState("szt.");
-  // const [inputExpiry, setInputExpiry] = useState(1);
-  // const [nameIsValid, setNameIsValid] = useState(true);
-  // const [formIsValid, setFormIsValid] = useState(false);
-  // const [invalidMessage, setInvalidMessage] = useState("");
-
-  // function handleClose(e) {
-  //   dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
-
-  //   setInputName("");
-  //   setInputAmount(1);
-  //   setInputGroup(tags[0]);
-  //   setInputUnit("szt.");
-  //   setInputExpiry(1);
-  //   setInvalidMessage("");
-  //   setNameIsValid(true);
-  //   setInitialRender(true);
-  // }
-
-  // function handleSubmit(e) {
-  //   e.preventDefault();
-  //   const isValid = validateForm();
-
-  //   if (isValid) {
-  //     console.log(inputGroup);
-  //     const newProduct = {
-  //       id: payload?.id || Math.floor(Math.random() * 9999),
-  //       name: inputName,
-  //       amount: inputAmount,
-  //       group: +tags.indexOf(inputGroup),
-  //       unit: inputUnit,
-  //       expiry: inputExpiry,
-  //       bookmark: false,
-  //     };
-  //     console.log(newProduct);
-
-  //     // Check if Editing
-  //     if (payload) {
-  //       const catalogUpdated = catalog.map((item) => {
-  //         if (item.id === payload.id) return newProduct;
-  //         else return item;
-  //       });
-  //       setCatalog([...catalogUpdated]);
-  //     }
-
-  //     if (!payload) {
-  //       setCatalog((current) => [...current, newProduct]);
-  //     }
-  //     setInputName("");
-  //     setNameIsValid(true);
-  //     setInitialRender(true);
-  //   }
-  // }
-
-  // const validateForm = useCallback(() => {
-  //   console.log("validation");
-  //   if (inputName.length === 0) {
-  //     setInvalidMessage("Wpisz nazwę produktu");
-  //     setNameIsValid(false);
-  //     setFormIsValid(false);
-  //     return false;
-  //   }
-
-  //   setNameIsValid(true);
-  //   setFormIsValid(true);
-  //   setInvalidMessage("");
-  //   return true;
-  // }, [inputName.length]);
-
-  // // This skips useEffect on first render
-  // const [initialRender, setInitialRender] = useState(true);
-
-  // // Validate the form on input change
-  // useEffect(() => {
-  //   if (!initialRender) validateForm();
-  //   else setInitialRender(false);
-  // }, [inputName, initialRender, validateForm]);
-
-  // // On render update the form using props.data or use default values
-  // useEffect(() => {
-  //   setInputName(payload?.name || "");
-  //   setInputAmount(payload?.amount || 1);
-  //   setInputGroup(payload?.group || tags[0]);
-  //   setInputUnit(payload?.unit || "szt.");
-  //   setInputExpiry(payload?.expiry || 1);
-  //   setInitialRender(true);
-  // }, [payload, tags]);
-
-  // function handleInputName(e) {
-  //   const val = e.target.value.trimStart();
-  //   setInputName(val);
-  // }
-
-  // function handleInputAmount(e) {
-  //   const val = +e.target.value;
-
-  //   setInputAmount(val === 0 ? "" : val);
-  // }
-
-  // function handleInputGroup(e) {
-  //   const val = e.target.value;
-  //   setInputGroup(val);
-  // }
-  // function handleInputUnit(e) {
-  //   const val = e.target.value;
-  //   setInputUnit(val);
-  // }
-
-  // function handleInputExpiry(e) {
-  //   const val = +e.target.value;
-  //   setInputExpiry(val);
-  // }
 
   const root = document.getElementById("modal");
 
   const content = (
     <>
-      {!isMobile && <div id="backdrop"></div>}
+      {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
       <div className={styles["add-catalog"]}>
         <header className={styles.header}>
           <h1>szablon produktu</h1>
-          <Button round>
+          <Button onClick={handleClose} round>
             <FiX />
           </Button>
         </header>

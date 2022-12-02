@@ -5,7 +5,7 @@ function Button(props) {
     props.mini ? styles.mini : ""
   } ${props.fill ? styles.fill : ""} ${props.warning ? styles.warning : ""} ${
     props.className || ""
-  } `;
+  }`;
 
   return (
     <button
@@ -13,6 +13,7 @@ function Button(props) {
       type={props.type}
       onClick={props.onClick}
       className={classes}
+      disabled={props.disabled}
     >
       {props.children}
     </button>

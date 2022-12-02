@@ -2,8 +2,8 @@
   background-color: var(--bg-color);
   border: 1px solid var(--hover-color);
   border-radius: var(--border-radius);
-  width: 80%;
-  height: 80%;
+  width: fit-content;
+  height: fit-content;
   box-shadow: var(--shadow);
   z-index: 1;
 }

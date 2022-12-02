@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { FiPlus, FiStar, FiX } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout";
 import styles from "./Catalog.module.css";
@@ -6,13 +6,10 @@ import Button from "../UI/Button";
 import SearchBar from "../UI/SearchBar/SearchBar";
 import CatalogItem from "./CatalogItem/CatalogItem";
 import UserDataContext from "../../contexts/user-data";
-import AddCatalog from "../AddCatalog/AddCatalog";
-import AddCatalogContext from "../../contexts/add-catalog";
 
 function Catalog() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
   const { catalog } = useContext(UserDataContext);
-  const { setPayload } = useContext(AddCatalogContext);
   const isActive = isVisible.catalog;
 
   function handleClose() {
@@ -20,7 +17,6 @@ function Catalog() {
   }
 
   function handleAddProduct() {
-    setPayload(null);
     dispatchIsVisible({
       type: "addCatalog",
       mode: "toggle",
@@ -29,7 +25,6 @@ function Catalog() {
 
   function handleEditProduct(item) {
     console.log(item);
-    setPayload(item);
     dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
   }
 
@@ -38,7 +33,7 @@ function Catalog() {
       {isActive && (
         <div className={`${styles.catalog} ${isMobile ? styles.mobile : ""}`}>
           <header className={styles.header}>
-            <h1>Katalog składników</h1>
+            <h1>Katalog produktów</h1>
             <Button onClick={handleClose} round>
               <FiX />
             </Button>
