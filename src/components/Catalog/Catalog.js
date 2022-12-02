@@ -7,27 +7,29 @@ import SearchBar from "../UI/SearchBar/SearchBar";
 import CatalogItem from "./CatalogItem/CatalogItem";
 import UserDataContext from "../../contexts/user-data";
 import AddCatalog from "../AddCatalog/AddCatalog";
+import AddCatalogContext from "../../contexts/add-catalog";
 
 function Catalog() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
   const { catalog } = useContext(UserDataContext);
-  // Product data for editing inside the form
-  const [productData, setProductData] = useState(false);
+  const { setPayload } = useContext(AddCatalogContext);
   const isActive = isVisible.catalog;
 
   function handleClose() {
     dispatchIsVisible({ type: "catalog", mode: "toggle" });
-    dispatchIsVisible({ type: "settings", mode: "toggle" });
   }
 
   function handleAddProduct() {
-    setProductData(false);
-    dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
+    setPayload(null);
+    dispatchIsVisible({
+      type: "addCatalog",
+      mode: "toggle",
+    });
   }
 
   function handleEditProduct(item) {
     console.log(item);
-    setProductData(item);
+    setPayload(item);
     dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
   }
 
@@ -78,7 +80,6 @@ function Catalog() {
           </div>
         </div>
       )}
-      <AddCatalog data={productData} />
     </>
   );
 }

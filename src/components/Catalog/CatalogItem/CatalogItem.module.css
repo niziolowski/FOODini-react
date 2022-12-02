@@ -1,0 +1,10 @@
+.tag {
+  position: relative;
+  left: 50%;
+  translate: -50%;
+  font-weight: 400;
+  width: fit-content;
+  height: 20px;
+  border-radius: 10px;
+  padding: 0 10px;
+}

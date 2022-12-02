@@ -15,9 +15,9 @@ import AddCatalog from "./components/AddCatalog/AddCatalog";
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
 
-  // useEffect(() => {
-  //   dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
-  // }, []);
+  useEffect(() => {
+    dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
+  }, [dispatchIsVisible]);
 
   const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;
   return (
@@ -35,6 +35,7 @@ function App() {
       {isVisible.storage && <StorageList />}
       {isVisible.recipes && <RecipeList />}
       <Catalog />
+      <AddCatalog />
     </div>
   );
 }

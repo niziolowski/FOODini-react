@@ -13,6 +13,12 @@
 
 .bookmark svg {
   color: var(--grey-color);
+  fill: var(--grey-color);
+}
+
+.bookmark svg.fill {
+  color: var(--accent-color);
+  fill: var(--accent-color);
 }
 
 .title {
@@ -42,6 +48,11 @@
 
 .expiry-indicator__bar {
   height: 100%;
+}
+
+.expiry-days-left {
+  display: flex;
+  align-items: center;
 }
 
 .tag {

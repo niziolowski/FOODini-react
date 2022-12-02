@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styles from "./Input.module.css";
 
 function Input(props) {
@@ -8,6 +7,7 @@ function Input(props) {
       className={`${styles.input} ${!props.isValid ? styles.invalid : ""}`}
       value={props.value}
       onChange={props.onChange}
+      onBlur={props.onBlur}
       name={props.name}
       type={props.type}
       autoComplete={props.autocomplete}
