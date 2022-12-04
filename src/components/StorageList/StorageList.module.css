@@ -1,8 +1,13 @@
+.storage-list {
+  flex: 1;
+  background-color: var(--bg-color);
+}
+
+/* § MOBILE */
 .storage-list.mobile {
   position: absolute;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
-  background-color: var(--bg-color);
 }

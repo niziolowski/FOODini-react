@@ -11,7 +11,7 @@ function CatalogItem({ item, onEdit }) {
     onEdit(item);
   }
 
-  function handleDelete() {
+  function handleDelete(e) {
     deleteProduct(item.id);
   }
 
@@ -24,7 +24,13 @@ function CatalogItem({ item, onEdit }) {
   return (
     <tr>
       <td>
-        <Button onClick={handleBookmark} round mini fill={item.bookmark}>
+        <Button
+          onClick={handleBookmark}
+          round
+          mini
+          fillIcon
+          active={item.bookmark}
+        >
           <FiStar />
         </Button>
       </td>
@@ -48,7 +54,7 @@ function CatalogItem({ item, onEdit }) {
         </Button>
       </td>
       <td>
-        <Button onClick={handleDelete} round mini>
+        <Button onClick={handleDelete} doubleAction round mini>
           <FiTrash />
         </Button>
       </td>

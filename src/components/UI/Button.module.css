@@ -35,6 +35,30 @@ button[disabled] {
   background-color: var(--accent-color);
 }
 
+.fill-icon {
+  color: var(--grey-color);
+}
+
+.fill-icon:hover svg {
+  color: var(--grey-color);
+}
+
+.fill-icon.active {
+  color: var(--accent-color);
+}
+
+.fill-icon.active:hover svg {
+  color: var(--accent-color);
+}
+
+.fill-icon svg {
+  fill: var(--grey-color);
+}
+
+.fill-icon.active svg {
+  fill: var(--accent-color);
+}
+
 .round {
   display: flex;
   justify-content: center;

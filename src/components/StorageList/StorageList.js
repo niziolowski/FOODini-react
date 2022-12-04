@@ -1,12 +1,15 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import LayoutContext from "../../contexts/layout";
 import styles from "./StorageList.module.css";
 import StorageItem from "./StorageItem/StorageItem";
 import FilterOptions from "../UI/FilterOptions/FilterOptions";
+import Spotlight from "../Spotlight/Spotlight";
+import UserDataContext from "../../contexts/user-data";
 
 function StorageList() {
   const { isMobile } = useContext(LayoutContext);
-
+  const { catalog } = useContext(UserDataContext);
+  const [isSpotlight, setIsSpotlight] = useState(true);
   const testData = [
     {
       id: Math.floor(Math.random() * 9999),
@@ -28,11 +31,20 @@ function StorageList() {
     },
   ];
 
+  const toggleSpotlight = () => {
+    setIsSpotlight(!isSpotlight);
+  };
+
+  const handleAddItem = () => {
+    console.log("add item");
+  };
+
   return (
     <div
       className={`${styles["storage-list"]} ${isMobile ? styles.mobile : ""}`}
     >
-      <FilterOptions />
+      {isSpotlight && <Spotlight onClose={toggleSpotlight} data={catalog} />}
+      <FilterOptions onAddItem={toggleSpotlight} />
       {testData.map((item) => (
         <StorageItem key={item.id} item={item}></StorageItem>
       ))}

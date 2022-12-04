@@ -1,12 +1,14 @@
 import styles from "./FilterOptions.module.css";
 import { FiSearch, FiMaximize2, FiPlus, FiStar } from "react-icons/fi";
 import Button from "../Button";
+import Spotlight from "../../Spotlight/Spotlight";
+import { useState } from "react";
 
-function FilterOptions() {
+function FilterOptions({ onAddItem }) {
   return (
     <section className={styles.options}>
       <div className={styles.row}>
-        <Button round mini>
+        <Button onClick={onAddItem} round mini>
           <FiPlus />
         </Button>
         <div className={styles["search-bar"]}>

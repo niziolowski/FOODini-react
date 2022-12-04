@@ -16,6 +16,7 @@ function Catalog() {
   const [isFormActive, setIsFormActive] = useState(false);
   const [formData, setFormData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isFavorites, setIsFavorites] = useState(false);
 
   function handleClose() {
     dispatchIsVisible({ type: "catalog", mode: "toggle" });
@@ -39,14 +40,22 @@ function Catalog() {
     setIsFormActive(false);
   }
 
+  function handleFavorites() {
+    setIsFavorites(!isFavorites);
+  }
+
   // Filter catalog with search query
   useEffect(() => {
-    setCatalogFiltered(
-      catalog.filter((item) =>
-        item.name.toLowerCase().startsWith(searchQuery.toLowerCase())
-      )
+    let filtered = catalog.filter((item) =>
+      item.name.toLowerCase().startsWith(searchQuery.toLowerCase())
     );
-  }, [catalog, searchQuery]);
+
+    if (isFavorites) {
+      filtered = filtered.filter((item) => item.bookmark);
+    }
+
+    setCatalogFiltered(filtered);
+  }, [catalog, searchQuery, isFavorites]);
 
   return (
     <>
@@ -78,7 +87,13 @@ function Catalog() {
                 <tbody>
                   <tr>
                     <th>
-                      <Button round mini>
+                      <Button
+                        onClick={handleFavorites}
+                        round
+                        mini
+                        fillIcon
+                        active={isFavorites}
+                      >
                         <FiStar />
                       </Button>
                     </th>

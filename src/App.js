@@ -11,6 +11,7 @@ import StorageList from "./components/StorageList/StorageList";
 import RecipeList from "./components/RecipeList/RecipeList";
 import Catalog from "./components/Catalog/Catalog";
 import AddCatalog from "./components/AddCatalog/AddCatalog";
+import Spotlight from "./components/Spotlight/Spotlight";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
@@ -21,6 +22,10 @@ function App() {
   useEffect(() => {
     dispatchIsVisible({ type: "home", mode: "switch" });
   }, [isMobile]);
+
+  // useEffect(() => {
+  //   dispatchIsVisible({ type: "catalog", mode: "toggle" });
+  // }, []);
 
   return (
     <div className={classes}>
