@@ -15,6 +15,7 @@ function Input(props) {
       maxLength={props.maxLength}
       placeholder={props.placeholder}
       disabled={props.disabled}
+      autoFocus={props.autoFocus}
     />
   );
 }

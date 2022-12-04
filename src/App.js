@@ -13,11 +13,7 @@ import Catalog from "./components/Catalog/Catalog";
 import AddCatalog from "./components/AddCatalog/AddCatalog";
 
 function App() {
-  const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
-
-  useEffect(() => {
-    dispatchIsVisible({ type: "catalog", mode: "toggle" });
-  }, [dispatchIsVisible]);
+  const { isMobile, isVisible } = useContext(LayoutContext);
 
   const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;
   return (

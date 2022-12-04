@@ -93,6 +93,14 @@
   top: -7px;
 }
 
+.message {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  font-weight: 200;
+  color: var(--warning-red-color);
+}
+
 @media (max-width: 950px) {
   .form {
     max-width: min-content;

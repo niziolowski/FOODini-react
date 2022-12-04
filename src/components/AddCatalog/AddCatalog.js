@@ -1,6 +1,6 @@
-import { useContext, useState, useReducer } from "react";
+import { useContext, useState, useReducer, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { FiX } from "react-icons/fi";
+import { FiInfo, FiX } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
 import LayoutContext from "../../contexts/layout";
 import Button from "../UI/Button";
@@ -9,11 +9,25 @@ import Input from "../UI/Input/Input";
 import Select from "../UI/Select/Select";
 import UserDataContext from "../../contexts/user-data";
 
+// Initial form state
+const initialState = {
+  name: "",
+  isNameValid: true,
+  tag: 0,
+  amount: 1,
+  isAmountValid: true,
+  unit: "szt.",
+  expiry: "",
+  isExpiryValid: true,
+  isValid: false,
+  message: "",
+};
+
 const validateForm = (state) => {
   if (state.name.trim().length === 0) {
     return {
       isNameValid: false,
-      isFormValid: false,
+      isValid: false,
       message: "Wpisz nazwę produktu",
     };
   }
@@ -21,18 +35,19 @@ const validateForm = (state) => {
   if (+state.amount < 1)
     return {
       isAmountValid: false,
-      isFormValid: false,
+      isValid: false,
       message: "Wpisz poprawną ilość",
     };
+
   if (+state.expiry < 0 || state.expiry.length === 0)
     return {
       isExpiryValid: false,
-      isFormValid: false,
+      isValid: false,
       message: "Wpisz wazność produktu lub zaznacz opcję '∞'",
     };
 
   return {
-    isFormValid: true,
+    isValid: true,
   };
 };
 
@@ -79,45 +94,39 @@ const formReducer = (state, action) => {
     case "VALIDATE_FORM":
       const result = validateForm(state);
       return { ...state, ...result };
-
+    case "RESET_FORM":
+      return { ...initialState };
     default:
       return state;
   }
 };
 
 function AddCatalog() {
-  // Initial form state
-  const initialState = {
-    name: "",
-    isNameValid: true,
-    tag: 0,
-    amount: 1,
-    isAmountValid: true,
-    unit: "szt.",
-    expiry: "",
-    isExpiryValid: true,
-    isFormValid: true,
-    message: "",
-  };
-
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
+  const isActive = isVisible.addCatalog;
   const { tags, addProduct } = useContext(UserDataContext);
   const [isExpiry, setIsExpiry] = useState(true);
-  const isActive = isVisible.addCatalog;
   const [form, dispatchForm] = useReducer(formReducer, initialState);
 
+  // A state that prevents the validation before user action
+  const [initialRender, setInitialRender] = useState(true);
+
   function handleClose(e) {
+    setInitialRender(true);
     dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
+    dispatchForm({ type: "RESET_FORM" });
   }
 
-  // toggle no expiry date
+  // handle BTN no expiry
   function handleBtnExpiry() {
+    // change inputExpiry value
     dispatchForm({
       type: "UPDATE_FIELD",
       field: "expiry",
       value: isExpiry ? 0 : 1,
     });
 
+    // validate inputExpiry
     dispatchForm({
       type: "VALIDATE_FIELD",
       field: "expiry",
@@ -129,12 +138,14 @@ function AddCatalog() {
 
   // handle input change
   const handleChange = (e) => {
+    // update field
     dispatchForm({
       type: "UPDATE_FIELD",
       field: e.target.name,
       value: e.target.value,
     });
 
+    // validate field
     dispatchForm({
       type: "VALIDATE_FIELD",
       field: e.target.name,
@@ -142,10 +153,23 @@ function AddCatalog() {
     });
   };
 
+  // when user clicks on form, change initialRender state, if already true, validate form
+  const handleParentClick = () => {
+    setInitialRender(false);
+  };
+
+  // function for skipping form validation before user input
+  useEffect(() => {
+    if (!initialRender) dispatchForm({ type: "VALIDATE_FORM" });
+  }, [initialRender, form.isNameValid, form.isAmountValid, form.isExpiryValid]);
+
   // handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (form.isNameValid && form.isAmountValid && form.isExpiryValid) {
+
+    dispatchForm({ type: "VALIDATE_FORM" });
+
+    if (form.isValid) {
       const newProduct = {
         id: Math.floor(Math.random() * 9999),
         name: form.name,
@@ -165,7 +189,7 @@ function AddCatalog() {
   const content = (
     <>
       {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
-      <div className={styles["add-catalog"]}>
+      <div onClick={handleParentClick} className={styles["add-catalog"]}>
         <header className={styles.header}>
           <h1>szablon produktu</h1>
           <Button onClick={handleClose} round>
@@ -185,6 +209,7 @@ function AddCatalog() {
                 autocomplete="off"
                 placeholder="Jajka od Pana Stefana"
                 isValid={form.isNameValid}
+                autoFocus
               />
 
               <ul className="suggestions"></ul>
@@ -231,7 +256,7 @@ function AddCatalog() {
                 disabled={!isExpiry}
                 value={form.expiry}
                 onChange={handleChange}
-                min={1}
+                min={0}
                 isValid={form.isExpiryValid}
               />
               <Button
@@ -247,7 +272,10 @@ function AddCatalog() {
             </div>
           </div>
         </form>
-        <div className={styles.message}>{form.message}</div>
+        <div className={styles.message}>
+          {form.message.length > 0 && <FiInfo />}
+          {form.message}
+        </div>
         <Button form="addCatalog" type="submit">
           Zapisz
         </Button>
