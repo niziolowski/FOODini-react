@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { FiPlus, FiStar, FiX } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout";
 import styles from "./Catalog.module.css";
@@ -6,30 +6,42 @@ import Button from "../UI/Button";
 import SearchBar from "../UI/SearchBar/SearchBar";
 import CatalogItem from "./CatalogItem/CatalogItem";
 import UserDataContext from "../../contexts/user-data";
+import AddCatalog from "../AddCatalog/AddCatalog";
 
 function Catalog() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
   const { catalog } = useContext(UserDataContext);
   const isActive = isVisible.catalog;
+  const [isFormActive, setIsFormActive] = useState(false);
+  const [formData, setFormData] = useState(null);
 
   function handleClose() {
     dispatchIsVisible({ type: "catalog", mode: "toggle" });
   }
 
   function handleAddProduct() {
-    dispatchIsVisible({
-      type: "addCatalog",
-      mode: "toggle",
-    });
+    setIsFormActive(true);
+    setFormData(null);
   }
 
   function handleEditProduct(item) {
-    console.log(item);
-    dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
+    setFormData(item);
+    setIsFormActive(true);
+  }
+
+  function handleFormClose() {
+    setIsFormActive(false);
+    setFormData(null);
   }
 
   return (
     <>
+      <AddCatalog
+        isActive={isFormActive}
+        data={formData}
+        onClose={handleFormClose}
+      />
+
       {isActive && (
         <div className={`${styles.catalog} ${isMobile ? styles.mobile : ""}`}>
           <header className={styles.header}>

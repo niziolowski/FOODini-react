@@ -4,15 +4,15 @@ const UserDataContext = createContext();
 
 export const UserDataProvider = ({ children }) => {
   const [catalog, setCatalog] = useState([
-    {
-      id: 123,
-      name: "Jajka",
-      amount: 10,
-      group: 0,
-      unit: "szt.",
-      expiry: 14,
-      bookmark: false,
-    },
+    // {
+    //   id: 123,
+    //   name: "Jajka",
+    //   amount: 10,
+    //   group: 0,
+    //   unit: "szt.",
+    //   expiry: 14,
+    //   bookmark: false,
+    // },
   ]);
   const [tags, setTags] = useState(["świeże", "suche", "mrożone"]);
 
@@ -22,7 +22,9 @@ export const UserDataProvider = ({ children }) => {
   };
 
   const editProduct = (updatedProduct) => {
-    const index = catalog.indexOf((item) => item.id === updatedProduct.id);
+    const index = catalog.indexOf(
+      catalog.find((item) => item.id === updatedProduct.id)
+    );
 
     setCatalog((current) => {
       current.splice(index, 1, updatedProduct);

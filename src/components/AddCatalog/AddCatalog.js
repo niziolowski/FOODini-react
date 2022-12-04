@@ -9,15 +9,14 @@ import Input from "../UI/Input/Input";
 import Select from "../UI/Select/Select";
 import UserDataContext from "../../contexts/user-data";
 
-// Initial form state
 const initialState = {
   name: "",
-  isNameValid: true,
   tag: 0,
   amount: 1,
-  isAmountValid: true,
   unit: "szt.",
   expiry: "",
+  isNameValid: true,
+  isAmountValid: true,
   isExpiryValid: true,
   isValid: false,
   message: "",
@@ -84,6 +83,8 @@ const validateField = (state, field) => {
 
 const formReducer = (state, action) => {
   switch (action.type) {
+    case "FILL_FORM":
+      return { ...state, ...action.data };
     case "UPDATE_FIELD":
       return { ...state, [action.field]: action.value };
 
@@ -94,6 +95,7 @@ const formReducer = (state, action) => {
     case "VALIDATE_FORM":
       const result = validateForm(state);
       return { ...state, ...result };
+
     case "RESET_FORM":
       return { ...initialState };
     default:
@@ -101,10 +103,9 @@ const formReducer = (state, action) => {
   }
 };
 
-function AddCatalog() {
-  const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
-  const isActive = isVisible.addCatalog;
-  const { tags, addProduct } = useContext(UserDataContext);
+function AddCatalog({ isActive, data, onClose }) {
+  const { isMobile } = useContext(LayoutContext);
+  const { tags, addProduct, editProduct } = useContext(UserDataContext);
   const [isExpiry, setIsExpiry] = useState(true);
   const [form, dispatchForm] = useReducer(formReducer, initialState);
 
@@ -113,8 +114,8 @@ function AddCatalog() {
 
   function handleClose(e) {
     setInitialRender(true);
-    dispatchIsVisible({ type: "addCatalog", mode: "toggle" });
     dispatchForm({ type: "RESET_FORM" });
+    onClose();
   }
 
   // handle BTN no expiry
@@ -151,6 +152,8 @@ function AddCatalog() {
       field: e.target.name,
       value: e.target.value,
     });
+
+    setInitialRender(false);
   };
 
   // when user clicks on form, change initialRender state, if already true, validate form
@@ -163,6 +166,11 @@ function AddCatalog() {
     if (!initialRender) dispatchForm({ type: "VALIDATE_FORM" });
   }, [initialRender, form.isNameValid, form.isAmountValid, form.isExpiryValid]);
 
+  useEffect(() => {
+    if (initialRender && data) {
+      dispatchForm({ type: "FILL_FORM", data: data });
+    }
+  }, [initialRender, data]);
   // handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -170,17 +178,37 @@ function AddCatalog() {
     dispatchForm({ type: "VALIDATE_FORM" });
 
     if (form.isValid) {
-      const newProduct = {
-        id: Math.floor(Math.random() * 9999),
-        name: form.name,
-        amount: form.amount,
-        group: form.tag,
-        unit: form.unit,
-        expiry: form.expiry,
-        bookmark: false,
-      };
+      // Edit mode
 
-      addProduct(newProduct);
+      if (data) {
+        const updatedProduct = {
+          id: data.id,
+          name: form.name,
+          amount: form.amount,
+          group: form.tag,
+          unit: form.unit,
+          expiry: form.expiry,
+          bookmark: false,
+        };
+
+        editProduct(updatedProduct);
+      } else {
+        // Create mode
+        const newProduct = {
+          id: Math.floor(Math.random() * 9999),
+          name: form.name,
+          amount: form.amount,
+          group: form.tag,
+          unit: form.unit,
+          expiry: form.expiry,
+          bookmark: false,
+        };
+
+        addProduct(newProduct);
+      }
+
+      // close the form
+      handleClose();
     }
   };
 
@@ -189,14 +217,19 @@ function AddCatalog() {
   const content = (
     <>
       {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
-      <div onClick={handleParentClick} className={styles["add-catalog"]}>
+      <div className={styles["add-catalog"]}>
         <header className={styles.header}>
           <h1>szablon produktu</h1>
           <Button onClick={handleClose} round>
             <FiX />
           </Button>
         </header>
-        <form onSubmit={handleSubmit} id="addCatalog" className={styles.form}>
+        <form
+          onClick={handleParentClick}
+          onSubmit={handleSubmit}
+          id="addCatalog"
+          className={styles.form}
+        >
           <div className={styles["row-1"]}>
             <div className={styles.col}>
               <label>Produkt</label>
