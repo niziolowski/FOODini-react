@@ -32,7 +32,9 @@ function Settings() {
           )}
         </header>
         <div className={styles.content}>
-          <Button onClick={handleCatalog}>Katalog produktów</Button>
+          <Button onClick={handleCatalog} disabled={isMobile}>
+            Katalog produktów
+          </Button>
         </div>
       </div>
     </>

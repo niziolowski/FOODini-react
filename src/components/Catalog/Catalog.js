@@ -26,8 +26,8 @@ function Catalog() {
   }
 
   function handleAddProduct() {
-    setIsFormActive(true);
     setFormData(null);
+    setIsFormActive(true);
   }
 
   function handleEditProduct(item) {
@@ -37,7 +37,6 @@ function Catalog() {
 
   function handleFormClose() {
     setIsFormActive(false);
-    setFormData(null);
   }
 
   // Filter catalog with search query
