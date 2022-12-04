@@ -39,11 +39,6 @@ function visibilityReducer(state, action) {
           ...state,
           catalog: !state.catalog,
         };
-      case "addCatalog":
-        return {
-          ...state,
-          addCatalog: !state.addCatalog,
-        };
 
       default:
         return { ...state };

@@ -13,9 +13,15 @@ import Catalog from "./components/Catalog/Catalog";
 import AddCatalog from "./components/AddCatalog/AddCatalog";
 
 function App() {
-  const { isMobile, isVisible } = useContext(LayoutContext);
+  const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
 
   const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;
+
+  // Hide all windows when switching to mobile view
+  useEffect(() => {
+    dispatchIsVisible({ type: "home", mode: "switch" });
+  }, [isMobile]);
+
   return (
     <div className={classes}>
       <div
@@ -31,6 +37,7 @@ function App() {
       {isVisible.storage && <StorageList />}
       {isVisible.recipes && <RecipeList />}
       <Catalog />
+      <AddCatalog />
     </div>
   );
 }

@@ -4,15 +4,24 @@ const UserDataContext = createContext();
 
 export const UserDataProvider = ({ children }) => {
   const [catalog, setCatalog] = useState([
-    // {
-    //   id: 123,
-    //   name: "Jajka",
-    //   amount: 10,
-    //   group: 0,
-    //   unit: "szt.",
-    //   expiry: 14,
-    //   bookmark: false,
-    // },
+    {
+      id: 123,
+      name: "Jajka",
+      amount: 10,
+      group: 0,
+      unit: "szt.",
+      expiry: 14,
+      bookmark: false,
+    },
+    {
+      id: 124,
+      name: "Makaron",
+      amount: 100,
+      group: 0,
+      unit: "g",
+      expiry: 100,
+      bookmark: false,
+    },
   ]);
   const [tags, setTags] = useState(["świeże", "suche", "mrożone"]);
 

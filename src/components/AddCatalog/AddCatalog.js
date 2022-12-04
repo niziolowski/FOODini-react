@@ -304,11 +304,11 @@ function AddCatalog({ isActive, data, onClose }) {
               </Button>
             </div>
           </div>
+          <div className={styles.message}>
+            {form.message.length > 0 && <FiInfo />}
+            {form.message}
+          </div>
         </form>
-        <div className={styles.message}>
-          {form.message.length > 0 && <FiInfo />}
-          {form.message}
-        </div>
         <Button form="addCatalog" type="submit">
           Zapisz
         </Button>

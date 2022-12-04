@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FiPlus, FiStar, FiX } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout";
 import styles from "./Catalog.module.css";
@@ -12,11 +12,17 @@ function Catalog() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
   const { catalog } = useContext(UserDataContext);
   const isActive = isVisible.catalog;
+  const [catalogFiltered, setCatalogFiltered] = useState(catalog);
   const [isFormActive, setIsFormActive] = useState(false);
   const [formData, setFormData] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   function handleClose() {
     dispatchIsVisible({ type: "catalog", mode: "toggle" });
+  }
+
+  function handleChange(e) {
+    setSearchQuery(e.target.value);
   }
 
   function handleAddProduct() {
@@ -34,13 +40,24 @@ function Catalog() {
     setFormData(null);
   }
 
+  // Filter catalog with search query
+  useEffect(() => {
+    setCatalogFiltered(
+      catalog.filter((item) =>
+        item.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+      )
+    );
+  }, [catalog, searchQuery]);
+
   return (
     <>
-      <AddCatalog
-        isActive={isFormActive}
-        data={formData}
-        onClose={handleFormClose}
-      />
+      {isFormActive && (
+        <AddCatalog
+          isActive={isFormActive}
+          data={formData}
+          onClose={handleFormClose}
+        />
+      )}
 
       {isActive && (
         <div className={`${styles.catalog} ${isMobile ? styles.mobile : ""}`}>
@@ -55,7 +72,7 @@ function Catalog() {
               <Button onClick={handleAddProduct} round mini>
                 <FiPlus />
               </Button>
-              <SearchBar />
+              <SearchBar onChange={handleChange} />
             </div>
             <div className={styles["table-wrapper"]}>
               <table className={styles.table}>
@@ -74,7 +91,7 @@ function Catalog() {
                     <th></th>
                     <th></th>
                   </tr>
-                  {catalog.map((item) => (
+                  {catalogFiltered.map((item) => (
                     <CatalogItem
                       onEdit={handleEditProduct}
                       key={item.id}

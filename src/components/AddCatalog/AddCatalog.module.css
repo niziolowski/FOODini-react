@@ -22,6 +22,7 @@
 }
 
 .form {
+  position: relative;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -32,6 +33,7 @@
   column-gap: 20px;
   row-gap: 15px;
   max-width: max-content;
+  padding-bottom: 40px;
 }
 
 .row-1 {
@@ -94,6 +96,8 @@
 }
 
 .message {
+  position: absolute;
+  bottom: 0;
   display: flex;
   align-items: center;
   column-gap: 8px;
