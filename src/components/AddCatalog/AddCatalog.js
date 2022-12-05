@@ -239,7 +239,7 @@ function AddCatalog({ isActive, data, onClose }) {
                 type="text"
                 name="name"
                 maxLength={100}
-                autocomplete="off"
+                autoComplete="off"
                 placeholder="Jajka od Pana Stefana"
                 isValid={form.isNameValid}
                 autoFocus
@@ -265,7 +265,7 @@ function AddCatalog({ isActive, data, onClose }) {
                 type="number"
                 value={form.amount}
                 onChange={handleChange}
-                autocomplete="off"
+                autoComplete="off"
                 min={0}
                 isValid={form.isAmountValid}
               />

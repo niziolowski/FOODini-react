@@ -4,7 +4,7 @@
   font-size: 0.8rem;
   font-weight: 400;
   border: 1px solid var(--grey-color);
-  background-color: transparent;
+  background-color: var(--bg-color);
   border-radius: 5px;
   transition: var(--btn-transition);
   flex: 0 0 auto;
@@ -49,6 +49,7 @@
 button:disabled,
 button[disabled] {
   border: 1px solid var(--grey-color);
+  background-color: transparent;
   color: var(--grey-color);
   pointer-events: none;
 }
@@ -65,13 +66,13 @@ button[disabled] {
 }
 
 .round:hover {
-  filter: brightness(95%);
+  filter: brightness(97%);
   box-shadow: var(--shadow);
 }
 
 .round:active {
   border: var(--border);
-  filter: brightness(90%);
+  filter: brightness(95%);
   box-shadow: var(--shadow-inset);
 }
 
