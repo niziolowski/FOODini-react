@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import ReactDOM from "react-dom";
-import { FiSearch } from "react-icons/fi";
+import { FiEdit, FiSearch } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout";
 import StorageItem from "../StorageList/StorageItem/StorageItem";
 
@@ -26,6 +26,9 @@ function Spotlight({ data, onClose }) {
       {filteredData.map((item) => (
         <StorageItem key={item.id} item={item} />
       ))}
+      <li>
+        Stwórz nowy produkt <FiEdit />
+      </li>
     </ul>
   );
   const content = (

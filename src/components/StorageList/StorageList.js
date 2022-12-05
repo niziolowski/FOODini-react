@@ -9,7 +9,7 @@ import UserDataContext from "../../contexts/user-data";
 function StorageList() {
   const { isMobile } = useContext(LayoutContext);
   const { catalog } = useContext(UserDataContext);
-  const [isSpotlight, setIsSpotlight] = useState(true);
+  const [isSpotlight, setIsSpotlight] = useState(false);
   const testData = [
     {
       id: Math.floor(Math.random() * 9999),
