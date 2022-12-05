@@ -1,5 +1,5 @@
 import { FiStar, FiTrash } from "react-icons/fi";
-import Button from "../../UI/Button";
+import Button from "../../UI/Button/Button";
 import styles from "./RecipeItem.module.css";
 
 function RecipeItem() {
@@ -36,10 +36,10 @@ function RecipeItem() {
         </div>
       </div>
       <div className={styles.col}>
-        <Button round mini>
+        <Button round mini fillIcon active={false}>
           <FiStar />
         </Button>
-        <Button round mini>
+        <Button doubleAction round mini>
           <FiTrash />
         </Button>
       </div>

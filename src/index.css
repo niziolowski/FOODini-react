@@ -12,6 +12,7 @@
   --font-negative-color: #eee;
 
   /* UI static colors */
+  --success-color: rgb(162, 199, 103);
   --warning-orange-color: orange;
   --warning-red-color: orangered;
   --grey-color: #cccccc;
@@ -28,7 +29,7 @@
   --tag-1-color: #7ab4ff;
   --tag-2-color: #dd6b6b;
 
-  background-color: black;
+  background-color: white;
 }
 
 /* § RESET DEFAULT CSS */

@@ -8,7 +8,7 @@ import {
   FiShoppingBag,
 } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout.js";
-import Button from "./../UI/Button.js";
+import Button from "./../UI/Button/Button.js";
 import styles from "./Nav.module.css";
 
 /**

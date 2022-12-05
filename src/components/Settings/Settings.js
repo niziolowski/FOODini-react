@@ -2,7 +2,7 @@ import { useContext } from "react";
 import LayoutContext from "../../contexts/layout";
 import ReactDOM from "react-dom";
 import styles from "./Settings.module.css";
-import Button from "../UI/Button";
+import Button from "../UI/Button/Button";
 import { FiX } from "react-icons/fi";
 
 function Settings() {
@@ -32,7 +32,7 @@ function Settings() {
           )}
         </header>
         <div className={styles.content}>
-          <Button onClick={handleCatalog} disabled={isMobile}>
+          <Button onClick={handleCatalog} primary disabled={isMobile}>
             Katalog produktów
           </Button>
         </div>

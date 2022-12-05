@@ -1,12 +1,12 @@
 import styles from "./Meal.module.css";
-import Button from "../../../UI/Button";
+import Button from "../../../UI/Button/Button";
 import { FiTrash } from "react-icons/fi";
 
 function Meal({ title }) {
   return (
     <li className={styles.meal}>
       <div>{title}</div>
-      <Button round mini>
+      <Button doubleAction round mini>
         <FiTrash />
       </Button>
     </li>

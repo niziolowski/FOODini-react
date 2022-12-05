@@ -1,0 +1,121 @@
+.button {
+  height: 40px;
+  padding: 0 15px;
+  font-size: 0.8rem;
+  font-weight: 400;
+  border: 1px solid var(--grey-color);
+  background-color: transparent;
+  border-radius: 5px;
+  transition: var(--btn-transition);
+  flex: 0 0 auto;
+}
+
+.button:hover {
+  filter: brightness(110%);
+  box-shadow: var(--shadow);
+}
+
+.button:active {
+  box-shadow: var(--shadow-inset);
+  filter: brightness(90%);
+}
+
+.primary {
+  background-color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+}
+
+.success {
+  background-color: var(--success-color);
+  border: 1px solid var(--success-color);
+  color: var(--success-color);
+}
+
+.warning {
+  background-color: var(--warning-red-color);
+  border: 1px solid var(--warning-red-color);
+  color: var(--warning-red-color);
+}
+
+.warning.round {
+  color: var(--font-negative-color);
+}
+
+.outline {
+  background-color: var(--bg-color);
+}
+
+button:disabled,
+button[disabled] {
+  border: 1px solid var(--grey-color);
+  color: var(--grey-color);
+  pointer-events: none;
+}
+
+.round {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  color: var(--accent-color);
+}
+
+.round:hover {
+  filter: brightness(95%);
+  box-shadow: var(--shadow);
+}
+
+.round:active {
+  border: var(--border);
+  filter: brightness(90%);
+  box-shadow: var(--shadow-inset);
+}
+
+.round svg {
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+  transition: var(--btn-transition);
+}
+
+.round:hover svg {
+  scale: 1.1;
+}
+
+.round:active svg {
+  scale: 1;
+}
+
+.round.mini {
+  width: 35px;
+  height: 35px;
+}
+
+.round.mini svg {
+  min-width: 20px;
+  height: 20px;
+}
+
+.font-white {
+  color: var(--font-negative-color);
+}
+
+.fill-icon {
+  color: var(--grey-color);
+}
+
+.fill-icon.active {
+  color: var(--accent-color);
+}
+
+.fill-icon svg {
+  fill: var(--grey-color);
+}
+
+.fill-icon.active svg {
+  fill: var(--accent-color);
+}

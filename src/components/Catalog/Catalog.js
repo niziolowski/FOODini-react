@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { FiPlus, FiStar, FiX } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout";
 import styles from "./Catalog.module.css";
-import Button from "../UI/Button";
+import Button from "../UI/Button/Button";
 import SearchBar from "../UI/SearchBar/SearchBar";
 import CatalogItem from "./CatalogItem/CatalogItem";
 import UserDataContext from "../../contexts/user-data";

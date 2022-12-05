@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { FiEdit, FiStar, FiTrash } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
 import UserDataContext from "../../../contexts/user-data";
-import Button from "../../UI/Button";
+import Button from "../../UI/Button/Button";
 import styles from "./CatalogItem.module.css";
 
 function CatalogItem({ item, onEdit }) {

@@ -1,5 +1,5 @@
 import styles from "./ShoppingList.module.css";
-import Button from "../UI/Button";
+import Button from "../UI/Button/Button";
 import { FiPlus, FiX } from "react-icons/fi";
 import { useRef, useContext } from "react";
 import LayoutContext from "../../contexts/layout";
@@ -65,7 +65,7 @@ function ShoppingList() {
           <button className={styles["btn-add"]}>
             <FiPlus /> Dodaj
           </button>
-          <Button className={styles["btn-submit"]} fill={isMobile}>
+          <Button className={styles["btn-submit"]} primary>
             Przenieś zakupy do spiżarni
           </Button>
         </ul>

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { FiInfo, FiX } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
 import LayoutContext from "../../contexts/layout";
-import Button from "../UI/Button";
+import Button from "../UI/Button/Button";
 import styles from "./AddCatalog.module.css";
 import Input from "../UI/Input/Input";
 import Select from "../UI/Select/Select";
@@ -309,7 +309,7 @@ function AddCatalog({ isActive, data, onClose }) {
             {form.message}
           </div>
         </form>
-        <Button form="addCatalog" type="submit">
+        <Button form="addCatalog" type="submit" primary={form.isValid}>
           Zapisz
         </Button>
       </div>

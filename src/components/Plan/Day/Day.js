@@ -1,5 +1,5 @@
 import styles from "./Day.module.css";
-import Button from "../../UI/Button";
+import Button from "../../UI/Button/Button";
 import { FiPlus } from "react-icons/fi";
 import { useContext } from "react";
 import LayoutContext from "../../../contexts/layout";
@@ -9,7 +9,7 @@ function Day({ title }) {
   const { isMobile } = useContext(LayoutContext);
 
   const btnAdd = (
-    <Button round mini fill>
+    <Button primary round mini>
       <FiPlus />
     </Button>
   );

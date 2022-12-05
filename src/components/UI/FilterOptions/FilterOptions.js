@@ -1,6 +1,6 @@
 import styles from "./FilterOptions.module.css";
 import { FiSearch, FiMaximize2, FiPlus, FiStar } from "react-icons/fi";
-import Button from "../Button";
+import Button from "../Button/Button";
 import Spotlight from "../../Spotlight/Spotlight";
 import { useState } from "react";
 
@@ -24,7 +24,7 @@ function FilterOptions({ onAddItem }) {
         <select>
           <option>ważność</option>
         </select>
-        <Button round mini>
+        <Button round mini fillIcon active={false}>
           <FiStar />
         </Button>
       </div>

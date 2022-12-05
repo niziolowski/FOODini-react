@@ -11,7 +11,7 @@ import {
 import React, { Fragment, useContext, useState } from "react";
 import ReactDOM from "react-dom";
 import NavMobileBar from "./NavMobileBar";
-import Button from "../UI/Button";
+import Button from "../UI/Button/Button";
 import LayoutContext from "../../contexts/layout";
 
 function NavMobile() {
