@@ -5,14 +5,11 @@ import styles from "./Select.module.css";
  * @param {Array} Options
  * @returns A dropdown menu with passed options
  */
-function Select({ options, name, value, onChange }) {
+function Select({ className, options, ...rest }) {
+  const classes = `${className} ${styles.select}`;
+
   return (
-    <select
-      name={name}
-      value={value}
-      className={styles.select}
-      onChange={onChange}
-    >
+    <select className={classes} {...rest}>
       {options.map((option) => (
         <option key={option}>{option}</option>
       ))}

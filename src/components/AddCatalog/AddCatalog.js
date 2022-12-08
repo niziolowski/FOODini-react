@@ -156,7 +156,7 @@ function AddCatalog({ isActive, data, onClose }) {
     setInitialRender(false);
   };
 
-  // when user clicks on form, change initialRender state, if already true, validate form
+  // when user clicks on form, change initialRender state
   const handleParentClick = () => {
     setInitialRender(false);
   };
@@ -166,6 +166,7 @@ function AddCatalog({ isActive, data, onClose }) {
     if (!initialRender) dispatchForm({ type: "VALIDATE_FORM" });
   }, [initialRender, form.isNameValid, form.isAmountValid, form.isExpiryValid]);
 
+  // If there is data prop, fill the form (edit mode)
   useEffect(() => {
     if (initialRender && data) {
       dispatchForm({ type: "FILL_FORM", data: data });
@@ -298,7 +299,7 @@ function AddCatalog({ isActive, data, onClose }) {
                 type="button"
                 round
                 mini
-                warning={!isExpiry}
+                primary={!isExpiry}
               >
                 <TbInfinity />
               </Button>
