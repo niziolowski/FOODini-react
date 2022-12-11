@@ -3,10 +3,10 @@ import { TbInfinity } from "react-icons/tb";
 import Button from "../../UI/Button/Button";
 import styles from "./StorageItem.module.css";
 
-function StorageItem({ item }) {
+function StorageItem({ item, ...rest }) {
   // Gets tag index
   return (
-    <li className={styles["storage-item"]}>
+    <li {...rest} className={styles["storage-item"]}>
       <Button round mini fillIcon active={item.bookmark}>
         <FiStar />
       </Button>

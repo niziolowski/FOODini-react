@@ -42,6 +42,33 @@
   overflow-y: scroll;
 }
 
+.suggestion-list > li {
+  background-color: var(--bg-color);
+  cursor: pointer;
+}
+
+.suggestion-list > li:hover {
+  filter: brightness(95%);
+}
+
+.suggestion-list > li.hover {
+  filter: brightness(95%);
+}
+
+.btn-add {
+  padding: 15px;
+  font-style: italic;
+  color: var(--accent-color);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+
+.btn-add svg {
+  font-size: 1rem;
+}
+
 /* § MOBILE */
 
 .spotlight.mobile {

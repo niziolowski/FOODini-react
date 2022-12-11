@@ -84,7 +84,7 @@ const validateField = (state, field) => {
 const formReducer = (state, action) => {
   switch (action.type) {
     case "FILL_FORM":
-      return { ...state, ...action.data };
+      return { ...initialState, ...action.data };
     case "UPDATE_FIELD":
       return { ...state, [action.field]: action.value };
 
@@ -112,10 +112,10 @@ function AddCatalog({ isActive, data, onClose }) {
   // A state that prevents the validation before user action
   const [initialRender, setInitialRender] = useState(true);
 
-  function handleClose(e) {
+  function handleClose(newProduct) {
     setInitialRender(true);
     dispatchForm({ type: "RESET_FORM" });
-    onClose();
+    onClose(newProduct);
   }
 
   // handle BTN no expiry
@@ -175,42 +175,32 @@ function AddCatalog({ isActive, data, onClose }) {
   // handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(e);
 
     dispatchForm({ type: "VALIDATE_FORM" });
 
+    // Define the newly added product
+    let newProduct;
+
     if (form.isValid) {
-      // Edit mode
+      newProduct = {
+        id: data?.id || Math.floor(Math.random() * 9999),
+        name: form.name,
+        amount: form.amount,
+        group: form.tag,
+        unit: form.unit,
+        expiry: form.expiry,
+        bookmark: form?.bookmark || false,
+      };
 
-      if (data) {
-        const updatedProduct = {
-          id: data.id,
-          name: form.name,
-          amount: form.amount,
-          group: form.tag,
-          unit: form.unit,
-          expiry: form.expiry,
-          bookmark: false,
-        };
-
-        editProduct(updatedProduct);
-      } else {
-        // Create mode
-        const newProduct = {
-          id: Math.floor(Math.random() * 9999),
-          name: form.name,
-          amount: form.amount,
-          group: form.tag,
-          unit: form.unit,
-          expiry: form.expiry,
-          bookmark: false,
-        };
-
-        addProduct(newProduct);
-      }
-
-      // close the form
-      handleClose();
+      // Edit mode (we can pass data but if there is ID passed it's going to edit)
+      if (data.id) editProduct(newProduct);
+      // Create mode
+      if (!data.id) addProduct(newProduct);
     }
+
+    // close the form and pass the data
+    handleClose(newProduct);
   };
 
   const root = document.getElementById("modal");

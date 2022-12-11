@@ -30,10 +30,15 @@ export const UserDataProvider = ({ children }) => {
     setCatalog((current) => [...current, newProduct]);
   };
 
+  const getProductByID = (id) => {
+    return catalog.find((item) => item.id === id);
+  };
+
   const editProduct = (updatedProduct) => {
     const index = catalog.indexOf(
       catalog.find((item) => item.id === updatedProduct.id)
     );
+    if (index === -1) return; //! Display error
 
     setCatalog((current) => {
       current.splice(index, 1, updatedProduct);
@@ -55,6 +60,7 @@ export const UserDataProvider = ({ children }) => {
         addProduct,
         editProduct,
         deleteProduct,
+        getProductByID,
         catalog,
         tags,
       }}
