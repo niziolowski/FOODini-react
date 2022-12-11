@@ -6,6 +6,7 @@
   flex: 1;
   height: var(--mobile-nav-bar-size);
   border: none;
+  border-top: var(--border);
   background-color: #fff;
   color: var(--grey-color);
   font-size: 24px;

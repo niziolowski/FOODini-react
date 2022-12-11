@@ -1,5 +1,7 @@
 import { FiStar, FiTrash } from "react-icons/fi";
+import BarIndicator from "../../UI/BarIndicator/BarIndicator";
 import Button from "../../UI/Button/Button";
+import DifficultyIndicator from "../../UI/DifficultyIndicator/DifficultyIndicator";
 import styles from "./RecipeItem.module.css";
 
 function RecipeItem() {
@@ -17,22 +19,8 @@ function RecipeItem() {
       <div className={styles.col}>
         <div className={styles.title}> Stek panie, jaki dobry</div>
         <div className={styles.info}>
-          <div className={styles.difficulty}>
-            <p>Trudność</p>
-            <div className={styles.indicator}>
-              <FiStar className={styles.fill} />
-              <FiStar />
-              <FiStar />
-              <FiStar />
-              <FiStar />
-            </div>
-          </div>
-          <div className={styles.ingredients}>
-            <p>Składniki</p>
-            <div className={styles.indicator}>
-              <div className={styles["indicator-bar"]}></div>
-            </div>
-          </div>
+          <DifficultyIndicator value={2} />
+          <BarIndicator label="Składniki" value={30} />
         </div>
       </div>
       <div className={styles.col}>

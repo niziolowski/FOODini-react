@@ -10,6 +10,7 @@ const visibilityInitialState = {
   sidebar: false,
   catalog: false,
   addCatalog: false,
+  recipeView: false,
 };
 
 /**
@@ -38,6 +39,11 @@ function visibilityReducer(state, action) {
         return {
           ...state,
           catalog: !state.catalog,
+        };
+      case "recipe-view":
+        return {
+          ...state,
+          recipePreview: !state.recipePreview,
         };
 
       default:

@@ -3,6 +3,7 @@ import { createContext, useState } from "react";
 const UserDataContext = createContext();
 
 export const UserDataProvider = ({ children }) => {
+  // § PRODUCT CATALOG
   const [catalog, setCatalog] = useState([
     {
       id: 123,
@@ -25,7 +26,6 @@ export const UserDataProvider = ({ children }) => {
   ]);
   const [tags, setTags] = useState(["świeże", "suche", "mrożone"]);
 
-  // § PRODUCT CATALOG
   const addProduct = (newProduct) => {
     setCatalog((current) => [...current, newProduct]);
   };
@@ -54,6 +54,27 @@ export const UserDataProvider = ({ children }) => {
     });
   };
 
+  // § RECIPES
+  const [recipes, setRecipes] = useState([
+    {
+      id: 123,
+      title: "Jajecznica",
+    },
+  ]);
+
+  const editRecipe = (updatedRecipe) => {
+    const index = recipes.indexOf(
+      recipes.find((item) => item.id === updatedRecipe.id)
+    );
+    if (index === -1) return; //! Display error
+
+    setRecipes((current) => {
+      current.splice(index, 1, updatedRecipe);
+
+      return [...current];
+    });
+  };
+
   return (
     <UserDataContext.Provider
       value={{
@@ -63,6 +84,8 @@ export const UserDataProvider = ({ children }) => {
         getProductByID,
         catalog,
         tags,
+        recipes,
+        editRecipe,
       }}
     >
       {children}

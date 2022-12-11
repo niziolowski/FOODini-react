@@ -53,68 +53,15 @@
 .recipe-item .col:nth-child(2) {
   flex: 1;
   padding: 10px;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   justify-content: space-between;
   color: var(--font-color);
 }
 
 .info {
-  font-size: 0.6rem;
   display: flex;
   column-gap: 15px;
   justify-content: space-around;
-}
-
-/* Difficulty level */
-.difficulty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  row-gap: 3px;
-}
-
-.difficulty .indicator {
-  display: flex;
-  justify-content: center;
-  column-gap: 3px;
-  color: transparent;
-}
-
-.difficulty .indicator svg {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  fill: var(--grey-color);
-  width: 15px;
-  height: 15px;
-}
-
-.difficulty .indicator svg.fill {
-  fill: var(--accent-color);
-  width: 15px;
-  height: 15px;
-}
-
-.ingredients {
-  width: 85px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  row-gap: 6px;
-}
-
-.ingredients .indicator {
-  width: 100%;
-  height: 6px;
-  border-radius: 3px;
-  overflow: hidden;
-  background-color: var(--grey-color);
-}
-
-.ingredients .indicator-bar {
-  width: 50%;
-  height: 100%;
-  background-color: var(--tag-3-color);
 }
 
 @media (max-width: 340px) {

@@ -1,0 +1,28 @@
+.tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  height: 30px;
+  padding: 5px 15px;
+  border-radius: 15px;
+}
+
+.tag span {
+  filter: brightness(40%);
+}
+
+.color-0 {
+  background-color: var(--tag-0-color);
+  color: var(--tag-0-color);
+}
+
+.color-1 {
+  background-color: var(--tag-1-color);
+  color: var(--tag-1-color);
+}
+
+.color-2 {
+  background-color: var(--tag-2-color);
+  color: var(--tag-2-color);
+}

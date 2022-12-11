@@ -1,5 +1,6 @@
 import { FiStar, FiTrash } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
+import BarIndicator from "../../UI/BarIndicator/BarIndicator";
 import Button from "../../UI/Button/Button";
 import styles from "./StorageItem.module.css";
 
@@ -13,18 +14,11 @@ function StorageItem({ item, ...rest }) {
       <div className={styles.title}>{item.name}</div>
       <div className={styles.amount}>{item.amount}</div>
       <div className={styles.unit}>{item.unit}</div>
-      <div className={styles.expiry}>
-        <div className={styles["expiry-days-left"]}>
-          {item.expiry === Infinity ? <TbInfinity /> : item.expiry}
-        </div>
-        {item.expiry !== Infinity && (
-          <>
-            <div className={styles["expiry-indicator"]}>
-              <div className={styles["expiry-indicator__bar"]}></div>
-            </div>
-          </>
-        )}
-      </div>
+      <BarIndicator
+        label={item.expiry === Infinity ? <TbInfinity /> : `${item.expiry} dni`}
+        value={30}
+        small
+      />
       <Button doubleAction round mini>
         <FiTrash />
       </Button>
