@@ -9,6 +9,7 @@
   translate: -100%;
   border-right: var(--border);
   transition: var(--transition);
+  overflow: hidden;
 }
 
 .sidebar.active {
@@ -20,6 +21,7 @@
   display: flex;
   /* border-bottom: 1px solid var(--grey-color); */
   height: 55px;
+  flex: 0 0 auto;
 }
 
 .tab {

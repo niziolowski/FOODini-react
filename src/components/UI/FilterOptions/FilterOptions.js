@@ -4,11 +4,11 @@ import Button from "../Button/Button";
 import Spotlight from "../../Spotlight/Spotlight";
 import { useState } from "react";
 
-function FilterOptions({ onAddItem }) {
+function FilterOptions({ onAddRecipe }) {
   return (
     <section className={styles.options}>
       <div className={styles.row}>
-        <Button onClick={onAddItem} round mini>
+        <Button onClick={onAddRecipe} round mini>
           <FiPlus />
         </Button>
         <div className={styles["search-bar"]}>

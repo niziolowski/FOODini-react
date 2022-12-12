@@ -30,7 +30,6 @@
   justify-content: stretch;
   bottom: 0;
   width: 100%;
-  border-top: 1px solid var(--grey-color);
   background-color: var(--bg-color);
   overflow: hidden;
   border-radius: 0 0 10px 10px;

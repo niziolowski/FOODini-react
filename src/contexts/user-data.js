@@ -24,7 +24,8 @@ export const UserDataProvider = ({ children }) => {
       bookmark: false,
     },
   ]);
-  const [tags, setTags] = useState(["świeże", "suche", "mrożone"]);
+  const [tagsIng, setTagsIng] = useState(["świeże", "suche", "mrożone"]);
+  const [tagsRec, setTagsRec] = useState(["śniadanie", "obiad", "przekąska"]);
 
   const addProduct = (newProduct) => {
     setCatalog((current) => [...current, newProduct]);
@@ -83,7 +84,8 @@ export const UserDataProvider = ({ children }) => {
         deleteProduct,
         getProductByID,
         catalog,
-        tags,
+        tagsIng,
+        tagsRec,
         recipes,
         editRecipe,
       }}

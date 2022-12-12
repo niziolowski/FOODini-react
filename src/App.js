@@ -10,7 +10,6 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import StorageList from "./components/StorageList/StorageList";
 import RecipeList from "./components/RecipeList/RecipeList";
 import Catalog from "./components/Catalog/Catalog";
-import RecipeView from "./components/RecipeView/RecipeView";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
@@ -37,7 +36,6 @@ function App() {
       {isVisible.storage && <StorageList />}
       {isVisible.recipes && <RecipeList />}
       <Catalog />
-      <RecipeView />
     </div>
   );
 }

@@ -43,7 +43,7 @@ function visibilityReducer(state, action) {
       case "recipe-view":
         return {
           ...state,
-          recipePreview: !state.recipePreview,
+          recipeView: !state.recipeView,
         };
 
       default:
