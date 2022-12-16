@@ -15,7 +15,6 @@
 .grid {
   position: relative;
   width: 100%;
-  height: 100%;
   display: grid;
   grid-template-columns: 275px 1fr;
   gap: 20px;
@@ -59,7 +58,7 @@
 
 .header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   column-gap: 20px;
 }
 
@@ -71,7 +70,7 @@
   height: fit-content;
   font-weight: 200;
   color: var(--accent-color);
-  margin: 0 0 10px 0;
+  margin: 0 20px 10px 20px;
 }
 
 .ingredient-list {
@@ -179,6 +178,11 @@
     top: 0;
     right: 0;
     margin: 10px;
+  }
+
+  .title {
+    flex: 0;
+    font-size: 1.5rem;
   }
 
   .instructions {
