@@ -8,6 +8,7 @@ import BarIndicator from "../UI/BarIndicator/BarIndicator";
 import Button from "../UI/Button/Button";
 import DifficultyIndicator from "../UI/DifficultyIndicator/DifficultyIndicator";
 import Tag from "../UI/Tag/Tag";
+import RecipeForm from "../RecipeForm/RecipeForm";
 
 function RecipeView({ data, onClose }) {
   const { isMobile } = useContext(LayoutContext);
@@ -82,6 +83,7 @@ function RecipeView({ data, onClose }) {
           </section>
         </div>
       </div>
+      <RecipeForm isActive={false} />
     </>
   );
 
