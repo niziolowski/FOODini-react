@@ -10,6 +10,7 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import StorageList from "./components/StorageList/StorageList";
 import RecipeList from "./components/RecipeList/RecipeList";
 import Catalog from "./components/Catalog/Catalog";
+import LoginPage from "./components/LoginPage/LoginPage";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
@@ -20,24 +21,31 @@ function App() {
   useEffect(() => {
     dispatchIsVisible({ type: "home", mode: "switch" });
   }, [isMobile]);
+  if (true) {
+    return <LoginPage></LoginPage>;
+  } else {
+    return (
+      <div className="wrapper">
+        <div className={classes}>
+          <div
+            className={`${styles.wrapper} ${
+              isVisible.sidebar ? styles.shift : ""
+            }`}
+          >
+            {!isMobile ? <Nav /> : <NavMobile />}
 
-  return (
-    <div className={classes}>
-      <div
-        className={`${styles.wrapper} ${isVisible.sidebar ? styles.shift : ""}`}
-      >
-        {!isMobile ? <Nav /> : <NavMobile />}
-
-        <Plan />
+            <Plan />
+          </div>
+          <ShoppingList />
+          <Settings />
+          <Sidebar />
+          {isVisible.storage && <StorageList />}
+          {isVisible.recipes && <RecipeList />}
+          <Catalog />
+        </div>
       </div>
-      <ShoppingList />
-      <Settings />
-      <Sidebar />
-      {isVisible.storage && <StorageList />}
-      {isVisible.recipes && <RecipeList />}
-      <Catalog />
-    </div>
-  );
+    );
+  }
 }
 
 export default App;

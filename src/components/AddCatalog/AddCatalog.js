@@ -105,12 +105,13 @@ const formReducer = (state, action) => {
 
 function AddCatalog({ isActive, data, onClose }) {
   const { isMobile } = useContext(LayoutContext);
-  const { tags, addProduct, editProduct } = useContext(UserDataContext);
+  const { tagsIng, addProduct, editProduct } = useContext(UserDataContext);
   const [isExpiry, setIsExpiry] = useState(true);
   const [form, dispatchForm] = useReducer(formReducer, initialState);
 
   // A state that prevents the validation before user action
   const [initialRender, setInitialRender] = useState(true);
+  const root = document.getElementById("modal");
 
   function handleClose(newProduct) {
     setInitialRender(true);
@@ -203,8 +204,6 @@ function AddCatalog({ isActive, data, onClose }) {
     handleClose(newProduct);
   };
 
-  const root = document.getElementById("modal");
-
   const content = (
     <>
       {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
@@ -241,7 +240,7 @@ function AddCatalog({ isActive, data, onClose }) {
             <div className={styles.col}>
               <label>Grupa</label>
               <Select
-                options={tags}
+                options={tagsIng}
                 name="tag"
                 onChange={handleChange}
                 value={form.tag}

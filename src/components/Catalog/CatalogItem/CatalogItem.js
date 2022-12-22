@@ -6,7 +6,7 @@ import Button from "../../UI/Button/Button";
 import styles from "./CatalogItem.module.css";
 
 function CatalogItem({ item, onEdit }) {
-  const { tags, deleteProduct, editProduct } = useContext(UserDataContext);
+  const { tagsIng, deleteProduct, editProduct } = useContext(UserDataContext);
   function handleEdit() {
     onEdit(item);
   }
@@ -44,7 +44,7 @@ function CatalogItem({ item, onEdit }) {
             backgroundColor: `var(--tag-${item.group}-color)`,
           }}
         >
-          {tags[item.group]}
+          {tagsIng[item.group]}
         </div>
       </td>
       <td>{item.expiry === 0 ? <TbInfinity /> : `${item.expiry} dni`}</td>

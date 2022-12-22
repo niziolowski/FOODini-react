@@ -9,9 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <LayoutProvider>
     <UserDataProvider>
-      <div className="wrapper">
-        <App />
-      </div>
+      <App />
     </UserDataProvider>
   </LayoutProvider>
 );

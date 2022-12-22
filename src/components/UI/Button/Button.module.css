@@ -5,7 +5,7 @@
   font-weight: 400;
   border: 1px solid var(--grey-color);
   background-color: var(--bg-color);
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   transition: var(--btn-transition);
   flex: 0 0 auto;
 }
