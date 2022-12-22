@@ -23,7 +23,7 @@
 .app.mobile {
   padding-bottom: var(--mobile-nav-bar-size);
   border-radius: 10px;
-
+  height: 100%;
   /*? This is a fix for safari. The overflow: hidden property doesn't work for children elements but if we add z-index, it works. MAGIC! */
   z-index: 0;
 }

@@ -21,7 +21,16 @@ function App() {
   useEffect(() => {
     dispatchIsVisible({ type: "home", mode: "switch" });
   }, [isMobile, dispatchIsVisible]);
-  if (true) {
+
+  // This is to prevent weird elastic scrolling on iOS
+  useEffect(() => {
+    window.addEventListener("scroll", (e) => {
+      e.preventDefault();
+      window.scrollTo(0, 0);
+    });
+  }, []);
+
+  if (false) {
     return <LoginPage></LoginPage>;
   } else {
     return (

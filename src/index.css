@@ -63,6 +63,7 @@ body {
   /* This is for mobile devices, to disable scrolling effect that shifts the entire app */
   position: fixed;
   background-color: black;
+  height: 100%;
 }
 
 h1 {
@@ -81,7 +82,7 @@ h2 {
 
 #root {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
 }
@@ -118,7 +119,7 @@ h2 {
 .wrapper {
   position: absolute;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
 }
 
 @media (min-width: 1800px) {

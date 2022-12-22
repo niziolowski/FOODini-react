@@ -7,14 +7,13 @@
 }
 
 .list {
-  /* height: 100%; */
   overflow-y: scroll;
 }
 
 .recipe-list.mobile {
   position: absolute;
   width: 100%;
-  height: calc(100vh - var(--mobile-nav-bar-size));
+  height: calc(100% - var(--mobile-nav-bar-size));
   top: 0;
   left: 0;
   background-color: var(--bg-color);
