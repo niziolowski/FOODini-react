@@ -1,8 +1,6 @@
 import styles from "./FilterOptions.module.css";
 import { FiSearch, FiMaximize2, FiPlus, FiStar } from "react-icons/fi";
 import Button from "../Button/Button";
-import Spotlight from "../../Spotlight/Spotlight";
-import { useState } from "react";
 
 function FilterOptions({ onAddRecipe }) {
   return (

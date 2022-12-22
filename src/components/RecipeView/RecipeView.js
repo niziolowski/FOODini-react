@@ -39,7 +39,10 @@ function RecipeView({ data, onClose }) {
       <div className={`${styles.content} ${isMobile && styles.mobile}`}>
         <div className={styles.grid}>
           <section className={styles.summary}>
-            <img src="https://na-talerzu.pl/wp-content/uploads/2021/05/Kulki-mocy-z-kokosem-5177.jpg" />
+            <img
+              src="https://na-talerzu.pl/wp-content/uploads/2021/05/Kulki-mocy-z-kokosem-5177.jpg"
+              alt="recipe"
+            />
             <Tag className={styles.tag} tag={data.tag}>
               {tagsRec[data.tag]}
             </Tag>
