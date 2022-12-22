@@ -22,7 +22,7 @@ function App() {
     dispatchIsVisible({ type: "home", mode: "switch" });
   }, [isMobile, dispatchIsVisible]);
 
-  // This is to prevent weird elastic scrolling on iOS
+  // This is to prevent weird scrolling animation on iOS
   useEffect(() => {
     window.addEventListener("scroll", (e) => {
       e.preventDefault();
@@ -30,7 +30,7 @@ function App() {
     });
   }, []);
 
-  if (false) {
+  if (true) {
     return <LoginPage></LoginPage>;
   } else {
     return (
