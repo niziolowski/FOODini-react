@@ -24,8 +24,8 @@ export const UserDataProvider = ({ children }) => {
       bookmark: false,
     },
   ]);
-  const [tagsIng, setTagsIng] = useState(["świeże", "suche", "mrożone"]);
-  const [tagsRec, setTagsRec] = useState(["śniadanie", "obiad", "przekąska"]);
+  const [tagsIng] = useState(["świeże", "suche", "mrożone"]);
+  const [tagsRec] = useState(["śniadanie", "obiad", "przekąska"]);
 
   const addProduct = (newProduct) => {
     setCatalog((current) => [...current, newProduct]);
