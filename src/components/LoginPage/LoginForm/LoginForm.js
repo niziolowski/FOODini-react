@@ -6,6 +6,8 @@ import styles from "./LoginForm.module.css";
 import lemonSliceImage from "../../../assets/images/lemon-slice.png";
 import lemonSkinImage from "../../../assets/images/lemon-skin.png";
 import { FiInfo } from "react-icons/fi";
+import AuthContext from "../../../contexts/auth";
+import Spinner from "../../UI/Spinner/Spinner";
 
 const initialState = {
   name: "",
@@ -19,6 +21,7 @@ const initialState = {
 };
 
 function LoginForm() {
+  const { signUp, loading, error } = useContext(AuthContext);
   const { isMobile } = useContext(LayoutContext);
   // Switch between 'sign in' and 'sign up' form
   const [isLogging, setIsLogging] = useState(true);
@@ -114,6 +117,10 @@ function LoginForm() {
       case "RESET_FORM":
         return { ...initialState };
 
+      case "SET_MESSAGE":
+        console.log(action.message);
+        return { ...state, message: action.message };
+
       default:
         break;
     }
@@ -133,10 +140,14 @@ function LoginForm() {
     });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    // dispatchForm({ type: "VALIDATE_FORM" });
-    console.log(form.isValid);
+    if (!form.isValid) return;
+    if (isLogging) {
+      //
+    } else {
+      signUp(form.name, form.email, form.password);
+    }
   }
 
   // Start validating form after first interaction
@@ -144,6 +155,12 @@ function LoginForm() {
     setInitialRender(false);
   }
 
+  // Update form message when error occurs
+  useEffect(() => {
+    dispatchForm({ type: "SET_MESSAGE", message: error });
+  }, [error]);
+
+  // Form validation on input
   useEffect(() => {
     if (!initialRender) dispatchForm({ type: "VALIDATE_FORM" });
   }, [
@@ -151,8 +168,19 @@ function LoginForm() {
     form.nameIsValid,
     form.emailIsValid,
     form.passwordIsValid,
-    isLogging,
   ]);
+
+  const btnSubmit = (
+    <>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <Button type="submit" primary>
+          {isLogging ? "Zaloguj" : "Stwórz konto"}
+        </Button>
+      )}
+    </>
+  );
 
   const formSection = (
     <form
@@ -201,9 +229,7 @@ function LoginForm() {
             <FiInfo /> {form.message}
           </div>
         )}
-        <Button type="submit" primary>
-          {isLogging ? "Zaloguj" : "Stwórz konto"}
-        </Button>
+        {btnSubmit}
       </div>
     </form>
   );
