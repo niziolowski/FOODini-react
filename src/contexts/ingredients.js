@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 import AuthContext from "./auth";
 
 const IngredientsContext = createContext();
@@ -10,7 +10,7 @@ export const IngredientsContextProvider = ({ children }) => {
   const { token } = useContext(AuthContext);
   const [ingredients, setIngredients] = useState([]);
 
-  const fetchIngredients = async () => {
+  const fetchIngredients = useCallback(async () => {
     console.log("ingredients fetching...");
     const res = await fetch(URL_INGREDIENTS, {
       method: "GET",
@@ -21,7 +21,7 @@ export const IngredientsContextProvider = ({ children }) => {
 
     const data = await res.json();
     setIngredients(data);
-  };
+  }, [token]);
 
   const value = {
     ingredients,

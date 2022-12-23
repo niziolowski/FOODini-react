@@ -43,7 +43,7 @@ function StorageList() {
 
   useEffect(() => {
     fetchIngredients();
-  }, []);
+  }, [fetchIngredients]);
 
   return (
     <div

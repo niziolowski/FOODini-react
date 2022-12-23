@@ -3,15 +3,12 @@ import { createContext, useState } from "react";
 const URL_SIGNUP = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/auth/signup";
 const URL_LOGIN = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/auth/login";
 
-const AuthContext = createContext({
-  token: null,
-  login: (email, password) => {},
-  logout: () => {},
-  signUp: (name, email, password) => {},
-});
+const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [token, setToken] = useState(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -33,11 +30,13 @@ export const AuthContextProvider = ({ children }) => {
       setLoading(false);
 
       if (res.ok) {
-        const token = await res.json();
+        const data = await res.json();
         setError(null);
-        setToken(token.authToken);
+        setToken(data.authToken);
         setIsLoggedIn(true);
-        return token;
+        setName(data.userInfo.name);
+        setEmail(data.userInfo.email);
+        return data;
       }
 
       if (!res.ok) {
@@ -66,15 +65,16 @@ export const AuthContextProvider = ({ children }) => {
         },
         body: JSON.stringify(body),
       });
-
       setLoading(false);
 
       if (res.ok) {
-        const token = await res.json();
+        const data = await res.json();
         setError(null);
-        setToken(token.authToken);
+        setToken(data.authToken);
+        setName(data.userInfo.name);
+        setEmail(data.userInfo.email);
         setIsLoggedIn(true);
-        return token;
+        return data;
       }
 
       if (!res.ok) {
@@ -90,12 +90,22 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setToken(null);
+    setName("");
+    setEmail("");
+  };
+
   const value = {
+    name,
+    email,
     token,
     loading,
     error,
     isLoggedIn,
     login: handleLogin,
+    logout: handleLogout,
     signUp: handleSignUp,
   };
 

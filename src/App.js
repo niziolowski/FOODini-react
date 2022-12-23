@@ -36,7 +36,6 @@ function App() {
   // Fix IOS safari viewport size when keyboard shows up. Child must be 'relative' positioned
   useEffect(() => {
     if (window.visualViewport) {
-      console.log(window.visualViewport.height);
       function resizeHandler() {
         const target = document.getElementById("root");
         target.style.height = window.visualViewport.height.toString() + "px";
