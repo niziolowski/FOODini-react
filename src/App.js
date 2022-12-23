@@ -12,6 +12,8 @@ import RecipeList from "./components/RecipeList/RecipeList";
 import Catalog from "./components/Catalog/Catalog";
 import LoginPage from "./components/LoginPage/LoginPage";
 import AuthContext from "./contexts/auth";
+import { IngredientsContextProvider } from "./contexts/ingredients";
+import IngredientsContext from "./contexts/ingredients";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
@@ -49,10 +51,12 @@ function App() {
           </div>
           <ShoppingList />
           <Settings />
-          <Sidebar />
-          {isVisible.storage && <StorageList />}
+          <IngredientsContextProvider>
+            <Sidebar />
+            {isVisible.storage && <StorageList />}
+            <Catalog />
+          </IngredientsContextProvider>
           {isVisible.recipes && <RecipeList />}
-          <Catalog />
         </div>
       </div>
     );

@@ -35,7 +35,7 @@ export const AuthContextProvider = ({ children }) => {
       if (res.ok) {
         const token = await res.json();
         setError(null);
-        setToken(token);
+        setToken(token.authToken);
         setIsLoggedIn(true);
         return token;
       }
@@ -72,7 +72,7 @@ export const AuthContextProvider = ({ children }) => {
       if (res.ok) {
         const token = await res.json();
         setError(null);
-        setToken(token);
+        setToken(token.authToken);
         setIsLoggedIn(true);
         return token;
       }
@@ -90,7 +90,7 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
-  const memoedValue = {
+  const value = {
     token,
     loading,
     error,
@@ -99,9 +99,7 @@ export const AuthContextProvider = ({ children }) => {
     signUp: handleSignUp,
   };
 
-  return (
-    <AuthContext.Provider value={memoedValue}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export default AuthContext;
