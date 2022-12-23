@@ -15,6 +15,7 @@ function Button({
   active,
   doubleAction,
   onClick,
+  wide,
   ...rest
 }) {
   // classnames library way of binding the styles module
@@ -28,6 +29,7 @@ function Button({
     round,
     mini,
     active,
+    wide,
     "fill-icon": fillIcon,
     "font-white": (primary || success || warning) && !outline,
   });

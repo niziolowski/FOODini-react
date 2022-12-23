@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   FiChevronLeft,
   FiChevronRight,
@@ -8,6 +8,7 @@ import {
   FiShoppingBag,
 } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout.js";
+import Profile from "../Profile/Profile.js";
 import Button from "./../UI/Button/Button.js";
 import styles from "./Nav.module.css";
 
@@ -16,13 +17,14 @@ import styles from "./Nav.module.css";
  */
 function Nav() {
   const { dispatchIsVisible } = useContext(LayoutContext);
+  const [isProfileVisible, setIsProfileVisible] = useState(false);
   function handleClick(e) {
     const btn = e.target.closest("button");
 
-    // Settings
-    if (btn.classList.contains("js-btn-settings")) {
-      dispatchIsVisible({ type: "settings", mode: "toggle" });
-    }
+    // // Settings
+    // if (btn.classList.contains("js-btn-settings")) {
+    //   dispatchIsVisible({ type: "settings", mode: "toggle" });
+    // }
 
     // Sidebar
     if (btn.classList.contains("js-btn-sidebar")) {
@@ -30,15 +32,26 @@ function Nav() {
     }
   }
 
+  const handleToggleProfile = () => {
+    setIsProfileVisible((current) => !current);
+  };
+
   return (
     <nav className={styles.nav}>
       <div className={styles.actions}>
         <Button className="js-btn-sidebar" onClick={handleClick} round>
           <FiSidebar />
         </Button>
-        <Button className="js-btn-settings" onClick={handleClick} round>
-          <FiSettings />
-        </Button>
+        <div className={styles.profile}>
+          <Button
+            className="js-btn-settings"
+            onClick={handleToggleProfile}
+            round
+          >
+            <FiSettings />
+          </Button>
+          {isProfileVisible && <Profile onClose={handleToggleProfile} />}
+        </div>
       </div>
       <div className={styles.title}>
         <h1>PLAN POSIŁKÓW</h1>

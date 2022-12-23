@@ -7,6 +7,7 @@ import { UserDataProvider } from "./contexts/user-data";
 import { AuthContextProvider } from "./contexts/auth";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <AuthContextProvider>
     <LayoutProvider>
