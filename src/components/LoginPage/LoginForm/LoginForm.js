@@ -1,4 +1,4 @@
-import { useContext, useEffect, useReducer, useState } from "react";
+import { useContext, useEffect, useReducer, useRef, useState } from "react";
 import LayoutContext from "../../../contexts/layout";
 import Button from "../../UI/Button/Button";
 import Input from "../../UI/Input/Input";
@@ -8,6 +8,7 @@ import lemonSkinImage from "../../../assets/images/lemon-skin.png";
 import { FiInfo } from "react-icons/fi";
 import AuthContext from "../../../contexts/auth";
 import Spinner from "../../UI/Spinner/Spinner";
+import { animate } from "../../../utils/animate.js";
 
 const initialState = {
   name: "",
@@ -21,12 +22,13 @@ const initialState = {
 };
 
 function LoginForm() {
-  const { signUp, loading, error } = useContext(AuthContext);
+  const { signUp, login, loading, error } = useContext(AuthContext);
   const { isMobile } = useContext(LayoutContext);
   // Switch between 'sign in' and 'sign up' form
   const [isLogging, setIsLogging] = useState(true);
   const [initialRender, setInitialRender] = useState(true);
   const [form, dispatchForm] = useReducer(formReducer, initialState);
+  const panelEl = useRef();
 
   function handleToggleForm() {
     setIsLogging((current) => !current);
@@ -118,7 +120,6 @@ function LoginForm() {
         return { ...initialState };
 
       case "SET_MESSAGE":
-        console.log(action.message);
         return { ...state, message: action.message };
 
       default:
@@ -142,12 +143,14 @@ function LoginForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!form.isValid) return;
+    if (!form.isValid) return animate(panelEl.current, "shake");
+    let data;
     if (isLogging) {
-      //
+      data = await login(form.email, form.password);
     } else {
-      signUp(form.name, form.email, form.password);
+      data = await signUp(form.name, form.email, form.password);
     }
+    if (!data) return animate(panelEl.current, "shake");
   }
 
   // Start validating form after first interaction
@@ -218,6 +221,8 @@ function LoginForm() {
         <Input
           type="password"
           name="password"
+          autoComplete="current-password"
+          id="current-password"
           onChange={handleChange}
           value={form.password}
           isValid={form.passwordIsValid}
@@ -256,7 +261,10 @@ function LoginForm() {
   );
 
   return (
-    <div className={`${styles.content} ${isMobile && styles.mobile}`}>
+    <div
+      ref={panelEl}
+      className={`${styles.content} ${isMobile && styles.mobile}`}
+    >
       {formSection}
       {footer}
       {!isMobile && (

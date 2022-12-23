@@ -11,9 +11,11 @@ import StorageList from "./components/StorageList/StorageList";
 import RecipeList from "./components/RecipeList/RecipeList";
 import Catalog from "./components/Catalog/Catalog";
 import LoginPage from "./components/LoginPage/LoginPage";
+import AuthContext from "./contexts/auth";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
+  const { isLoggedIn } = useContext(AuthContext);
 
   const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;
 
@@ -30,7 +32,7 @@ function App() {
     });
   }, []);
 
-  if (true) {
+  if (!isLoggedIn) {
     return <LoginPage></LoginPage>;
   } else {
     return (
