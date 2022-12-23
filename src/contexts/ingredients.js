@@ -11,6 +11,7 @@ export const IngredientsContextProvider = ({ children }) => {
   const [ingredients, setIngredients] = useState([]);
 
   const fetchIngredients = async () => {
+    console.log("ingredients fetching...");
     const res = await fetch(URL_INGREDIENTS, {
       method: "GET",
       headers: {

@@ -151,6 +151,7 @@
   bottom: 0;
   left: 0;
   translate: -40% 20%;
+  pointer-events: none;
   -webkit-filter: drop-shadow(
       -0.3px 0.3px 0.5px hsl(var(--shadow-color) / 0.36)
     )
@@ -168,6 +169,7 @@
   top: 0;
   right: 0;
   translate: 40% -40%;
+  pointer-events: none;
 }
 
 /* ----------------------------------------------

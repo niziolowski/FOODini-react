@@ -1,5 +1,6 @@
 import styles from "./Button.module.css";
 import classNames from "classnames/bind";
+import { animate } from "../../../utils/animate";
 
 function Button({
   children,
@@ -37,9 +38,18 @@ function Button({
     if (btn.classList.contains(styles.warning)) return onClick(e);
 
     btn.classList.add(styles.warning);
-    setTimeout(() => {
+    animate(btn, "vibrate");
+    // setTimeout(() => {
+    //   btn.classList.remove(styles.warning);
+    //   btn.classList.remove("vibrate");
+    // }, 1000);
+    const stop = () => {
       btn.classList.remove(styles.warning);
-    }, 1000);
+      btn.classList.remove("vibrate");
+      btn.removeEventListener("mouseleave", stop);
+    };
+
+    btn.addEventListener("mouseleave", stop);
   };
 
   return (
