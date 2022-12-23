@@ -13,6 +13,16 @@ export const AuthContextProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const saveToken = (token) => {
+    setToken(token);
+    localStorage.setItem("authToken", token);
+  };
+
+  const removeToken = () => {
+    setToken(null);
+    localStorage.removeItem("authToken");
+  };
+
   const handleSignUp = async (name, email, password) => {
     try {
       setLoading(true);
@@ -32,7 +42,7 @@ export const AuthContextProvider = ({ children }) => {
       if (res.ok) {
         const data = await res.json();
         setError(null);
-        setToken(data.authToken);
+        saveToken(data.authToken);
         setIsLoggedIn(true);
         setName(data.userInfo.name);
         setEmail(data.userInfo.email);
@@ -70,7 +80,7 @@ export const AuthContextProvider = ({ children }) => {
       if (res.ok) {
         const data = await res.json();
         setError(null);
-        setToken(data.authToken);
+        saveToken(data.authToken);
         setName(data.userInfo.name);
         setEmail(data.userInfo.email);
         setIsLoggedIn(true);
@@ -92,7 +102,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setToken(null);
+    removeToken();
     setName("");
     setEmail("");
   };

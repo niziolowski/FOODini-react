@@ -6,7 +6,6 @@ import Button from "../../UI/Button/Button";
 import styles from "./CatalogItem.module.css";
 
 function CatalogItem({ item, onEdit }) {
-  console.log(item);
   const { tagsIng, deleteProduct, editProduct } = useContext(UserDataContext);
   function handleEdit() {
     onEdit(item);
