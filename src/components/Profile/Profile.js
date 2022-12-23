@@ -1,15 +1,23 @@
 import { useContext, useEffect, useRef } from "react";
 import { FiSettings } from "react-icons/fi";
 import AuthContext from "../../contexts/auth";
+import LayoutContext from "../../contexts/layout";
 import Button from "../UI/Button/Button";
 import styles from "./Profile.module.css";
 
 function Profile({ onClose }) {
   const { name, email, logout } = useContext(AuthContext);
+  const { dispatchIsVisible } = useContext(LayoutContext);
   const panelEl = useRef();
 
   const handleLogout = () => {
     logout();
+  };
+
+  // * Catalog should be called 'templates'
+  const handleCatalog = () => {
+    dispatchIsVisible({ type: "catalog", mode: "toggle" });
+    onClose();
   };
 
   // Close panel when on mouseleave
@@ -26,10 +34,13 @@ function Profile({ onClose }) {
         <h1>{name}</h1>
         <p>{email}</p>
       </div>
-      <Button primary wide>
+      <Button primary wide outline>
         Wygląd
       </Button>
-      <Button onClick={handleLogout} primary outline wide>
+      <Button onClick={handleCatalog} primary wide outline>
+        Szablony produktów
+      </Button>
+      <Button onClick={handleLogout} primary wide>
         Wyloguj się
       </Button>
     </div>
