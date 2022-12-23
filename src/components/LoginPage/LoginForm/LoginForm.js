@@ -276,11 +276,7 @@ function LoginForm() {
           />
           <div className={styles["lemon-slice"]}>
             <div className={styles["lemon-slice-shadow"]}></div>
-            <img
-              className={styles["rotate-center"]}
-              src={lemonSliceImage}
-              alt="lemon-slice"
-            />
+            <img className="rotate" src={lemonSliceImage} alt="lemon-slice" />
           </div>
         </>
       )}
