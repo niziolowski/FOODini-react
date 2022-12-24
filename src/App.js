@@ -11,9 +11,12 @@ import StorageList from "./components/StorageList/StorageList";
 import RecipeList from "./components/RecipeList/RecipeList";
 import Catalog from "./components/Catalog/Catalog";
 import LoginPage from "./components/LoginPage/LoginPage";
+import AuthContext from "./contexts/auth";
+import { IngredientsContextProvider } from "./contexts/ingredients";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
+  const { isLoggedIn } = useContext(AuthContext);
 
   const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;
 
@@ -21,7 +24,28 @@ function App() {
   useEffect(() => {
     dispatchIsVisible({ type: "home", mode: "switch" });
   }, [isMobile, dispatchIsVisible]);
-  if (true) {
+
+  // This is to prevent weird scrolling animation on iOS. Not ideal, can flicker sometimes
+  useEffect(() => {
+    window.addEventListener("scroll", (e) => {
+      e.preventDefault();
+      window.scrollTo(0, 0);
+    });
+  }, []);
+
+  // Fix IOS safari viewport size when keyboard shows up. Child must be 'relative' positioned
+  useEffect(() => {
+    if (window.visualViewport) {
+      function resizeHandler() {
+        const target = document.getElementById("root");
+        target.style.height = window.visualViewport.height.toString() + "px";
+      }
+
+      window.visualViewport.addEventListener("resize", resizeHandler);
+    }
+  }, []);
+
+  if (!isLoggedIn) {
     return <LoginPage></LoginPage>;
   } else {
     return (
@@ -38,10 +62,12 @@ function App() {
           </div>
           <ShoppingList />
           <Settings />
-          <Sidebar />
-          {isVisible.storage && <StorageList />}
+          <IngredientsContextProvider>
+            <Sidebar />
+            {isVisible.storage && <StorageList />}
+            <Catalog />
+          </IngredientsContextProvider>
           {isVisible.recipes && <RecipeList />}
-          <Catalog />
         </div>
       </div>
     );

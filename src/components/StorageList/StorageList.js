@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import LayoutContext from "../../contexts/layout";
 import styles from "./StorageList.module.css";
 import StorageItem from "./StorageItem/StorageItem";
@@ -6,33 +6,20 @@ import FilterOptions from "../UI/FilterOptions/FilterOptions";
 import Spotlight from "../Spotlight/Spotlight";
 import UserDataContext from "../../contexts/user-data";
 import AddCatalog from "../AddCatalog/AddCatalog";
+import IngredientsContext from "../../contexts/ingredients";
 
 function StorageList() {
   const { isMobile } = useContext(LayoutContext);
+  const { ingredients } = useContext(IngredientsContext);
   const { catalog, getProductByID } = useContext(UserDataContext);
   const [isSpotlight, setIsSpotlight] = useState(false);
   const [isAddCatalog, setIsAddCatalog] = useState(false);
   const [addCatalogData, setAddCatalogData] = useState({});
-  const testData = [
-    {
-      id: Math.floor(Math.random() * 9999),
-      name: "Jajka",
-      amount: 10,
-      group: 1,
-      unit: "szt.",
-      expiry: 10,
-      bookmark: false,
-    },
-    {
-      id: Math.floor(Math.random() * 9999),
-      name: "Makaron",
-      amount: 10,
-      group: 2,
-      unit: "szt.",
-      expiry: Infinity,
-      bookmark: true,
-    },
-  ];
+
+  // Filter out storage ingredients
+  const filteredIngredients = ingredients.filter(
+    (ing) => ing.type === "storage"
+  );
 
   const toggleSpotlight = () => {
     setIsSpotlight(!isSpotlight);
@@ -81,9 +68,11 @@ function StorageList() {
       )}
       {}
       <FilterOptions onAddItem={toggleSpotlight} />
-      {testData.map((item) => (
-        <StorageItem key={item.id} item={item}></StorageItem>
-      ))}
+      <ul className={styles.list}>
+        {filteredIngredients.map((item) => (
+          <StorageItem key={item.id} item={item}></StorageItem>
+        ))}
+      </ul>
     </div>
   );
 }

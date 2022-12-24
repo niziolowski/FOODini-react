@@ -11,6 +11,12 @@
   justify-content: flex-end;
 }
 
+.profile {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
 .title {
   text-align: center;
   align-self: center;

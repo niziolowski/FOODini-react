@@ -63,6 +63,7 @@ body {
   /* This is for mobile devices, to disable scrolling effect that shifts the entire app */
   position: fixed;
   background-color: black;
+  height: 100%;
 }
 
 h1 {
@@ -81,7 +82,7 @@ h2 {
 
 #root {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
 }
@@ -118,7 +119,7 @@ h2 {
 .wrapper {
   position: absolute;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
 }
 
 @media (min-width: 1800px) {
@@ -140,5 +141,130 @@ h2 {
     border-bottom-right-radius: 0;
     overflow: hidden;
     /* z-index: 0; */
+  }
+}
+
+/* § ANIMATIONS */
+.spin {
+  animation: spin 2s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+  50% {
+    transform: rotate(900deg);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  100% {
+    transform: rotate(1800deg);
+  }
+}
+
+.pulsate {
+  animation: pulsate 0.5s ease-in-out infinite;
+}
+
+@keyframes pulsate {
+  0% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  50% {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+.shake {
+  animation: shake 0.8s cubic-bezier(0.455, 0.03, 0.515, 0.955) both;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70% {
+    -webkit-transform: translateX(-10px);
+    transform: translateX(-10px);
+  }
+  20%,
+  40%,
+  60% {
+    -webkit-transform: translateX(10px);
+    transform: translateX(10px);
+  }
+  80% {
+    -webkit-transform: translateX(8px);
+    transform: translateX(8px);
+  }
+  90% {
+    -webkit-transform: translateX(-8px);
+    transform: translateX(-8px);
+  }
+}
+
+.vibrate {
+  animation: vibrate 0.3s linear infinite both;
+}
+
+@keyframes vibrate {
+  0% {
+    -webkit-transform: translate(0);
+    transform: translate(0);
+  }
+  20% {
+    -webkit-transform: translate(-2px, 2px);
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    -webkit-transform: translate(-2px, -2px);
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    -webkit-transform: translate(2px, 2px);
+    transform: translate(2px, 2px);
+  }
+  80% {
+    -webkit-transform: translate(2px, -2px);
+    transform: translate(2px, -2px);
+  }
+  100% {
+    -webkit-transform: translate(0);
+    transform: translate(0);
+  }
+}
+
+.rotate {
+  -webkit-animation: rotate 10s cubic-bezier(0.68, -0.55, 0.265, 1.55) 2s both
+    infinite;
+  animation: rotate 10s cubic-bezier(0.68, -0.55, 0.265, 1.55) 2s both infinite;
+}
+
+@keyframes rotate {
+  0% {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+
+  80% {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }

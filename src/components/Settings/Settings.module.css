@@ -1,4 +1,6 @@
 .settings {
+  justify-self: center;
+  align-self: center;
   background-color: var(--bg-color);
   border: 1px solid var(--hover-color);
   border-radius: var(--border-radius);

@@ -5,18 +5,19 @@ import styles from "./Catalog.module.css";
 import Button from "../UI/Button/Button";
 import SearchBar from "../UI/SearchBar/SearchBar";
 import CatalogItem from "./CatalogItem/CatalogItem";
-import UserDataContext from "../../contexts/user-data";
 import AddCatalog from "../AddCatalog/AddCatalog";
+import IngredientsContext from "../../contexts/ingredients";
 
 function Catalog() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
-  const { catalog } = useContext(UserDataContext);
   const isActive = isVisible.catalog;
-  const [catalogFiltered, setCatalogFiltered] = useState(catalog);
   const [isFormActive, setIsFormActive] = useState(false);
   const [formData, setFormData] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isFavorites, setIsFavorites] = useState(false);
+  const { ingredients } = useContext(IngredientsContext);
+
+  const [ingredientsFiltered, setIngredientsFiltered] = useState(ingredients);
 
   function handleClose() {
     dispatchIsVisible({ type: "catalog", mode: "toggle" });
@@ -44,9 +45,11 @@ function Catalog() {
     setIsFavorites(!isFavorites);
   }
 
-  // Filter catalog with search query
+  // Filter ingredients with search query, type and bookmark
   useEffect(() => {
-    let filtered = catalog.filter((item) =>
+    let filtered = ingredients.filter((item) => item.type === "template");
+
+    filtered = filtered.filter((item) =>
       item.name.toLowerCase().startsWith(searchQuery.toLowerCase())
     );
 
@@ -54,8 +57,8 @@ function Catalog() {
       filtered = filtered.filter((item) => item.bookmark);
     }
 
-    setCatalogFiltered(filtered);
-  }, [catalog, searchQuery, isFavorites]);
+    setIngredientsFiltered(filtered);
+  }, [ingredients, searchQuery, isFavorites]);
 
   return (
     <>
@@ -105,7 +108,7 @@ function Catalog() {
                     <th></th>
                     <th></th>
                   </tr>
-                  {catalogFiltered.map((item) => (
+                  {ingredientsFiltered.map((item) => (
                     <CatalogItem
                       onEdit={handleEditProduct}
                       key={item.id}

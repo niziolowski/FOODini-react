@@ -36,16 +36,6 @@ function RecipeList() {
       bookmark: true,
       tag: 1,
     },
-    {
-      id: 124,
-      title: "Jajecznica",
-      difficulty: 2,
-      ingredients: [{ name: "Jajka", amount: "4", unit: "szt" }],
-      instructions: "afasdfwofn;asdf",
-      spices: ["Sól", "Pieprz"],
-      bookmark: false,
-      tag: 0,
-    },
   ];
 
   return (
