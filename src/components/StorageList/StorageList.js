@@ -10,11 +10,16 @@ import IngredientsContext from "../../contexts/ingredients";
 
 function StorageList() {
   const { isMobile } = useContext(LayoutContext);
-  const { ingredients, fetchIngredients } = useContext(IngredientsContext);
+  const { ingredients } = useContext(IngredientsContext);
   const { catalog, getProductByID } = useContext(UserDataContext);
   const [isSpotlight, setIsSpotlight] = useState(false);
   const [isAddCatalog, setIsAddCatalog] = useState(false);
   const [addCatalogData, setAddCatalogData] = useState({});
+
+  // Filter out storage ingredients
+  const filteredIngredients = ingredients.filter(
+    (ing) => ing.type === "storage"
+  );
 
   const toggleSpotlight = () => {
     setIsSpotlight(!isSpotlight);
@@ -41,10 +46,6 @@ function StorageList() {
     console.log(product);
   };
 
-  useEffect(() => {
-    fetchIngredients();
-  }, [fetchIngredients]);
-
   return (
     <div
       className={`${styles["storage-list"]} ${isMobile ? styles.mobile : ""}`}
@@ -68,7 +69,7 @@ function StorageList() {
       {}
       <FilterOptions onAddItem={toggleSpotlight} />
       <ul className={styles.list}>
-        {ingredients.map((item) => (
+        {filteredIngredients.map((item) => (
           <StorageItem key={item.id} item={item}></StorageItem>
         ))}
       </ul>

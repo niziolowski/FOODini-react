@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 const URL_SIGNUP = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/auth/signup";
 const URL_LOGIN = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/auth/login";
@@ -118,6 +118,14 @@ export const AuthContextProvider = ({ children }) => {
     logout: handleLogout,
     signUp: handleSignUp,
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setToken(token);
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

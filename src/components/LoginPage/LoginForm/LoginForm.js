@@ -1,4 +1,4 @@
-import { useContext, useEffect, useReducer, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import LayoutContext from "../../../contexts/layout";
 import Button from "../../UI/Button/Button";
 import Input from "../../UI/Input/Input";
@@ -9,176 +9,72 @@ import { FiInfo } from "react-icons/fi";
 import AuthContext from "../../../contexts/auth";
 import Spinner from "../../UI/Spinner/Spinner";
 import { animate } from "../../../utils/animate.js";
-
-const initialState = {
-  name: "",
-  nameIsValid: true,
-  email: "",
-  emailIsValid: true,
-  password: "",
-  passwordIsValid: true,
-  isValid: false,
-  message: "",
-};
+import { useForm } from "react-hook-form";
 
 function LoginForm() {
-  const { signUp, login, loading, error } = useContext(AuthContext);
   const { isMobile } = useContext(LayoutContext);
+  const { signUp, login, loading, error } = useContext(AuthContext);
+
   // Switch between 'sign in' and 'sign up' form
   const [isLogging, setIsLogging] = useState(true);
-  const [initialRender, setInitialRender] = useState(true);
-  const [form, dispatchForm] = useReducer(formReducer, initialState);
+  // Reference for triggering animation
   const panelEl = useRef();
+  // Error message from validation or server
+  const [message, setMessage] = useState(null);
 
+  // react-hook-form Hook for form handling
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm();
+
+  // Update error message on validation
+  useEffect(() => {
+    if (errors.name?.type === "minLength")
+      return setMessage("Imię powinno być dłuższe");
+    if (errors.name?.type === "required")
+      return setMessage(errors.name.message);
+    if (errors.email) return setMessage(errors.email.message);
+    if (errors.password?.type === "minLength")
+      return setMessage("Hasło musi mieć minimum 6 znaków");
+    if (errors.password?.type === "required") return setMessage("Podaj hasło");
+
+    return setMessage(null);
+  }, [errors.email, errors.password, errors.name]);
+
+  // Function is called by useForm handleSubmit
+  const onSubmit = async (data) => {
+    // Data is passed by useForm
+    let response;
+    if (isLogging) {
+      response = await login(data.email, data.password);
+    } else {
+      response = await signUp(data.name, data.email, data.password);
+    }
+    if (!response) animate(panelEl.current, "shake");
+  };
+
+  // Update message on server error
+  useEffect(() => setMessage(error), [error]);
+
+  // When submitting with invalid values, show animation
+  const handleInvalidSubmit = () => {
+    if (!isValid) animate(panelEl.current, "shake");
+  };
+
+  // Toggle form between login and signUp
   function handleToggleForm() {
     setIsLogging((current) => !current);
-    setInitialRender(true);
-    dispatchForm({ type: "RESET_FORM" });
+    setMessage(null);
   }
-
-  function validateField(state, field) {
-    const value = state[field];
-
-    switch (field) {
-      case "name":
-        if (value.trim().length < 2)
-          return {
-            nameIsValid: false,
-            message: "Podaj poprawne imię",
-          };
-        else
-          return {
-            nameIsValid: true,
-            message: "",
-          };
-
-      case "email":
-        // e-mail format validator stolen from the web
-        // eslint-disable-next-line
-        if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value))
-          return {
-            emailIsValid: false,
-            message: "Podaj poprawny adres e-mail",
-          };
-        else
-          return {
-            emailIsValid: true,
-            message: "",
-          };
-
-      case "password":
-        if (value.length < 6)
-          return {
-            passwordIsValid: false,
-            message: "Hasło powinno mieć minimum 6 znaków",
-          };
-        else
-          return {
-            passwordIsValid: true,
-            message: "",
-          };
-
-      default:
-        break;
-    }
-  }
-
-  function validateForm(state) {
-    let isValid = false;
-    const emailResults = validateField(state, "email");
-    const passwordResults = validateField(state, "password");
-
-    // Validate name if creating a new account
-    if (!isLogging) {
-      const nameResults = validateField(state, "name");
-      if (!nameResults.nameIsValid) return { isValid, ...nameResults };
-    }
-
-    if (!emailResults.emailIsValid) return { isValid, ...emailResults };
-    if (!passwordResults.passwordIsValid)
-      return { isValid, ...passwordResults };
-
-    return { isValid: true };
-  }
-
-  function formReducer(state, action) {
-    switch (action.type) {
-      case "UPDATE_FIELD":
-        return { ...state, [action.field]: action.value };
-
-      case "VALIDATE_FIELD": {
-        const results = validateField(state, action.field);
-        return { ...state, ...results };
-      }
-
-      case "VALIDATE_FORM": {
-        const results = validateForm(state);
-        return { ...state, ...results };
-      }
-
-      case "RESET_FORM":
-        return { ...initialState };
-
-      case "SET_MESSAGE":
-        return { ...state, message: action.message };
-
-      default:
-        break;
-    }
-  }
-
-  function handleChange(e) {
-    dispatchForm({
-      type: "UPDATE_FIELD",
-      field: e.target.name,
-      value: e.target.value,
-    });
-
-    dispatchForm({
-      type: "VALIDATE_FIELD",
-      field: e.target.name,
-      value: e.target.value,
-    });
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!form.isValid) return animate(panelEl.current, "shake");
-    let data;
-    if (isLogging) {
-      data = await login(form.email, form.password);
-    } else {
-      data = await signUp(form.name, form.email, form.password);
-    }
-    if (!data) return animate(panelEl.current, "shake");
-  }
-
-  // Start validating form after first interaction
-  function handleFirstClick() {
-    setInitialRender(false);
-  }
-
-  // Update form message when error occurs
-  useEffect(() => {
-    dispatchForm({ type: "SET_MESSAGE", message: error });
-  }, [error]);
-
-  // Form validation on input
-  useEffect(() => {
-    if (!initialRender) dispatchForm({ type: "VALIDATE_FORM" });
-  }, [
-    initialRender,
-    form.nameIsValid,
-    form.emailIsValid,
-    form.passwordIsValid,
-  ]);
 
   const btnSubmit = (
     <>
       {loading ? (
         <Spinner />
       ) : (
-        <Button type="submit" primary>
+        <Button onClick={handleInvalidSubmit} type="submit" primary>
           {isLogging ? "Zaloguj" : "Stwórz konto"}
         </Button>
       )}
@@ -186,22 +82,17 @@ function LoginForm() {
   );
 
   const formSection = (
-    <form
-      onSubmit={handleSubmit}
-      onClick={handleFirstClick}
-      className={styles.form}
-    >
+    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <h1 className="noselect">Foodini</h1>
       {!isLogging && (
         <div className={styles.field}>
           <label>Imię</label>
           <Input
-            type=""
+            type="text"
             name="name"
             autoComplete="off"
-            onChange={handleChange}
-            value={form.name}
-            isValid={form.nameIsValid}
+            {...register("name", { required: "Podaj imię", minLength: 2 })}
+            isValid={!errors.name}
           />
         </div>
       )}
@@ -211,9 +102,14 @@ function LoginForm() {
           type="email"
           name="email"
           autoComplete="off"
-          onChange={handleChange}
-          value={form.email}
-          isValid={form.emailIsValid}
+          {...register("email", {
+            required: "Podaj adres e-mail",
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: "Podaj prawidłowy adres e-mail",
+            },
+          })}
+          isValid={!errors.email}
         />
       </div>
       <div className={styles.field}>
@@ -221,19 +117,22 @@ function LoginForm() {
         <Input
           type="password"
           name="password"
-          autoComplete="current-password"
-          id="current-password"
-          onChange={handleChange}
-          value={form.password}
-          isValid={form.passwordIsValid}
+          // autoComplete="current-password"
+          // id="current-password"
+          {...register("password", {
+            required: "Podaj hasło",
+            minLength: 6,
+          })}
+          isValid={!errors.password}
         />
       </div>
       <div className={`${styles.field} ${styles.actions} noselect`}>
-        {form.message && (
+        {message && (
           <div className={styles["form-message"]}>
-            <FiInfo /> {form.message}
+            <FiInfo /> {message}
           </div>
         )}
+
         {btnSubmit}
       </div>
     </form>
