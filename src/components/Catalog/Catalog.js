@@ -5,7 +5,7 @@ import styles from "./Catalog.module.css";
 import Button from "../UI/Button/Button";
 import SearchBar from "../UI/SearchBar/SearchBar";
 import CatalogItem from "./CatalogItem/CatalogItem";
-import AddCatalog from "../AddCatalogv2/AddCatalog";
+import AddCatalog from "../AddCatalog/AddCatalog";
 import IngredientsContext from "../../contexts/ingredients";
 
 function Catalog() {
