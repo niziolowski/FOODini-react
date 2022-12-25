@@ -8,6 +8,7 @@ import styles from "./AddCatalog.module.css";
 import Input from "../UI/Input/Input";
 import Select from "../UI/Select/Select";
 import UserDataContext from "../../contexts/user-data";
+import IngredientsContext from "../../contexts/ingredients";
 
 const initialState = {
   name: "",
@@ -105,9 +106,10 @@ const formReducer = (state, action) => {
 
 function AddCatalog({ isActive, data, onClose }) {
   const { isMobile } = useContext(LayoutContext);
-  const { tagsIng, addProduct, editProduct } = useContext(UserDataContext);
+  const { tagsIng } = useContext(UserDataContext);
   const [isExpiry, setIsExpiry] = useState(true);
   const [form, dispatchForm] = useReducer(formReducer, initialState);
+  const { addIngredient, editIngredient } = useContext(IngredientsContext);
 
   // A state that prevents the validation before user action
   const [initialRender, setInitialRender] = useState(true);
@@ -176,7 +178,6 @@ function AddCatalog({ isActive, data, onClose }) {
   // handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e);
 
     dispatchForm({ type: "VALIDATE_FORM" });
 
@@ -184,20 +185,32 @@ function AddCatalog({ isActive, data, onClose }) {
     let newProduct;
 
     if (form.isValid) {
+      console.log(form.tag);
+      const tag = tagsIng.indexOf(form.tag);
+      console.log(tag);
       newProduct = {
-        id: data?.id || Math.floor(Math.random() * 9999),
+        id: data?.id || null,
+        app_id: data?.app_id || Math.floor(Math.random() * 9999),
         name: form.name,
+        type: "template",
         amount: form.amount,
-        group: form.tag,
         unit: form.unit,
         expiry: form.expiry,
+        purchase_date: null,
+        tag: tag,
         bookmark: form?.bookmark || false,
+        created_at: null,
+        users_id: null, // ID is added in IngredientsContext
+        recipes_id: null,
       };
 
       // Edit mode (we can pass data but if there is ID passed it's going to edit)
-      if (data.id) editProduct(newProduct);
+
+      if (data?.id) {
+        editIngredient(newProduct);
+      }
       // Create mode
-      if (!data.id) addProduct(newProduct);
+      if (!data?.id) addIngredient(newProduct);
     }
 
     // close the form and pass the data

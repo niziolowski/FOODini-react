@@ -1,24 +1,26 @@
 import { useContext } from "react";
 import { FiEdit, FiStar, FiTrash } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
+import IngredientsContext from "../../../contexts/ingredients";
 import UserDataContext from "../../../contexts/user-data";
 import Button from "../../UI/Button/Button";
 import styles from "./CatalogItem.module.css";
 
 function CatalogItem({ item, onEdit }) {
-  const { tagsIng, deleteProduct, editProduct } = useContext(UserDataContext);
+  const { tagsIng } = useContext(UserDataContext);
+  const { editIngredient, removeIngredient } = useContext(IngredientsContext);
   function handleEdit() {
     onEdit(item);
   }
 
   function handleDelete(e) {
-    deleteProduct(item.id);
+    removeIngredient(item.id);
   }
 
   function handleBookmark() {
     const updatedProduct = { ...item, bookmark: !item.bookmark };
 
-    editProduct(updatedProduct);
+    editIngredient(updatedProduct);
   }
 
   return (

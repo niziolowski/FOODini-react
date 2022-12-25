@@ -1,28 +1,66 @@
 import { createContext, useState, useEffect } from "react";
-import { fetchIngredients, createIngredient } from "../apis/ingredients";
+import {
+  fetchIngredients,
+  createIngredient,
+  updateIngredient,
+  deleteIngredient,
+} from "../apis/ingredients";
 
 const IngredientsContext = createContext();
 
 export const IngredientsContextProvider = ({ children }) => {
   const [ingredients, setIngredients] = useState([]);
 
-  const testData = {
-    id: null,
-    app_id: 1,
-    name: "Jajka",
-    type: "storage",
-    amount: 10,
-    unit: "szt.",
-    expiry: 14,
-    purchase_date: new Date(),
-    tag: 0,
-    bookmark: false,
-    created_at: null,
-    users_id: null,
-    recipes_id: null,
+  const addIngredient = async (ing) => {
+    const { id } = JSON.parse(localStorage.getItem("user"));
+    try {
+      const updatedIng = { ...ing, users_id: id };
+      const res = await createIngredient(updatedIng);
+
+      if (res.status === 200) {
+        // Update State
+        setIngredients((current) => [...current, res.data]);
+      }
+    } catch (error) {
+      alert(error);
+    }
   };
 
-  createIngredient(testData);
+  const editIngredient = async (ing) => {
+    const { id } = JSON.parse(localStorage.getItem("user"));
+    try {
+      const updatedIng = { ...ing, users_id: id };
+      const res = await updateIngredient(updatedIng);
+
+      if (res.status === 200) {
+        // Update State
+        setIngredients((current) => {
+          const el = current.find((item) => item.id === ing.id);
+          const index = current.indexOf(el);
+          const updated = [...current];
+          updated.splice(index, 1, res.data);
+
+          return [...updated];
+        });
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const removeIngredient = async (id) => {
+    try {
+      const res = await deleteIngredient(id);
+      if (res.status === 200) {
+        // Update State
+        setIngredients((current) => [
+          ...current.filter((ing) => ing.id !== id),
+        ]);
+      }
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -36,6 +74,9 @@ export const IngredientsContextProvider = ({ children }) => {
   const value = {
     ingredients,
     fetchIngredients,
+    addIngredient,
+    editIngredient,
+    removeIngredient,
   };
 
   return (
