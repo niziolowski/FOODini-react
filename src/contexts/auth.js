@@ -54,6 +54,7 @@ export const AuthContextProvider = ({ children }) => {
         setError(null);
 
         const user = {
+          id: data.userInfo.id,
           name: data.userInfo.name,
           email: data.userInfo.email,
           token: data.authToken,
@@ -98,6 +99,7 @@ export const AuthContextProvider = ({ children }) => {
         setError(null);
 
         const user = {
+          id: data.userInfo.id,
           name: data.userInfo.name,
           email: data.userInfo.email,
           token: data.authToken,
