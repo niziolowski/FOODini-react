@@ -9,3 +9,5 @@ const axiosAuthorized = axios.create({
 });
 
 export const fetchIngredients = () => axiosAuthorized.get(baseURL);
+
+export const createIngredient = (ing) => axiosAuthorized.post(baseURL, ing);
