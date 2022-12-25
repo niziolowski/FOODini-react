@@ -10,9 +10,11 @@ const IngredientsContext = createContext();
 
 export const IngredientsContextProvider = ({ children }) => {
   const [ingredients, setIngredients] = useState([]);
+  const [tags] = useState(["świeże", "suche", "mrożone"]);
 
   const addIngredient = async (ing) => {
     const { id } = JSON.parse(localStorage.getItem("user"));
+
     try {
       const updatedIng = { ...ing, users_id: id };
       const res = await createIngredient(updatedIng);
@@ -28,6 +30,7 @@ export const IngredientsContextProvider = ({ children }) => {
 
   const editIngredient = async (ing) => {
     const { id } = JSON.parse(localStorage.getItem("user"));
+
     try {
       const updatedIng = { ...ing, users_id: id };
       const res = await updateIngredient(updatedIng);
@@ -66,12 +69,14 @@ export const IngredientsContextProvider = ({ children }) => {
     async function fetchData() {
       console.log("fetching ingredients..."); //*: dev only line
       const response = await fetchIngredients();
+
       setIngredients(response.data);
     }
     fetchData();
   }, []);
 
   const value = {
+    tags,
     ingredients,
     fetchIngredients,
     addIngredient,

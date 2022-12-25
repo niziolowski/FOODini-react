@@ -2,13 +2,12 @@ import { useContext } from "react";
 import { FiEdit, FiStar, FiTrash } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
 import IngredientsContext from "../../../contexts/ingredients";
-import UserDataContext from "../../../contexts/user-data";
 import Button from "../../UI/Button/Button";
 import styles from "./CatalogItem.module.css";
 
 function CatalogItem({ item, onEdit }) {
-  const { tagsIng } = useContext(UserDataContext);
-  const { editIngredient, removeIngredient } = useContext(IngredientsContext);
+  const { editIngredient, removeIngredient, tags } =
+    useContext(IngredientsContext);
   function handleEdit() {
     onEdit(item);
   }
@@ -46,7 +45,7 @@ function CatalogItem({ item, onEdit }) {
             backgroundColor: `var(--tag-${item.tag}-color)`,
           }}
         >
-          {tagsIng[item.tag]}
+          {tags[item.tag]}
         </div>
       </td>
       <td>{item.expiry === 0 ? <TbInfinity /> : `${item.expiry} dni`}</td>
