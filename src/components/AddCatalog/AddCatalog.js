@@ -207,7 +207,7 @@ function AddCatalog({ isActive, data, onClose }) {
   const content = (
     <>
       {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
-      <div className={styles["add-catalog"]}>
+      <div className={`${styles["add-catalog"]} ${isMobile && styles.mobile}`}>
         <header className={styles.header}>
           <h1>szablon produktu</h1>
           <Button onClick={handleClose} round>
