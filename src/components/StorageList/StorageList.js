@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import LayoutContext from "../../contexts/layout";
 import styles from "./StorageList.module.css";
 import StorageItem from "./StorageItem/StorageItem";
