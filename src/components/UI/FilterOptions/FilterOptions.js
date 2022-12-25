@@ -2,11 +2,11 @@ import styles from "./FilterOptions.module.css";
 import { FiSearch, FiMaximize2, FiPlus, FiStar } from "react-icons/fi";
 import Button from "../Button/Button";
 
-function FilterOptions({ onAddRecipe }) {
+function FilterOptions({ onAddItem }) {
   return (
     <section className={styles.options}>
       <div className={styles.row}>
-        <Button onClick={onAddRecipe} round mini>
+        <Button onClick={onAddItem} round mini>
           <FiPlus />
         </Button>
         <div className={styles["search-bar"]}>

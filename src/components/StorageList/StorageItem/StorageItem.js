@@ -1,14 +1,28 @@
+import { useContext } from "react";
 import { FiStar, FiTrash } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
+import IngredientsContext from "../../../contexts/ingredients";
 import BarIndicator from "../../UI/BarIndicator/BarIndicator";
 import Button from "../../UI/Button/Button";
 import styles from "./StorageItem.module.css";
 
 function StorageItem({ item, ...rest }) {
-  // Gets tag index
+  const { editIngredient } = useContext(IngredientsContext);
+
+  const handleBookmark = () => {
+    const updated = { ...item, bookmark: !item.bookmark };
+    editIngredient(updated);
+  };
+
   return (
     <li {...rest} className={styles["storage-item"]}>
-      <Button round mini fillIcon active={item.bookmark}>
+      <Button
+        onClick={handleBookmark}
+        round
+        mini
+        fillIcon
+        active={item.bookmark}
+      >
         <FiStar />
       </Button>
       <div className={styles.title}>{item.name}</div>
@@ -25,7 +39,7 @@ function StorageItem({ item, ...rest }) {
       <div
         className={styles.tag}
         style={{
-          backgroundColor: `var(--tag-${item.group}-color)`,
+          backgroundColor: `var(--tag-${item.tag}-color)`,
         }}
       ></div>
     </li>
