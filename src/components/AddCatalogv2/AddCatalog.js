@@ -1,4 +1,4 @@
-import { useContext, useState, useReducer, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { FiInfo, FiX } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
