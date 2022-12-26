@@ -10,7 +10,6 @@ import Select from "../UI/Select/Select";
 import UserDataContext from "../../contexts/user-data";
 import IngredientsContext from "../../contexts/ingredients";
 import { useForm } from "react-hook-form";
-import { v4 as uuid } from "uuid";
 
 // data gets passed in and out from other places to quickly create a new template
 function AddCatalog({ isActive, isEditing, data, onClose }) {
@@ -35,17 +34,17 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
   function onSubmit(form) {
     console.log("submit");
     const tag = tags.indexOf(form.tag);
-    const id = uuid();
+
     // Create new Ingredient object
     const newProduct = {
       id: isEditing ? data?.id : null,
-      app_id: isEditing ? data?.app_id : id,
+      app_id: isEditing ? data?.app_id : null,
       name: form.name,
       type: "template",
       amount: form.amount,
       unit: form.unit,
       expiry: form.expiry,
-      purchase_date: null,
+      purchase_date: new Date(),
       tag: tag,
       bookmark: form?.bookmark || false,
       created_at: null,

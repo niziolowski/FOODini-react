@@ -10,8 +10,8 @@ import IngredientsContext from "../../contexts/ingredients";
 
 function StorageList() {
   const { isMobile } = useContext(LayoutContext);
-  const { ingredients } = useContext(IngredientsContext);
-  const { catalog, getProductByID } = useContext(UserDataContext);
+  const { ingredients, addIngredient, getIngredientById } =
+    useContext(IngredientsContext);
   const [isSpotlight, setIsSpotlight] = useState(false);
   const [isAddCatalog, setIsAddCatalog] = useState(false);
   const [addCatalogData, setAddCatalogData] = useState({});
@@ -19,6 +19,11 @@ function StorageList() {
   // Filter out storage ingredients
   const filteredIngredients = ingredients.filter(
     (ing) => ing.type === "storage"
+  );
+
+  // Filter out template ingredients
+  const filteredTemplates = ingredients.filter(
+    (ing) => ing.type === "template"
   );
 
   const toggleSpotlight = () => {
@@ -35,15 +40,29 @@ function StorageList() {
 
   const onFormAddCatalogSubmit = (newProduct) => {
     if (newProduct) {
+      const newIngredient = {
+        ...newProduct,
+        id: null,
+        app_id: null,
+        type: "storage",
+      };
       // Add to storage
+      addIngredient(newIngredient);
     }
     setIsAddCatalog(false);
   };
 
   const handleSuggestionClick = (id) => {
-    console.log(id);
-    const product = getProductByID(id);
-    console.log(product);
+    const product = getIngredientById(id);
+
+    const newIngredient = {
+      ...product,
+      id: null,
+      app_id: null,
+      type: "storage",
+    };
+
+    console.log(newIngredient);
   };
 
   return (
@@ -55,13 +74,14 @@ function StorageList() {
           onClose={toggleSpotlight}
           onAddNew={handleFormAddCatalog}
           onSuggestionClick={handleSuggestionClick}
-          data={catalog}
+          data={filteredTemplates}
         />
       )}
 
       {isAddCatalog && (
         <AddCatalog
           isActive={isAddCatalog}
+          isEditing={false}
           data={addCatalogData}
           onClose={onFormAddCatalogSubmit}
         />

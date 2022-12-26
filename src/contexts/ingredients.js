@@ -5,6 +5,7 @@ import {
   updateIngredient,
   deleteIngredient,
 } from "../apis/ingredients";
+import { v4 as uuid } from "uuid";
 
 const IngredientsContext = createContext();
 
@@ -14,9 +15,10 @@ export const IngredientsContextProvider = ({ children }) => {
 
   const addIngredient = async (ing) => {
     const { id } = JSON.parse(localStorage.getItem("user"));
+    const appId = uuid();
 
     try {
-      const updatedIng = { ...ing, users_id: id };
+      const updatedIng = { ...ing, users_id: id, app_id: appId };
       const res = await createIngredient(updatedIng);
 
       if (res.status === 200) {
