@@ -65,6 +65,10 @@ export const IngredientsContextProvider = ({ children }) => {
     }
   };
 
+  const getIngredientById = (id) => {
+    return ingredients.find((ing) => ing.id === id);
+  };
+
   useEffect(() => {
     async function fetchData() {
       console.log("fetching ingredients..."); //*: dev only line
@@ -82,6 +86,7 @@ export const IngredientsContextProvider = ({ children }) => {
     addIngredient,
     editIngredient,
     removeIngredient,
+    getIngredientById,
   };
 
   return (
