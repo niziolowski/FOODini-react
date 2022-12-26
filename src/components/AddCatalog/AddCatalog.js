@@ -10,9 +10,10 @@ import Select from "../UI/Select/Select";
 import UserDataContext from "../../contexts/user-data";
 import IngredientsContext from "../../contexts/ingredients";
 import { useForm } from "react-hook-form";
+import { v4 as uuid } from "uuid";
 
 // data gets passed in and out from other places to quickly create a new template
-function AddCatalog({ isActive, data, onClose }) {
+function AddCatalog({ isActive, isEditing, data, onClose }) {
   const { isMobile } = useContext(LayoutContext);
   const { tagsIng } = useContext(UserDataContext);
   const [isExpiry, setIsExpiry] = useState(true);
@@ -31,18 +32,14 @@ function AddCatalog({ isActive, data, onClose }) {
     defaultValues: data ? { ...data, tag: tags[data.tag] } : null,
   });
 
-  function handleClose(newProduct) {
-    onClose(newProduct);
-  }
-
   function onSubmit(form) {
     console.log("submit");
     const tag = tags.indexOf(form.tag);
-
+    const id = uuid();
     // Create new Ingredient object
     const newProduct = {
-      id: data?.id || null,
-      app_id: data?.app_id || Math.floor(Math.random() * 9999),
+      id: isEditing ? data?.id : null,
+      app_id: isEditing ? data?.app_id : id,
       name: form.name,
       type: "template",
       amount: form.amount,
@@ -56,14 +53,14 @@ function AddCatalog({ isActive, data, onClose }) {
       recipes_id: null,
     };
 
-    if (data?.id) {
+    if (isEditing) {
       editIngredient(newProduct);
     }
     // Create mode
-    if (!data?.id) addIngredient(newProduct);
+    if (!isEditing) addIngredient(newProduct);
 
     // close the form and pass the data
-    handleClose(newProduct);
+    onClose(newProduct);
   }
 
   // handle BTN no expiry
@@ -93,11 +90,11 @@ function AddCatalog({ isActive, data, onClose }) {
 
   const content = (
     <>
-      {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
+      {!isMobile && <div onClick={onClose} id="backdrop"></div>}
       <div className={`${styles["add-catalog"]} ${isMobile && styles.mobile}`}>
         <header className={styles.header}>
           <h1>szablon produktu</h1>
-          <Button onClick={handleClose} round>
+          <Button onClick={onClose} round>
             <FiX />
           </Button>
         </header>
