@@ -23,7 +23,6 @@ function Profile({ onClose }) {
   useEffect(() => {
     const handleClose = (e) => {
       const parentEl = e.target.closest(`.${styles.content}`);
-      console.log(parentEl);
       if (!parentEl) onClose();
     };
 

@@ -11,6 +11,7 @@ const IngredientsContext = createContext();
 
 export const IngredientsContextProvider = ({ children }) => {
   const [ingredients, setIngredients] = useState([]);
+
   const [tags] = useState(["świeże", "suche", "mrożone"]);
 
   const addIngredient = async (ing) => {

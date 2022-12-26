@@ -19,7 +19,6 @@ function App() {
   const { isLoggedIn } = useContext(AuthContext);
 
   const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;
-
   // Hide all windows when switching to mobile view
   useEffect(() => {
     dispatchIsVisible({ type: "home", mode: "switch" });
