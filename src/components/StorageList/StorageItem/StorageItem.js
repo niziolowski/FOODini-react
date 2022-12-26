@@ -9,7 +9,7 @@ import Button from "../../UI/Button/Button";
 import styles from "./StorageItem.module.css";
 
 function StorageItem({ item, ...rest }) {
-  const { editIngredient } = useContext(IngredientsContext);
+  const { editIngredient, removeIngredient } = useContext(IngredientsContext);
 
   // Calculate days until the ingredient expires
   const [daysToExpiry] = useState(
@@ -23,6 +23,10 @@ function StorageItem({ item, ...rest }) {
   const handleBookmark = () => {
     const updated = { ...item, bookmark: !item.bookmark };
     editIngredient(updated);
+  };
+
+  const handleDelete = () => {
+    removeIngredient(item.id);
   };
 
   return (
@@ -46,7 +50,7 @@ function StorageItem({ item, ...rest }) {
         value={indicatorValue}
         small
       />
-      <Button doubleAction round mini>
+      <Button onClick={handleDelete} doubleAction round mini>
         <FiTrash />
       </Button>
       <div
