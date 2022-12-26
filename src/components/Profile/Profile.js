@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect } from "react";
 import { FiSettings } from "react-icons/fi";
 import AuthContext from "../../contexts/auth";
 import LayoutContext from "../../contexts/layout";
@@ -8,7 +8,6 @@ import styles from "./Profile.module.css";
 function Profile({ onClose }) {
   const { name, email, logout } = useContext(AuthContext);
   const { dispatchIsVisible } = useContext(LayoutContext);
-  const panelEl = useRef();
 
   const handleLogout = () => {
     logout();
@@ -22,11 +21,19 @@ function Profile({ onClose }) {
 
   // Close panel when on mouseleave
   useEffect(() => {
-    panelEl.current.addEventListener("mouseleave", onClose);
-  }, [onClose]);
+    const handleClose = (e) => {
+      const parentEl = e.target.closest(`.${styles.content}`);
+      console.log(parentEl);
+      if (!parentEl) onClose();
+    };
+    window.addEventListener("touchstart", handleClose);
+    return () => {
+      window.removeEventListener("touchstart", handleClose);
+    };
+  }, []);
 
   return (
-    <div ref={panelEl} className={styles.content}>
+    <div onMouseLeave={onClose} className={styles.content}>
       <Button className={styles["btn-toggle"]} onClick={onClose} round mini>
         <FiSettings />
       </Button>
