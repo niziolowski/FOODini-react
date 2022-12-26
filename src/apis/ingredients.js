@@ -3,8 +3,8 @@ import axios from "axios";
 const baseURL = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/ingredients";
 
 // Get authToken from local storage
-const user = localStorage.getItem("user");
-const { token } = user ? JSON.parse(user) : null;
+const user = JSON?.parse(localStorage.getItem("user"));
+const token = user?.token;
 
 // Create axios instance with authorization header
 const axiosAuthorized = axios.create({

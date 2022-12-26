@@ -26,6 +26,7 @@ export const IngredientsContextProvider = ({ children }) => {
         setIngredients((current) => [...current, res.data]);
       }
     } catch (error) {
+      console.log(error);
       alert(error);
     }
   };

@@ -4,9 +4,9 @@ import styles from "./StorageList.module.css";
 import StorageItem from "./StorageItem/StorageItem";
 import FilterOptions from "../UI/FilterOptions/FilterOptions";
 import Spotlight from "../Spotlight/Spotlight";
-import UserDataContext from "../../contexts/user-data";
 import AddCatalog from "../AddCatalog/AddCatalog";
 import IngredientsContext from "../../contexts/ingredients";
+import AddStorage from "../AddStorage/AddStorage";
 
 function StorageList() {
   const { isMobile } = useContext(LayoutContext);
@@ -14,7 +14,9 @@ function StorageList() {
     useContext(IngredientsContext);
   const [isSpotlight, setIsSpotlight] = useState(false);
   const [isAddCatalog, setIsAddCatalog] = useState(false);
+  const [isAddStorage, setIsAddStorage] = useState(false);
   const [addCatalogData, setAddCatalogData] = useState({});
+  const [addStorageData, setAddStorageData] = useState(null);
 
   // Filter out storage ingredients
   const filteredIngredients = ingredients.filter(
@@ -45,6 +47,8 @@ function StorageList() {
         id: null,
         app_id: null,
         type: "storage",
+        created_at: null,
+        recipes_id: null,
       };
       // Add to storage
       addIngredient(newIngredient);
@@ -57,18 +61,24 @@ function StorageList() {
 
     const newIngredient = {
       ...product,
-      id: null,
-      app_id: null,
-      type: "storage",
     };
 
-    console.log(newIngredient);
+    setIsSpotlight(false);
+    setIsAddStorage(true);
+    setAddStorageData(newIngredient);
+  };
+
+  const handleAddStorageClose = () => {
+    setIsAddStorage(false);
   };
 
   return (
     <div
       className={`${styles["storage-list"]} ${isMobile ? styles.mobile : ""}`}
     >
+      {isAddStorage && (
+        <AddStorage onClose={handleAddStorageClose} data={addStorageData} />
+      )}
       {isSpotlight && (
         <Spotlight
           onClose={toggleSpotlight}
