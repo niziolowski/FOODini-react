@@ -22,7 +22,7 @@ function FilterOptions({ onAddItem, onFilterChange, options }) {
 
   useEffect(() => {
     onFilterChange({ query, sorting, favorites });
-  }, [query, sorting, favorites]);
+  }, [query, sorting, favorites, onFilterChange]);
 
   return (
     <section className={styles.options}>
