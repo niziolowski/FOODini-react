@@ -32,7 +32,6 @@ function StorageList() {
   };
 
   const handleFormAddCatalog = (query) => {
-    console.log(query);
     const data = { name: query };
     setIsSpotlight(false);
     setIsAddCatalog(true);
@@ -77,7 +76,6 @@ function StorageList() {
 
   // Filter storage
   useEffect(() => {
-    console.log(filters);
     let results = [...storage];
 
     // filter favorites
