@@ -26,11 +26,13 @@ function Profile({ onClose }) {
       console.log(parentEl);
       if (!parentEl) onClose();
     };
+
     window.addEventListener("touchstart", handleClose);
+
     return () => {
       window.removeEventListener("touchstart", handleClose);
     };
-  }, []);
+  }, [onClose]);
 
   return (
     <div onMouseLeave={onClose} className={styles.content}>

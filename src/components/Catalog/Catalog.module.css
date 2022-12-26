@@ -10,6 +10,9 @@
   height: 100%;
   background-color: var(--bg-color);
   padding: 20px;
+
+  /** this fix is for IOS (the shopping list button keeps poping on top without it */
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 .header {
