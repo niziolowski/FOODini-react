@@ -47,6 +47,12 @@ function FilterOptions({ onAddItem, onFilterChange, options, data }) {
         return aExpiry - bExpiry;
       });
 
+    // By difficulty
+    if (sorting === "trudność")
+      results = results.sort((a, b) => {
+        return a.difficulty - b.difficulty;
+      });
+
     // By name
     if (sorting === "nazwa") {
       results = results.sort((a, b) => {

@@ -26,7 +26,7 @@ function RecipeItem({ item, onPreview }) {
 
       <div className={styles.col}>
         <div onClick={handleClick} className={styles.title}>
-          {item.title}
+          {item.name}
         </div>
         <div className={styles.info}>
           <DifficultyIndicator value={item.difficulty} />
