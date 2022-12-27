@@ -9,6 +9,8 @@
   border-radius: var(--border-radius);
   z-index: 1;
   padding-bottom: 20px;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
 .header {
@@ -22,7 +24,7 @@
   position: relative;
   display: grid;
   grid-template-columns: 2fr 1fr;
-  margin: 20px;
+  margin: 5vmin;
   color: var(--font-color);
   font-weight: 300;
   font-size: 0.8rem;
@@ -64,21 +66,25 @@ label.custom-file-upload {
   flex-direction: column;
   row-gap: 5px;
   max-width: 100%;
+  flex: 1;
 }
 
 .row {
+  position: relative;
   display: flex;
+  justify-content: stretch;
   align-items: center;
   column-gap: 10px;
+  max-width: 100%;
 }
 
 .row input {
+  min-width: 90px;
   flex: 1;
 }
 
 .form section {
   position: relative;
-  /* display: flex; */
   flex-direction: column;
   row-gap: 5px;
   width: 100%;
@@ -90,6 +96,11 @@ label.custom-file-upload {
 
 .ingredients {
   max-width: fit-content;
+}
+
+.ingredients-amount {
+  width: 80px;
+  flex: 0 0 80px;
 }
 
 .instructions {
@@ -106,11 +117,12 @@ label.custom-file-upload {
   resize: vertical;
   width: 100%;
   min-height: 150px;
+  -webkit-appearance: none;
 }
 
 @media (max-width: 800px) {
   .form {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .instructions {
     grid-column: 1;

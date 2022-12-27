@@ -39,7 +39,7 @@ function RecipeForm({ isActive }) {
             <div className={styles.field}>
               <label>Zdjęcie</label>
               <label for="file-upload" class={styles["custom-file-upload"]}>
-                Prześlij zdjęcie
+                Prześlij
               </label>
               <input id="file-upload" type="file" />
             </div>
@@ -50,7 +50,11 @@ function RecipeForm({ isActive }) {
           <h2>Składniki</h2>
           <div className={styles.row}>
             <Input placeholder="Nazwa" />
-            <Input placeholder="Ilość" />
+            <Input
+              className={styles["ingredients-amount"]}
+              type="number"
+              placeholder="Ilość"
+            />
             <Select options={["szt.", "kg", "g", "ml"]} />
             <Button type="button" round mini>
               <FiTrash />
