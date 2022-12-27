@@ -14,6 +14,7 @@ function RecipeView({ data, onClose }) {
   const { isMobile } = useContext(LayoutContext);
   const { tagsRec } = useContext(UserDataContext);
 
+  console.log(data);
   const onToggleEdit = () => {};
 
   const handleClose = () => {

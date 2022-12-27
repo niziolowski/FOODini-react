@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { FiStar, FiTrash } from "react-icons/fi";
+import RecipesContext from "../../../contexts/recipes";
 import UserDataContext from "../../../contexts/user-data";
 import BarIndicator from "../../UI/BarIndicator/BarIndicator";
 import Button from "../../UI/Button/Button";
@@ -8,9 +9,18 @@ import styles from "./RecipeItem.module.css";
 
 function RecipeItem({ item, onPreview }) {
   const { tagsRec } = useContext(UserDataContext);
+  const { editRecipe, removeRecipe } = useContext(RecipesContext);
 
   const handleClick = () => {
     onPreview(item);
+  };
+
+  const handleBookmark = () => {
+    editRecipe({ ...item, bookmark: !item.bookmark });
+  };
+
+  const handleRemove = () => {
+    removeRecipe(item.id);
   };
 
   return (
@@ -34,10 +44,16 @@ function RecipeItem({ item, onPreview }) {
         </div>
       </div>
       <div className={styles.col}>
-        <Button round mini fillIcon active={item.bookmark}>
+        <Button
+          onClick={handleBookmark}
+          round
+          mini
+          fillIcon
+          active={item.bookmark}
+        >
           <FiStar />
         </Button>
-        <Button doubleAction round mini>
+        <Button onClick={handleRemove} doubleAction round mini>
           <FiTrash />
         </Button>
       </div>
