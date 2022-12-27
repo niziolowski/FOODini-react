@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import LayoutContext from "../../contexts/layout";
 import styles from "./StorageList.module.css";
 import StorageItem from "./StorageItem/StorageItem";
@@ -7,7 +7,6 @@ import Spotlight from "../Spotlight/Spotlight";
 import AddCatalog from "../AddCatalog/AddCatalog";
 import IngredientsContext from "../../contexts/ingredients";
 import AddStorage from "../AddStorage/AddStorage";
-import { calcDaysToExpiry } from "../../utils/dates";
 
 function StorageList() {
   const { isMobile } = useContext(LayoutContext);
@@ -19,7 +18,6 @@ function StorageList() {
   const [addCatalogData, setAddCatalogData] = useState({});
   const [addStorageData, setAddStorageData] = useState(null);
   const [storage, setStorage] = useState([]);
-  const [filters, setFilters] = useState({});
   const [filteredStorage, setFilteredStorage] = useState(storage);
 
   // Filter out template ingredients
@@ -70,52 +68,9 @@ function StorageList() {
     setIsAddStorage(false);
   };
 
-  const handleFilterChange = (data) => {
-    setFilters(data);
-  };
-
-  // Filter storage
-  useEffect(() => {
-    let results = [...storage];
-
-    // filter favorites
-    if (filters?.favorites)
-      results = results.filter((ing) => ing.bookmark === true);
-
-    // filter query
-    if (filters?.query?.length > 0) {
-      results = results.filter((ing) =>
-        ing.name.toLowerCase().includes(filters.query.toLowerCase())
-      );
-    }
-
-    // Sort storage
-
-    // By expiry date
-    if (filters?.sorting === "ważność")
-      results = results.sort((a, b) => {
-        // Calculate days until the ingredient expires
-        const aExpiry = calcDaysToExpiry(a.purchase_date, a.expiry);
-        const bExpiry = calcDaysToExpiry(b.purchase_date, b.expiry);
-
-        return aExpiry - bExpiry;
-      });
-
-    // By name
-    if (filters?.sorting === "nazwa") {
-      results = results.sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        }
-        if (a.name > b.name) {
-          return 1;
-        }
-        return 0;
-      });
-    }
-
-    setFilteredStorage(results);
-  }, [storage, filters]);
+  const handleFilterChange = useCallback((data) => {
+    setFilteredStorage(data);
+  }, []);
 
   // Update storage when ingredients change
   useEffect(() => {
@@ -151,6 +106,7 @@ function StorageList() {
         onAddItem={toggleSpotlight}
         onFilterChange={handleFilterChange}
         options={["ważność", "nazwa"]}
+        data={storage}
       />
       <ul className={styles.list}>
         {filteredStorage.map((item) => (
