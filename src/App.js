@@ -67,6 +67,7 @@ function App() {
             {isVisible.storage && <StorageList />}
             <Catalog />
             <RecipesContextProvider>
+              <RecipeForm isActive={true} />
               {/* Sidebar doesn't really need context but inside there is a StoragaList and RecipeList. Think through in the future */}
               <Sidebar />
               {isVisible.recipes && <RecipeList />}
