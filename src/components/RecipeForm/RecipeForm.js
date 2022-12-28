@@ -23,7 +23,7 @@ function RecipeForm({ isActive }) {
         <section>
           <div className={styles.field}>
             <label>Tytuł</label>
-            <Input />
+            <Input className={styles.title} />
           </div>
         </section>
         <section>
@@ -38,7 +38,10 @@ function RecipeForm({ isActive }) {
             </div>
             <div className={styles.field}>
               <label>Zdjęcie</label>
-              <label for="file-upload" class={styles["custom-file-upload"]}>
+              <label
+                htmlFor="file-upload"
+                className={styles["custom-file-upload"]}
+              >
                 Prześlij
               </label>
               <input id="file-upload" type="file" />
