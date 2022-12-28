@@ -14,10 +14,17 @@
 }
 
 .header {
+  position: relative;
   align-self: stretch;
-  padding: 20px;
+  margin: 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+}
+
+.header button {
+  position: absolute;
+  right: 0;
 }
 
 .form {
@@ -79,7 +86,6 @@ label.custom-file-upload {
 }
 
 .row input {
-  min-width: 90px;
   flex: 1;
 }
 
@@ -94,13 +100,14 @@ label.custom-file-upload {
   margin-top: 5px;
 }
 
-.ingredients {
-  max-width: fit-content;
+.ingredients,
+.title {
+  max-width: 500px;
 }
 
 .ingredients-amount {
-  width: 80px;
-  flex: 0 0 80px;
+  max-width: 60px;
+  flex: 0 0 60px;
 }
 
 .instructions {
@@ -120,9 +127,14 @@ label.custom-file-upload {
   -webkit-appearance: none;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 700px) {
   .form {
+    width: 90%;
     grid-template-columns: minmax(0, 1fr);
+  }
+  .ingredients,
+  .title {
+    max-width: none;
   }
   .instructions {
     grid-column: 1;
