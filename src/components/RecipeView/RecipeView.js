@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import LayoutContext from "../../contexts/layout";
 import styles from "./RecipeView.module.css";
 import ReactDOM from "react-dom";
@@ -8,14 +8,31 @@ import BarIndicator from "../UI/BarIndicator/BarIndicator";
 import Button from "../UI/Button/Button";
 import DifficultyIndicator from "../UI/DifficultyIndicator/DifficultyIndicator";
 import Tag from "../UI/Tag/Tag";
-import RecipeForm from "../RecipeForm/RecipeForm";
+import IngredientsContext from "../../contexts/ingredients";
 
-function RecipeView({ data, onClose }) {
+function RecipeView({ data, onClose, onEdit }) {
   const { isMobile } = useContext(LayoutContext);
   const { tagsRec } = useContext(UserDataContext);
+  const { ingredients } = useContext(IngredientsContext);
 
-  console.log(data);
-  const onToggleEdit = () => {};
+  const [recipeIngredients, setRecipeIngredients] = useState([]);
+
+  // Filter recipe ingredients
+  useEffect(() => {
+    // if already converted, skip (when passed back from recipeform)
+    if (typeof data.ingredients[0] === "object") return;
+
+    const filteredIngredients = [];
+    data.ingredients.forEach((id) =>
+      filteredIngredients.push(ingredients.find((item) => item.id === id))
+    );
+    setRecipeIngredients(filteredIngredients);
+  }, []);
+
+  const onToggleEdit = () => {
+    // pass correct data to recipe form (with complete ingredients object)
+    onEdit({ ...data, ingredients: recipeIngredients });
+  };
 
   const handleClose = () => {
     onClose();
@@ -58,7 +75,7 @@ function RecipeView({ data, onClose }) {
             <div className={styles.ingredients}>
               <h2 className={styles.title}>Składniki</h2>
               <ul className={styles["ingredient-list"]}>
-                {data.ingredients.map((ing) => (
+                {recipeIngredients.map((ing) => (
                   <li key={ing.name} className={styles["list-item"]}>
                     <FiCheck className={styles.check} />
                     <p className={styles.name}>{ing.name}</p>
@@ -72,9 +89,9 @@ function RecipeView({ data, onClose }) {
               <h2 className={styles.title}>Przyprawy</h2>
               <ul className={styles["spices-list"]}>
                 {data.spices.map((spice) => (
-                  <li key={spice} className={styles["list-item"]}>
+                  <li key={spice.name} className={styles["list-item"]}>
                     <FiChevronRight />
-                    <p className={styles.name}>{spice}</p>
+                    <p className={styles.name}>{spice.name}</p>
                   </li>
                 ))}
               </ul>
@@ -87,7 +104,6 @@ function RecipeView({ data, onClose }) {
           </section>
         </div>
       </div>
-      <RecipeForm isActive={false} />
     </>
   );
 

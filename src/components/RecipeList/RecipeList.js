@@ -1,6 +1,7 @@
 import { useCallback, useContext, useState } from "react";
 import LayoutContext from "../../contexts/layout";
 import RecipesContext from "../../contexts/recipes";
+import RecipeForm from "../RecipeForm/RecipeForm";
 import RecipeView from "../RecipeView/RecipeView";
 import FilterOptions from "../UI/FilterOptions/FilterOptions";
 import RecipeItem from "./RecipeItem/RecipeItem";
@@ -23,34 +24,44 @@ function RecipeList() {
   // ]);
   const [filteredRecipes, setFilteredRecipes] = useState(recipes);
 
-  const [isPreviewActive, setIsPreviewActive] = useState(null);
-  const [recipeToShow, setRecipeToShow] = useState(null);
+  const [isPreviewActive, setIsPreviewActive] = useState(false);
+  const [isRecipeForm, setIsRecipeForm] = useState(false);
+  const [recipeData, setRecipeData] = useState(null);
   // Display recipe form
-  const handleAddRecipe = () => {
-    setIsPreviewActive(true);
-  };
 
   const handlePreviewClose = () => {
     setIsPreviewActive(false);
-    setRecipeToShow(null);
+    setRecipeData(null);
   };
 
   const handleShowRecipe = (recipe) => {
     setIsPreviewActive(true);
-    setRecipeToShow(recipe);
+    setRecipeData(recipe);
   };
 
   const handleFilterChange = useCallback((data) => {
     setFilteredRecipes(data);
   }, []);
 
+  const handleRecipeFormToggle = () => {
+    setIsRecipeForm((current) => !current);
+  };
+
+  const handleRecipeEdit = (data) => {
+    setRecipeData(data);
+    handleRecipeFormToggle();
+  };
+
   return (
     <>
       <div
         className={`${styles["recipe-list"]} ${isMobile ? styles.mobile : ""}`}
       >
+        {isRecipeForm && (
+          <RecipeForm onClose={handleRecipeFormToggle} data={recipeData} />
+        )}
         <FilterOptions
-          onAddRecipe={handleAddRecipe}
+          onAddItem={handleRecipeFormToggle}
           onFilterChange={handleFilterChange}
           options={["nazwa", "trudność"]}
           data={recipes}
@@ -66,7 +77,11 @@ function RecipeList() {
         </ul>
       </div>
       {isPreviewActive && (
-        <RecipeView onClose={handlePreviewClose} data={recipeToShow} />
+        <RecipeView
+          onClose={handlePreviewClose}
+          onEdit={handleRecipeEdit}
+          data={recipeData}
+        />
       )}
     </>
   );

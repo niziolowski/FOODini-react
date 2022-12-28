@@ -7,17 +7,20 @@ import Select from "../UI/Select/Select";
 import styles from "./RecipeForm.module.css";
 import ReactDOM from "react-dom";
 import { useFieldArray, useForm } from "react-hook-form";
+import { toBase64 } from "../../utils/helpers";
 
-function RecipeForm({ isActive }) {
+function RecipeForm({ data, onClose }) {
   const { tags } = useContext(RecipesContext);
   const root = document.getElementById("modal");
   const [message, setMessage] = useState("test message");
+  const [isEditing, setIsEditin] = useState(data ? true : false);
   const {
     register,
     formState: { errors },
     handleSubmit,
     control,
-  } = useForm();
+  } = useForm({ defaultValues: data ? { ...data, title: data.name } : null });
+
   const {
     fields: ingredientsFields,
     append: ingredientsAppend,
@@ -41,8 +44,6 @@ function RecipeForm({ isActive }) {
 
   // Validate form
   useEffect(() => {
-    console.log(errors);
-
     // 1. Title
     if (errors.title) return setMessage(errors.title.message);
 
@@ -71,7 +72,7 @@ function RecipeForm({ isActive }) {
     // 4. Instructions
     if (errors.instructions) return setMessage(errors.instructions.message);
 
-    // 4. No errors
+    // 5. No errors
     return setMessage(null);
   }, [
     errors.title,
@@ -81,14 +82,16 @@ function RecipeForm({ isActive }) {
     errors,
   ]);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    const image = await toBase64(data.image[0]);
+    const updatedData = { ...data, image };
+    console.log(updatedData);
   };
 
   const header = (
     <header className={styles.header}>
       <h1>Stwórz nowy przepis</h1>
-      <Button round>
+      <Button onClick={onClose} round>
         <FiX />
       </Button>
     </header>
@@ -221,7 +224,7 @@ function RecipeForm({ isActive }) {
             >
               Prześlij
             </label>
-            <input id="file-upload" type="file" />
+            <input {...register("image")} id="file-upload" type="file" />
           </div>
         </div>
       </section>
@@ -249,11 +252,11 @@ function RecipeForm({ isActive }) {
         {message}
       </div>
       <Button type="submit" form="add-recipe" primary>
-        Dodaj
+        {isEditing ? "Zapisz" : "Stwórz"}
       </Button>
     </div>
   );
-  return <>{isActive && ReactDOM.createPortal(content, root)}</>;
+  return ReactDOM.createPortal(content, root);
 }
 
 export default RecipeForm;
