@@ -26,11 +26,7 @@ function RecipeItem({ item, onPreview }) {
   return (
     <li className={styles["recipe-item"]}>
       <div className={styles["image-wrapper"]}>
-        <img
-          className={styles.image}
-          src="https://www.seriouseats.com/thmb/WzQz05gt5witRGeOYKTcTqfe1gs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/butter-basted-pan-seared-steaks-recipe-hero-06-03b1131c58524be2bd6c9851a2fbdbc3.jpg"
-          alt="recipe"
-        />
+        <img className={styles.image} src={item.image} alt="recipe" />
         <div className={styles.tag}>{tagsRec[item.tag]}</div>
       </div>
 

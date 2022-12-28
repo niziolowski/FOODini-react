@@ -30,8 +30,17 @@ export const RecipesContextProvider = ({ children }) => {
   };
 
   const editRecipe = async (rec) => {
+    // create ingredients object with only the id reference
+    const recipeIngredients = rec.ingredients.map((ing) => ing.id);
+
+    // create updated recipe object
+    const updatedRecipe = {
+      ...rec,
+      ingredients: recipeIngredients,
+    };
+
     try {
-      const res = await updateRecipe(rec);
+      const res = await updateRecipe(updatedRecipe);
 
       if (res.status === 200) {
         // Update State

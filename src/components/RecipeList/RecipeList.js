@@ -10,18 +10,6 @@ import styles from "./RecipeList.module.css";
 function RecipeList() {
   const { isMobile } = useContext(LayoutContext);
   const { recipes } = useContext(RecipesContext);
-  // const [recipes] = useState([
-  //   {
-  //     id: 123,
-  //     name: "Jajecznica",
-  //     difficulty: 5,
-  //     ingredients: [{ name: "Wołowina", amount: "200", unit: "g" }],
-  //     instructions: "blablabla",
-  //     spices: ["Sól", "Pieprz"],
-  //     bookmark: false,
-  //     tag: 1,
-  //   },
-  // ]);
   const [filteredRecipes, setFilteredRecipes] = useState(recipes);
 
   const [isPreviewActive, setIsPreviewActive] = useState(false);
@@ -47,8 +35,7 @@ function RecipeList() {
     setIsRecipeForm((current) => !current);
   };
 
-  const handleRecipeEdit = (data) => {
-    setRecipeData(data);
+  const handleRecipeEdit = () => {
     handleRecipeFormToggle();
   };
 

@@ -13,13 +13,14 @@ function RecipeForm({ data, onClose }) {
   const { tags } = useContext(RecipesContext);
   const root = document.getElementById("modal");
   const [message, setMessage] = useState("test message");
-  const [isEditing, setIsEditin] = useState(data ? true : false);
+  const [isEditing] = useState(data ? true : false);
+  const { addRecipe } = useContext(RecipesContext);
   const {
     register,
     formState: { errors },
     handleSubmit,
     control,
-  } = useForm({ defaultValues: data ? { ...data, title: data.name } : null });
+  } = useForm({ defaultValues: data ? { ...data } : null });
 
   const {
     fields: ingredientsFields,
@@ -45,7 +46,7 @@ function RecipeForm({ data, onClose }) {
   // Validate form
   useEffect(() => {
     // 1. Title
-    if (errors.title) return setMessage(errors.title.message);
+    if (errors.name) return setMessage(errors.name.message);
 
     // 2. Ingredients (find first case and display)
 
@@ -75,7 +76,7 @@ function RecipeForm({ data, onClose }) {
     // 5. No errors
     return setMessage(null);
   }, [
-    errors.title,
+    errors.name,
     errors.ingredients,
     errors.spices,
     errors.instructions,
@@ -84,8 +85,9 @@ function RecipeForm({ data, onClose }) {
 
   const onSubmit = async (data) => {
     const image = await toBase64(data.image[0]);
-    const updatedData = { ...data, image };
-    console.log(updatedData);
+    const newRecipe = { ...data, image };
+
+    addRecipe(newRecipe);
   };
 
   const header = (
@@ -200,9 +202,9 @@ function RecipeForm({ data, onClose }) {
           <label>Tytuł</label>
           <Input
             type="text"
-            {...register("title", { required: "Podaj tytuł przepisu" })}
+            {...register("name", { required: "Podaj tytuł przepisu" })}
             className={styles.title}
-            isValid={!errors.title}
+            isValid={!errors.name}
           />
         </div>
       </section>

@@ -8,41 +8,16 @@ import BarIndicator from "../UI/BarIndicator/BarIndicator";
 import Button from "../UI/Button/Button";
 import DifficultyIndicator from "../UI/DifficultyIndicator/DifficultyIndicator";
 import Tag from "../UI/Tag/Tag";
-import IngredientsContext from "../../contexts/ingredients";
 
 function RecipeView({ data, onClose, onEdit }) {
   const { isMobile } = useContext(LayoutContext);
   const { tagsRec } = useContext(UserDataContext);
-  const { ingredients } = useContext(IngredientsContext);
-
-  const [recipeIngredients, setRecipeIngredients] = useState([]);
-
-  // Filter recipe ingredients
-  useEffect(() => {
-    // if already converted, skip (when passed back from recipeform)
-    if (typeof data.ingredients[0] === "object") return;
-
-    const filteredIngredients = [];
-    data.ingredients.forEach((id) =>
-      filteredIngredients.push(ingredients.find((item) => item.id === id))
-    );
-    setRecipeIngredients(filteredIngredients);
-  }, []);
-
-  const onToggleEdit = () => {
-    // pass correct data to recipe form (with complete ingredients object)
-    onEdit({ ...data, ingredients: recipeIngredients });
-  };
-
-  const handleClose = () => {
-    onClose();
-  };
 
   const root = document.getElementById("modal");
 
   const controls = (
     <>
-      <Button className={styles["btn-edit"]} onClick={onToggleEdit} round>
+      <Button className={styles["btn-edit"]} onClick={onEdit} round>
         <FiEdit />
       </Button>
       <h1 className={styles.title}>{data.title}</h1>
@@ -53,7 +28,7 @@ function RecipeView({ data, onClose, onEdit }) {
   );
   const content = (
     <>
-      {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
+      {!isMobile && <div onClick={onClose} id="backdrop"></div>}
       <div className={`${styles.content} ${isMobile && styles.mobile}`}>
         <div className={styles.grid}>
           <section className={styles.summary}>
@@ -75,8 +50,8 @@ function RecipeView({ data, onClose, onEdit }) {
             <div className={styles.ingredients}>
               <h2 className={styles.title}>Składniki</h2>
               <ul className={styles["ingredient-list"]}>
-                {recipeIngredients.map((ing) => (
-                  <li key={ing.name} className={styles["list-item"]}>
+                {data.ingredients.map((ing) => (
+                  <li key={ing.id} className={styles["list-item"]}>
                     <FiCheck className={styles.check} />
                     <p className={styles.name}>{ing.name}</p>
                     <p>{ing.amount}</p>
