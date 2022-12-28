@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import LayoutContext from "../../contexts/layout";
 import RecipesContext from "../../contexts/recipes";
 import RecipeView from "../RecipeView/RecipeView";

@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   position: absolute;
+  row-gap: 20px;
   width: 100%;
   min-height: 100%;
   background-color: var(--bg-color);
@@ -17,6 +18,7 @@
   position: relative;
   align-self: stretch;
   margin: 20px;
+  padding-right: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -24,6 +26,7 @@
 
 .header button {
   position: absolute;
+  top: 0;
   right: 0;
 }
 
@@ -31,12 +34,11 @@
   position: relative;
   display: grid;
   grid-template-columns: 2fr 1fr;
-  margin: 5vmin;
   color: var(--font-color);
   font-weight: 300;
   font-size: 0.8rem;
   gap: 20px;
-  max-width: 100%;
+  padding: 0 20px;
 }
 
 .form h2 {
@@ -71,9 +73,19 @@ label.custom-file-upload {
   position: relative;
   display: flex;
   flex-direction: column;
-  row-gap: 5px;
+  row-gap: 10px;
   max-width: 100%;
   flex: 1;
+}
+
+.message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 5px;
+  font-weight: 300;
+  font-size: 0.8rem;
+  color: var(--warning-red-color);
 }
 
 .row {
@@ -91,8 +103,9 @@ label.custom-file-upload {
 
 .form section {
   position: relative;
+  display: flex;
   flex-direction: column;
-  row-gap: 5px;
+  row-gap: 10px;
   width: 100%;
 }
 
@@ -127,10 +140,15 @@ label.custom-file-upload {
   -webkit-appearance: none;
 }
 
+.instructions textarea.invalid {
+  border: 1px solid var(--warning-red-color);
+  background-color: rgba(255, 68, 0, 0.157);
+}
+
 @media (max-width: 700px) {
   .form {
-    width: 90%;
     grid-template-columns: minmax(0, 1fr);
+    width: 100%;
   }
   .ingredients,
   .title {
