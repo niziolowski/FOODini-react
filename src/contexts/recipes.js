@@ -30,6 +30,7 @@ export const RecipesContextProvider = ({ children }) => {
   };
 
   const editRecipe = async (rec) => {
+    console.log(rec);
     // create ingredients object with only the id reference
     const recipeIngredients = rec.ingredients.map((ing) => ing.id);
 

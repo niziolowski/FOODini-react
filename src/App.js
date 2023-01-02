@@ -14,7 +14,6 @@ import LoginPage from "./components/LoginPage/LoginPage";
 import AuthContext from "./contexts/auth";
 import { IngredientsContextProvider } from "./contexts/ingredients";
 import { RecipesContextProvider } from "./contexts/recipes";
-import RecipeForm from "./components/RecipeForm/RecipeForm";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
@@ -60,12 +59,15 @@ function App() {
             {!isMobile ? <Nav /> : <NavMobile />}
 
             <Plan />
+            <ShoppingList />
+            <IngredientsContextProvider>
+              <Catalog />
+            </IngredientsContextProvider>
           </div>
-          <ShoppingList />
           <Settings />
           <IngredientsContextProvider>
             {isVisible.storage && <StorageList />}
-            <Catalog />
+
             <RecipesContextProvider>
               {/* Sidebar doesn't really need context but inside there is a StoragaList and RecipeList. Think through in the future */}
               <Sidebar />

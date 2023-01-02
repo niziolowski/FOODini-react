@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import LayoutContext from "../../contexts/layout";
 import styles from "./RecipeView.module.css";
 import ReactDOM from "react-dom";
@@ -15,12 +15,13 @@ function RecipeView({ data, onClose, onEdit }) {
 
   const root = document.getElementById("modal");
 
-  const controls = (
+  console.log(data);
+  const header = (
     <>
       <Button className={styles["btn-edit"]} onClick={onEdit} round>
         <FiEdit />
       </Button>
-      <h1 className={styles.title}>{data.title}</h1>
+      <h1 className={styles.title}>{data.name}</h1>
       <Button onClick={onClose} className={styles["btn-close"]} round>
         <FiX />
       </Button>
@@ -39,7 +40,7 @@ function RecipeView({ data, onClose, onEdit }) {
             <Tag className={styles.tag} tag={data.tag}>
               {tagsRec[data.tag]}
             </Tag>
-            {isMobile && controls}
+            {isMobile && header}
             <div className={styles.indicators}>
               <DifficultyIndicator value={data.difficulty} />
               <Button round mini fillIcon active={data.bookmark}>
@@ -73,7 +74,7 @@ function RecipeView({ data, onClose, onEdit }) {
             </div>
           </section>
           <section className={styles.description}>
-            <header className={styles.header}>{!isMobile && controls}</header>
+            <header className={styles.header}>{!isMobile && header}</header>
             {isMobile && <h2>Sposób przygotowania</h2>}
             <div className={styles.instructions}>{data.instructions}</div>
           </section>

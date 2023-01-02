@@ -85,6 +85,8 @@ function RecipeForm({ data, onClose }) {
 
   const onSubmit = async (data) => {
     const image = await toBase64(data.image[0]);
+
+    console.log(image);
     const newRecipe = { ...data, image };
 
     addRecipe(newRecipe);

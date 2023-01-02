@@ -8,7 +8,8 @@
   width: 350px;
   height: 100%;
   border-left: 1px solid var(--grey-color);
-  backdrop-filter: blur(10px);
+  background-color: var(--bg-color);
+  /* backdrop-filter: blur(10px); */
   transition: var(--transition);
 }
 
