@@ -1,20 +1,21 @@
 .content {
   position: relative;
   top: 10%;
-  width: 80%;
-  min-height: 80%;
   height: fit-content;
   border: var(--border);
   border-radius: var(--border-radius);
   background-color: var(--bg-color);
   z-index: 1;
   padding: 20px;
+  margin: 20px;
+  max-width: 1000px;
   box-shadow: var(--shadow);
 }
 
 .grid {
   position: relative;
   width: 100%;
+  height: 100%;
   display: grid;
   grid-template-columns: 275px 1fr;
   gap: 20px;
@@ -133,11 +134,23 @@
   max-width: 800px;
   line-height: 1.2rem;
   columns: var(--font-color);
+  white-space: pre-line; /** This preserves line breaks from text area input */
+}
+
+@media (max-width: 900px) {
+  .content {
+    position: absolute;
+    width: 100%;
+    min-height: 100%;
+    top: 0;
+    border-radius: none;
+    border: none;
+    margin: 0;
+  }
 }
 
 /* § MOBILE */
-
-@media (max-width: 720px) {
+@media (max-width: 770px) {
   .content {
     position: absolute;
     border: none;
@@ -147,6 +160,7 @@
     padding: 0;
     overflow-y: scroll;
     box-shadow: none;
+    margin: 0;
   }
 
   .grid {

@@ -96,7 +96,7 @@ h2 {
   background-color: var(--bg-color);
   filter: opacity(0.8);
 
-  backdrop-filter: blur(5px);
+  /* backdrop-filter: blur(5px); */
   z-index: 1;
 }
 

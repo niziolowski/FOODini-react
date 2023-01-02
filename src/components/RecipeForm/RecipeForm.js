@@ -86,8 +86,18 @@ function RecipeForm({ data, onClose }) {
   const onSubmit = async (data) => {
     const image = await toBase64(data.image[0]);
 
-    console.log(image);
-    const newRecipe = { ...data, image };
+    const tag = tags.indexOf(data.tag);
+    const newRecipe = {
+      id: null,
+      name: data.name,
+      tag,
+      difficulty: data.difficulty,
+      ingredients: data.ingredients,
+      spices: data.spices,
+      instructions: data.instructions,
+      image,
+      bookmark: false,
+    };
 
     addRecipe(newRecipe);
   };
@@ -214,11 +224,11 @@ function RecipeForm({ data, onClose }) {
         <div className={styles.row}>
           <div className={styles.field}>
             <label>Grupa</label>
-            <Select options={tags} />
+            <Select {...register("tag")} options={tags} />
           </div>
           <div className={styles.field}>
             <label>Trudność</label>
-            <Select options={[1, 2, 3, 4, 5]} />
+            <Select {...register("difficulty")} options={[1, 2, 3, 4, 5]} />
           </div>
           <div className={styles.field}>
             <label>Zdjęcie</label>
