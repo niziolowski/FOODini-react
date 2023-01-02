@@ -72,7 +72,6 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
   };
 
   const handleAddClick = () => {
-    console.log("test");
     // Pass to form
     onAddNew(query);
   };

@@ -11,8 +11,10 @@
   border: var(--border);
   box-shadow: var(--shadow);
   padding: 20px;
+  padding-top: 50px;
   z-index: 1;
   box-sizing: content-box;
+  width: max-content;
 }
 
 .btn-toggle {

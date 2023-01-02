@@ -9,7 +9,6 @@ import Button from "../../UI/Button/Button";
 import styles from "./StorageItem.module.css";
 
 function StorageItem({ item, ...rest }) {
-  console.log(item);
   const { editIngredient, removeIngredient } = useContext(IngredientsContext);
 
   // Calculate days until the ingredient expires

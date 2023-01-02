@@ -4,6 +4,7 @@ import {
   createIngredient,
   updateIngredient,
   deleteIngredient,
+  createOrEditIngredients,
 } from "../apis/ingredients";
 import { v4 as uuid } from "uuid";
 
@@ -69,6 +70,30 @@ export const IngredientsContextProvider = ({ children }) => {
     }
   };
 
+  /**
+   * If item has id, update, if not, create new record
+   * @param {Array} payload Array of ingredients
+   */
+  const addOrEditIngredients = async (payload) => {
+    const { id } = JSON.parse(localStorage.getItem("user"));
+
+    const updatedPayload = payload.map((ing) => {
+      const appId = uuid();
+      return { ...ing, users_id: id, app_id: ing.app_id || appId };
+    });
+
+    try {
+      const res = await createOrEditIngredients({ payload: updatedPayload });
+      if (res.status === 200) {
+        // Update State
+        setIngredients((current) => [...current, ...res.data]);
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
+
   const getIngredientById = (id) => {
     return ingredients.find((ing) => ing.id === id);
   };
@@ -91,6 +116,7 @@ export const IngredientsContextProvider = ({ children }) => {
     editIngredient,
     removeIngredient,
     getIngredientById,
+    addOrEditIngredients,
   };
 
   return (

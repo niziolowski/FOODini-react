@@ -1,6 +1,8 @@
 import axios from "axios";
 
 const baseURL = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/ingredients";
+const addMultipleURL =
+  "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/add_or_edit_ingredients";
 
 // Get authToken from local storage
 const user = JSON?.parse(localStorage.getItem("user"));
@@ -25,3 +27,7 @@ export const updateIngredient = (ing) =>
 
 export const deleteIngredient = (id) =>
   axiosAuthorized.delete(`${baseURL}/${id}`);
+
+// Add/edit multiple ingredients
+export const createOrEditIngredients = (payload) =>
+  axios.post(addMultipleURL, payload);

@@ -132,6 +132,8 @@ label.custom-file-upload {
 
 .instructions textarea {
   padding: 10px;
+  background-color: var(--bg-color);
+  filter: brightness(95%);
   border: var(--border);
   border-radius: var(--border-radius);
   resize: vertical;

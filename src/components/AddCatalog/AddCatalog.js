@@ -31,6 +31,10 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
     defaultValues: data ? { ...data, tag: tags[data.tag] } : null,
   });
 
+  const handleClose = () => {
+    onClose();
+  };
+
   function onSubmit(form) {
     console.log("submit");
     const tag = tags.indexOf(form.tag);
@@ -89,11 +93,11 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
 
   const content = (
     <>
-      {!isMobile && <div onClick={onClose} id="backdrop"></div>}
+      {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
       <div className={`${styles["add-catalog"]} ${isMobile && styles.mobile}`}>
         <header className={styles.header}>
           <h1>szablon produktu</h1>
-          <Button onClick={onClose} round>
+          <Button onClick={handleClose} round>
             <FiX />
           </Button>
         </header>

@@ -7,7 +7,7 @@
   height: var(--mobile-nav-bar-size);
   border: none;
   border-top: var(--border);
-  background-color: #fff;
+  background-color: var(--bg-color);
   color: var(--grey-color);
   font-size: 24px;
 }
