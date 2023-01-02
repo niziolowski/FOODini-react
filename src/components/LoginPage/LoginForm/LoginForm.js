@@ -5,7 +5,7 @@ import Input from "../../UI/Input/Input";
 import styles from "./LoginForm.module.css";
 import lemonSliceImage from "../../../assets/images/lemon-slice.png";
 import lemonSkinImage from "../../../assets/images/lemon-skin.png";
-import { FiInfo } from "react-icons/fi";
+import { FiArrowDown, FiInfo } from "react-icons/fi";
 import AuthContext from "../../../contexts/auth";
 import Spinner from "../../UI/Spinner/Spinner";
 import { animate } from "../../../utils/animate.js";
@@ -69,6 +69,11 @@ function LoginForm() {
     setMessage(null);
   }
 
+  const handleDemoLogin = () => {
+    const email = `demo${Math.floor(Math.random() * 999999)}@account.com`;
+    signUp("Demo", email, "123456");
+  };
+
   const btnSubmit = (
     <>
       {loading ? (
@@ -78,6 +83,21 @@ function LoginForm() {
           {isLogging ? "Zaloguj" : "Stwórz konto"}
         </Button>
       )}
+    </>
+  );
+
+  const btnDemo = (
+    <>
+      <div className={styles["demo-actions"]}>
+        {!loading && (
+          <>
+            <FiArrowDown className={`${styles["demo-arrow"]} bounce`} />
+            <Button onClick={handleDemoLogin} type="button" primary outline>
+              Demo
+            </Button>
+          </>
+        )}
+      </div>
     </>
   );
 
@@ -142,6 +162,7 @@ function LoginForm() {
     <>
       {isLogging && (
         <div className={styles.footer}>
+          {btnDemo}
           <span>Nie masz konta?</span>
           <Button onClick={handleToggleForm} primary outline>
             Zarejestruj się

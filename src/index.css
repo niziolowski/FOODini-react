@@ -268,3 +268,23 @@ h2 {
     transform: rotate(360deg);
   }
 }
+
+.bounce {
+  -webkit-animation: bounce 1s ease-in-out infinite both;
+  animation: bounce 1s ease-in-out infinite both;
+}
+
+@keyframes bounce {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(-20%);
+    transform: translateY(-20%);
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}

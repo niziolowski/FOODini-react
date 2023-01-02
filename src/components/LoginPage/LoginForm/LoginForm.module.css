@@ -201,3 +201,17 @@
   flex: 1;
   padding: 20px 0;
 }
+
+/* § DEMO */
+.demo-actions {
+  position: relative;
+}
+
+.demo-arrow {
+  font-size: 2rem;
+  color: var(--accent-color);
+  position: absolute;
+  top: -110%;
+  left: 50%;
+  translate: -50%;
+}
