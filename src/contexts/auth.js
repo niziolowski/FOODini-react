@@ -53,7 +53,6 @@ export const AuthContextProvider = ({ children }) => {
         const data = await res.json();
         setError(null);
 
-        console.log(data);
         const user = {
           id: data.userInfo.id,
           name: data.userInfo.name,

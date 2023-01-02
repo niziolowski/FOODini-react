@@ -9,12 +9,14 @@ import Button from "../../UI/Button/Button";
 import styles from "./StorageItem.module.css";
 
 function StorageItem({ item, ...rest }) {
+  console.log(item);
   const { editIngredient, removeIngredient } = useContext(IngredientsContext);
 
   // Calculate days until the ingredient expires
   const [daysToExpiry] = useState(
     calcDaysToExpiry(item.purchase_date, item.expiry)
   );
+
   // Calculate indicator value (between 0 and 100)
   const [indicatorValue] = useState(
     mapRange(daysToExpiry, 0, item.expiry, 0, 100)

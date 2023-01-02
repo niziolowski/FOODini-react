@@ -29,19 +29,16 @@ function LoginForm() {
     formState: { errors, isValid },
   } = useForm();
 
-  // Update error message on validation
-  useEffect(() => {
-    if (errors.name?.type === "minLength")
-      return setMessage("Imię powinno być dłuższe");
-    if (errors.name?.type === "required")
-      return setMessage(errors.name.message);
-    if (errors.email) return setMessage(errors.email.message);
-    if (errors.password?.type === "minLength")
-      return setMessage("Hasło musi mieć minimum 6 znaków");
-    if (errors.password?.type === "required") return setMessage("Podaj hasło");
+  // Toggle form between login and signUp
+  function handleToggleForm() {
+    setIsLogging((current) => !current);
+    setMessage(null);
+  }
 
-    return setMessage(null);
-  }, [errors.email, errors.password, errors.name]);
+  // Login function for demo account, skipping validation
+  const handleDemoLogin = () => {
+    login("demo@demo.com", 123456);
+  };
 
   // Function is called by useForm handleSubmit
   const onSubmit = async (data) => {
@@ -55,24 +52,27 @@ function LoginForm() {
     if (!response) animate(panelEl.current, "shake");
   };
 
-  // Update message on server error
-  useEffect(() => setMessage(error), [error]);
-
   // When submitting with invalid values, show animation
   const handleInvalidSubmit = () => {
     if (!isValid) animate(panelEl.current, "shake");
   };
 
-  // Toggle form between login and signUp
-  function handleToggleForm() {
-    setIsLogging((current) => !current);
-    setMessage(null);
-  }
+  // Update error message on form validation
+  useEffect(() => {
+    if (errors.name?.type === "minLength")
+      return setMessage("Imię powinno być dłuższe");
+    if (errors.name?.type === "required")
+      return setMessage(errors.name.message);
+    if (errors.email) return setMessage(errors.email.message);
+    if (errors.password?.type === "minLength")
+      return setMessage("Hasło musi mieć minimum 6 znaków");
+    if (errors.password?.type === "required") return setMessage("Podaj hasło");
 
-  const handleDemoLogin = () => {
-    const email = `demo${Math.floor(Math.random() * 999999)}@account.com`;
-    signUp("Demo", email, "123456");
-  };
+    return setMessage(null);
+  }, [errors.email, errors.password, errors.name]);
+
+  // Update message on server error
+  useEffect(() => setMessage(error), [error]);
 
   const btnSubmit = (
     <>
