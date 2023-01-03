@@ -15,6 +15,7 @@ function AddStorage({ onClose, data: { isEditing, data } }) {
   const { isMobile } = useContext(LayoutContext);
   const { tags, addIngredient, editIngredient } =
     useContext(IngredientsContext);
+  console.log(data);
   const {
     register,
     handleSubmit,
@@ -23,7 +24,11 @@ function AddStorage({ onClose, data: { isEditing, data } }) {
     formState: { errors },
   } = useForm({
     defaultValues: data
-      ? { ...data, tag: tags[data.tag], date: formatDate(new Date()) }
+      ? {
+          ...data,
+          tag: tags[data.tag],
+          date: isEditing ? data.purchase_date : formatDate(new Date()),
+        }
       : null,
   });
   const [message, setMessage] = useState(null);
