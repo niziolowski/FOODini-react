@@ -13,9 +13,13 @@ import RecipesContext from "../../contexts/recipes";
 
 function RecipeView({ data, onClose, onEdit }) {
   const { isMobile } = useContext(LayoutContext);
-  const { tags } = useContext(RecipesContext);
+  const { tags, editRecipe } = useContext(RecipesContext);
 
   const root = document.getElementById("modal");
+
+  const handleBookmark = () => {
+    editRecipe({ ...data, bookmark: !data.bookmark });
+  };
 
   const header = (
     <>
@@ -41,7 +45,13 @@ function RecipeView({ data, onClose, onEdit }) {
             {isMobile && header}
             <div className={styles.indicators}>
               <DifficultyIndicator value={data.difficulty} />
-              <Button round mini fillIcon active={data.bookmark}>
+              <Button
+                onClick={handleBookmark}
+                round
+                mini
+                fillIcon
+                active={data.bookmark}
+              >
                 <FiStar />
               </Button>
               <BarIndicator label="Składniki" value={50} />

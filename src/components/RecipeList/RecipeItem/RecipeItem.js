@@ -22,7 +22,6 @@ function RecipeItem({ item, onPreview }) {
   const handleRemove = () => {
     removeRecipe(item.id);
   };
-  console.log(item);
 
   return (
     <li className={styles["recipe-item"]}>

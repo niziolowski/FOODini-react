@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import LayoutContext from "../../contexts/layout";
 import RecipesContext from "../../contexts/recipes";
 import RecipeForm from "../RecipeForm/RecipeForm";
@@ -11,7 +11,6 @@ function RecipeList() {
   const { isMobile } = useContext(LayoutContext);
   const { recipes } = useContext(RecipesContext);
   const [filteredRecipes, setFilteredRecipes] = useState(recipes);
-
   const [isPreviewActive, setIsPreviewActive] = useState(false);
   const [isRecipeForm, setIsRecipeForm] = useState(false);
   const [recipeData, setRecipeData] = useState(null);
@@ -23,8 +22,8 @@ function RecipeList() {
   };
 
   const handleShowRecipe = (recipe) => {
-    setIsPreviewActive(true);
     setRecipeData(recipe);
+    setIsPreviewActive(true);
   };
 
   const handleFilterChange = useCallback((data) => {
@@ -38,6 +37,14 @@ function RecipeList() {
   const handleRecipeEdit = () => {
     handleRecipeFormToggle();
   };
+
+  // When recipe state changes and recipeData exists, update recipeData. Probably not optimal
+  useEffect(() => {
+    if (recipeData) {
+      const updatedRec = recipes.find((rec) => rec.id === recipeData.id);
+      setRecipeData(updatedRec);
+    }
+  }, [recipes, recipeData]);
 
   return (
     <>
