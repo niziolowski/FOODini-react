@@ -114,7 +114,7 @@ function RecipeForm({ data, onClose }) {
 
   const header = (
     <header className={styles.header}>
-      <h1>Stwórz nowy przepis</h1>
+      <h1>{isEditing ? "Edytuj przepis" : "Stwórz nowy przepis"}</h1>
       <Button onClick={onClose} round>
         <FiX />
       </Button>

@@ -21,6 +21,7 @@ function StorageItem({ item, onEdit, ...rest }) {
     mapRange(daysToExpiry, 0, item.expiry, 0, 100)
   );
 
+  // On item click
   const handleClick = (e) => {
     const btn = e.target.closest("button");
 
@@ -28,11 +29,13 @@ function StorageItem({ item, onEdit, ...rest }) {
     if (!btn) onEdit(item);
   };
 
+  // Toggle favorites
   const handleBookmark = () => {
     const updated = { ...item, bookmark: !item.bookmark };
     editIngredient(updated);
   };
 
+  // Delete ingredient
   const handleDelete = () => {
     removeIngredient(item.id);
   };

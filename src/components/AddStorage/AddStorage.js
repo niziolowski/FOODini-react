@@ -11,9 +11,10 @@ import Select from "../UI/Select/Select";
 import styles from "./AddStorage.module.css";
 import { formatDate } from "../../utils/dates";
 
-function AddStorage({ onClose, data, isEditing }) {
+function AddStorage({ onClose, data: { isEditing, data } }) {
   const { isMobile } = useContext(LayoutContext);
-  const { tags, addIngredient } = useContext(IngredientsContext);
+  const { tags, addIngredient, editIngredient } =
+    useContext(IngredientsContext);
   const {
     register,
     handleSubmit,
@@ -39,21 +40,23 @@ function AddStorage({ onClose, data, isEditing }) {
     setIsExpiry(!isExpiry);
   }
 
-  const onSubmit = (data) => {
-    const tag = tags.indexOf(data.tag);
+  const onSubmit = (form) => {
+    const tag = tags.indexOf(form.tag);
     const newIngredient = {
-      id: null,
-      app_id: null,
-      name: data.name,
-      amount: data.amount,
-      unit: data.unit,
+      id: isEditing ? data.id : null,
+      app_id: isEditing ? data.app_id : null,
+      name: form.name,
+      amount: form.amount,
+      unit: form.unit,
       type: "storage",
-      expiry: data.expiry,
-      purchase_date: data.date,
+      expiry: form.expiry,
+      purchase_date: form.date,
       tag: tag,
-      bookmark: false,
+      bookmark: isEditing ? data.bookmark : false,
     };
-    addIngredient(newIngredient);
+
+    if (isEditing) editIngredient(newIngredient);
+    if (!isEditing) addIngredient(newIngredient);
   };
 
   useEffect(() => {
@@ -77,7 +80,7 @@ function AddStorage({ onClose, data, isEditing }) {
       {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
       <div className={styles.content}>
         <div className={styles.header}>
-          <h1>Dodaj składnik</h1>
+          <h1>{isEditing ? "Edytuj składnik" : "Dodaj składnik"}</h1>
           <Button onClick={handleClose} round>
             <FiX />
           </Button>
@@ -167,7 +170,7 @@ function AddStorage({ onClose, data, isEditing }) {
           form="add-storage"
           primary
         >
-          Dodaj
+          {isEditing ? "Zapisz" : "Dodaj"}
         </Button>
       </div>
     </>

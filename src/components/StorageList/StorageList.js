@@ -70,7 +70,7 @@ function StorageList() {
 
     setIsSpotlight(false);
     setIsStorageForm(true);
-    setStorageFormData(newIngredient);
+    setStorageFormData({ isEditing: false, data: newIngredient });
   };
 
   // Close storage form
@@ -79,7 +79,10 @@ function StorageList() {
   };
 
   // Fill storage form with clicked item data
-  const handleEditIngredient = (item) => {};
+  const handleEditIngredient = (ingredient) => {
+    setStorageFormData({ isEditing: true, data: ingredient });
+    setIsStorageForm(true);
+  };
 
   // Update filteredStorage on filter options change
   const handleFilterChange = useCallback((data) => {
