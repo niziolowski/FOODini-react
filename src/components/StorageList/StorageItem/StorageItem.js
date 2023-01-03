@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo } from "react";
 import { FiStar, FiTrash } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
 import IngredientsContext from "../../../contexts/ingredients";
@@ -12,13 +12,15 @@ function StorageItem({ item, onEdit, ...rest }) {
   const { editIngredient, removeIngredient } = useContext(IngredientsContext);
 
   // Calculate days until the ingredient expires
-  const [daysToExpiry] = useState(
-    calcDaysToExpiry(item.purchase_date, item.expiry)
+  const daysToExpiry = useMemo(
+    () => calcDaysToExpiry(item.purchase_date, item.expiry),
+    [item.purchase_date, item.expiry]
   );
 
   // Calculate indicator value (between 0 and 100)
-  const [indicatorValue] = useState(
-    mapRange(daysToExpiry, 0, item.expiry, 0, 100)
+  const indicatorValue = useMemo(
+    () => mapRange(daysToExpiry, 0, item.expiry, 0, 100),
+    [daysToExpiry, item.expiry]
   );
 
   // On item click
