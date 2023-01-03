@@ -8,19 +8,22 @@ import styles from "./RecipeForm.module.css";
 import ReactDOM from "react-dom";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toBase64 } from "../../utils/helpers";
+import { img } from "../../assets/images/recipe-placeholder";
 
 function RecipeForm({ data, onClose }) {
   const { tags } = useContext(RecipesContext);
   const root = document.getElementById("modal");
   const [message, setMessage] = useState("test message");
   const [isEditing] = useState(data ? true : false);
-  const { addRecipe } = useContext(RecipesContext);
+  const { addRecipe, editRecipe } = useContext(RecipesContext);
   const {
     register,
     formState: { errors },
     handleSubmit,
     control,
-  } = useForm({ defaultValues: data ? { ...data } : null });
+  } = useForm({
+    defaultValues: data ? { ...data, tag: tags[data.tag] } : null,
+  });
 
   const {
     fields: ingredientsFields,
@@ -84,22 +87,29 @@ function RecipeForm({ data, onClose }) {
   ]);
 
   const onSubmit = async (data) => {
-    const image = await toBase64(data.image[0]);
+    let image = data.image;
+
+    if (typeof data.image === "object") {
+      image = await toBase64(data?.image[0]);
+    }
 
     const tag = tags.indexOf(data.tag);
     const newRecipe = {
-      id: null,
       name: data.name,
       tag,
       difficulty: data.difficulty,
       ingredients: data.ingredients,
       spices: data.spices,
       instructions: data.instructions,
-      image,
+      image: image || img,
       bookmark: false,
     };
 
-    addRecipe(newRecipe);
+    // Edit existing recipe
+    if (isEditing) editRecipe({ ...newRecipe, id: data.id });
+
+    // Create new recipe
+    if (!isEditing) addRecipe({ ...newRecipe, id: null });
   };
 
   const header = (
@@ -111,7 +121,7 @@ function RecipeForm({ data, onClose }) {
     </header>
   );
 
-  const ingredients = (
+  const ingredientList = (
     <section className={styles.ingredients}>
       <h2>Składniki</h2>
       {ingredientsFields.map((field, index) => {
@@ -124,6 +134,7 @@ function RecipeForm({ data, onClose }) {
               placeholder="Nazwa"
               isValid={!errors?.ingredients?.at(index)?.name}
             />
+
             <Input
               {...register(`ingredients.${index}.amount`, {
                 required: "Podaj ilość składnika",
@@ -242,7 +253,7 @@ function RecipeForm({ data, onClose }) {
           </div>
         </div>
       </section>
-      {ingredients}
+      {ingredientList}
       {spices}
       {/* Instructions */}
       <section className={styles.instructions}>

@@ -15,7 +15,6 @@ function RecipeView({ data, onClose, onEdit }) {
 
   const root = document.getElementById("modal");
 
-  console.log(data);
   const header = (
     <>
       <Button className={styles["btn-edit"]} onClick={onEdit} round>
@@ -49,7 +48,7 @@ function RecipeView({ data, onClose, onEdit }) {
               <h2 className={styles.title}>Składniki</h2>
               <ul className={styles["ingredient-list"]}>
                 {data.ingredients.map((ing) => (
-                  <li key={ing.id} className={styles["list-item"]}>
+                  <li key={ing.name} className={styles["list-item"]}>
                     <FiCheck className={styles.check} />
                     <p className={styles.name}>{ing.name}</p>
                     <p>{ing.amount}</p>

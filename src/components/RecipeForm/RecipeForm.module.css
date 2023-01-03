@@ -97,7 +97,8 @@ label.custom-file-upload {
   max-width: 100%;
 }
 
-.row input {
+.row input,
+.row div {
   flex: 1;
 }
 

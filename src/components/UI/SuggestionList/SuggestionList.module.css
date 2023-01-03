@@ -1,0 +1,81 @@
+.spotlight {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: var(--shadow);
+  align-self: flex-start;
+  margin-top: 10%;
+  border: var(--border);
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  z-index: 1;
+}
+
+.search-bar {
+  padding: 15px;
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+  font-size: 1.3rem;
+  color: var(--font-color);
+}
+
+.search-bar input {
+  font-size: inherit;
+  border: none;
+  width: 100%;
+  height: 100%;
+  font-weight: 300;
+  color: var(--font-color);
+  background-color: var(--bg-color);
+}
+
+.search-bar input:focus {
+  outline: none;
+}
+
+.suggestion-list {
+  border-top: var(--border);
+  list-style: none;
+  overflow-y: scroll;
+}
+
+.suggestion-list > li {
+  background-color: var(--bg-color);
+  cursor: pointer;
+}
+
+.suggestion-list > li:hover {
+  filter: brightness(95%);
+}
+
+.suggestion-list > li.hover {
+  filter: brightness(95%);
+}
+
+.btn-add {
+  padding: 15px;
+  font-style: italic;
+  color: var(--accent-color);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+
+.btn-add svg {
+  font-size: 1rem;
+}
+
+/* § MOBILE */
+
+.spotlight.mobile {
+  margin: 0;
+  width: 100%;
+  max-height: none;
+  align-self: stretch;
+  margin-bottom: var(--mobile-nav-bar-size);
+  border-radius: 10px 10px 0 0;
+  box-shadow: none;
+}

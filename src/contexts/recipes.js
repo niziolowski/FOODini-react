@@ -24,8 +24,7 @@ export const RecipesContextProvider = ({ children }) => {
         setRecipes((current) => [...current, res.data]);
       }
     } catch (error) {
-      console.log(error);
-      alert(error);
+      console.error(error);
     }
   };
 
@@ -33,6 +32,7 @@ export const RecipesContextProvider = ({ children }) => {
     const { id } = JSON.parse(localStorage.getItem("user"));
     try {
       const updatedRec = { ...rec, users_id: id };
+
       // Upload to API
       const res = await updateRecipe(updatedRec);
 
