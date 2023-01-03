@@ -30,18 +30,11 @@ export const RecipesContextProvider = ({ children }) => {
   };
 
   const editRecipe = async (rec) => {
-    console.log(rec);
-    // create ingredients object with only the id reference
-    const recipeIngredients = rec.ingredients.map((ing) => ing.id);
-
-    // create updated recipe object
-    const updatedRecipe = {
-      ...rec,
-      ingredients: recipeIngredients,
-    };
-
+    const { id } = JSON.parse(localStorage.getItem("user"));
     try {
-      const res = await updateRecipe(updatedRecipe);
+      const updatedRec = { ...rec, users_id: id };
+      // Upload to API
+      const res = await updateRecipe(updatedRec);
 
       if (res.status === 200) {
         // Update State
@@ -55,7 +48,7 @@ export const RecipesContextProvider = ({ children }) => {
         });
       }
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
@@ -67,7 +60,7 @@ export const RecipesContextProvider = ({ children }) => {
         setRecipes((current) => [...current.filter((rec) => rec.id !== id)]);
       }
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
