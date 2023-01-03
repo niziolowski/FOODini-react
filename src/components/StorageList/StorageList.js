@@ -13,33 +13,41 @@ function StorageList() {
   const { ingredients, addIngredient, getIngredientById } =
     useContext(IngredientsContext);
   const [isSpotlight, setIsSpotlight] = useState(false);
-  const [isAddCatalog, setIsAddCatalog] = useState(false);
-  const [isAddStorage, setIsAddStorage] = useState(false);
-  const [addCatalogData, setAddCatalogData] = useState({});
-  const [addStorageData, setAddStorageData] = useState(null);
+  // Templates catalog form state
+  const [isCatalogForm, setIsCatalogForm] = useState(false);
+  const [catalogFormData, setCatalogFormData] = useState({});
+  // Storage form state
+  const [isStorageForm, setIsStorageForm] = useState(false);
+  const [storageFormData, setStorageFormData] = useState(null);
+  // Storage data (ingredients of type 'storage')
   const [storage, setStorage] = useState([]);
   const [filteredStorage, setFilteredStorage] = useState(storage);
 
   // Filter out template ingredients
+  //TODO: refactor later
   const filteredTemplates = ingredients.filter(
     (ing) => ing.type === "template"
   );
 
+  // Toggle suggestion bar
   const toggleSpotlight = () => {
     setIsSpotlight(!isSpotlight);
   };
 
-  const handleFormAddCatalog = (query) => {
+  // Show form to add new template to catalog
+  const handleCreateTemplate = (query) => {
     const data = { name: query };
     setIsSpotlight(false);
-    setIsAddCatalog(true);
-    setAddCatalogData(data);
+    setIsCatalogForm(true);
+    setCatalogFormData(data);
   };
 
-  const onFormAddCatalogSubmit = (newProduct) => {
-    if (newProduct) {
+  // On form submit, automatically add new ingredient to storage
+  //? Maybe first pass data to storage form for purchase_date edit?
+  const handleCreateTemplateSubmit = (template) => {
+    if (template) {
       const newIngredient = {
-        ...newProduct,
+        ...template,
         id: null,
         app_id: null,
         type: "storage",
@@ -49,9 +57,10 @@ function StorageList() {
       // Add to storage
       addIngredient(newIngredient);
     }
-    setIsAddCatalog(false);
+    setIsCatalogForm(false);
   };
 
+  // Pass storage form with suggestion data
   const handleSuggestionClick = (id) => {
     const product = getIngredientById(id);
 
@@ -60,19 +69,24 @@ function StorageList() {
     };
 
     setIsSpotlight(false);
-    setIsAddStorage(true);
-    setAddStorageData(newIngredient);
+    setIsStorageForm(true);
+    setStorageFormData(newIngredient);
   };
 
-  const handleAddStorageClose = () => {
-    setIsAddStorage(false);
+  // Close storage form
+  const handleStorageFormClose = () => {
+    setIsStorageForm(false);
   };
 
+  // Fill storage form with clicked item data
+  const handleEditIngredient = (item) => {};
+
+  // Update filteredStorage on filter options change
   const handleFilterChange = useCallback((data) => {
     setFilteredStorage(data);
   }, []);
 
-  // Update storage when ingredients change
+  // Update storage on ingredients change
   useEffect(() => {
     setStorage(ingredients.filter((ing) => ing.type === "storage"));
   }, [ingredients]);
@@ -81,27 +95,26 @@ function StorageList() {
     <div
       className={`${styles["storage-list"]} ${isMobile ? styles.mobile : ""}`}
     >
-      {isAddStorage && (
-        <AddStorage onClose={handleAddStorageClose} data={addStorageData} />
+      {isStorageForm && (
+        <AddStorage onClose={handleStorageFormClose} data={storageFormData} />
       )}
       {isSpotlight && (
         <Spotlight
           onClose={toggleSpotlight}
-          onAddNew={handleFormAddCatalog}
+          onAddNew={handleCreateTemplate}
           onSuggestionClick={handleSuggestionClick}
           data={filteredTemplates}
         />
       )}
 
-      {isAddCatalog && (
+      {isCatalogForm && (
         <AddCatalog
-          isActive={isAddCatalog}
+          isActive={isCatalogForm}
           isEditing={false}
-          data={addCatalogData}
-          onClose={onFormAddCatalogSubmit}
+          data={catalogFormData}
+          onClose={handleCreateTemplateSubmit}
         />
       )}
-      {}
       <FilterOptions
         onAddItem={toggleSpotlight}
         onFilterChange={handleFilterChange}
@@ -110,7 +123,11 @@ function StorageList() {
       />
       <ul className={styles.list}>
         {filteredStorage.map((item) => (
-          <StorageItem key={item.id} item={item}></StorageItem>
+          <StorageItem
+            key={item.id}
+            item={item}
+            onEdit={handleEditIngredient}
+          ></StorageItem>
         ))}
       </ul>
     </div>

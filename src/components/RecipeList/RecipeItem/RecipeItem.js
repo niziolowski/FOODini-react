@@ -11,11 +11,14 @@ function RecipeItem({ item, onPreview }) {
   const { tags } = useContext(RecipesContext);
   const { editRecipe, removeRecipe } = useContext(RecipesContext);
 
-  const handleClick = () => {
-    onPreview(item);
+  const handleClick = (e) => {
+    // If target is not a button, show recipe preview
+    if (!e.target.closest("button")) onPreview(item);
   };
 
-  const handleBookmark = () => {
+  const handleBookmark = (e) => {
+    const btn = e.target.closest("button");
+    btn.classList.add("pulsate");
     editRecipe({ ...item, bookmark: !item.bookmark });
   };
 
@@ -24,7 +27,7 @@ function RecipeItem({ item, onPreview }) {
   };
 
   return (
-    <li className={styles["recipe-item"]}>
+    <li onClick={handleClick} className={styles["recipe-item"]}>
       <div className={styles["image-wrapper"]}>
         <img className={styles.image} src={item.image} alt="recipe" />
         <Tag className={styles.tag} tag={item.tag} small>
@@ -34,9 +37,7 @@ function RecipeItem({ item, onPreview }) {
       </div>
 
       <div className={styles.col}>
-        <div onClick={handleClick} className={styles.title}>
-          {item.name}
-        </div>
+        <div className={styles.title}>{item.name}</div>
         <div className={styles.info}>
           <DifficultyIndicator value={item.difficulty} />
           <BarIndicator label="Składniki" value={30} />

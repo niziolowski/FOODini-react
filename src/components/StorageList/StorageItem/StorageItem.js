@@ -8,7 +8,7 @@ import BarIndicator from "../../UI/BarIndicator/BarIndicator";
 import Button from "../../UI/Button/Button";
 import styles from "./StorageItem.module.css";
 
-function StorageItem({ item, ...rest }) {
+function StorageItem({ item, onEdit, ...rest }) {
   const { editIngredient, removeIngredient } = useContext(IngredientsContext);
 
   // Calculate days until the ingredient expires
@@ -21,6 +21,13 @@ function StorageItem({ item, ...rest }) {
     mapRange(daysToExpiry, 0, item.expiry, 0, 100)
   );
 
+  const handleClick = (e) => {
+    const btn = e.target.closest("button");
+
+    // If click target is not a button, edit ingredient
+    if (!btn) onEdit(item);
+  };
+
   const handleBookmark = () => {
     const updated = { ...item, bookmark: !item.bookmark };
     editIngredient(updated);
@@ -31,7 +38,7 @@ function StorageItem({ item, ...rest }) {
   };
 
   return (
-    <li {...rest} className={styles["storage-item"]}>
+    <li onClick={handleClick} {...rest} className={styles["storage-item"]}>
       <Button
         onClick={handleBookmark}
         round

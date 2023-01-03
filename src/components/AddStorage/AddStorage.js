@@ -11,7 +11,7 @@ import Select from "../UI/Select/Select";
 import styles from "./AddStorage.module.css";
 import { formatDate } from "../../utils/dates";
 
-function AddStorage({ onClose, data }) {
+function AddStorage({ onClose, data, isEditing }) {
   const { isMobile } = useContext(LayoutContext);
   const { tags, addIngredient } = useContext(IngredientsContext);
   const {

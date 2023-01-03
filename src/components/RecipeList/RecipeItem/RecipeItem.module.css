@@ -2,6 +2,12 @@
   display: flex;
   height: 100px;
   border-bottom: 1px solid var(--grey-color);
+  cursor: pointer;
+  background-color: var(--bg-color);
+}
+
+.recipe-item:hover {
+  filter: brightness(95%);
 }
 
 .title {
