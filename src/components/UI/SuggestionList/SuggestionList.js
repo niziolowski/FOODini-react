@@ -1,5 +1,4 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
 import { FiEdit, FiSearch } from "react-icons/fi";
 import LayoutContext from "../../../contexts/layout";
 import StorageItem from "../../StorageList/StorageItem/StorageItem";
@@ -8,7 +7,6 @@ import styles from "./SuggestionList.module.css";
 
 function SuggestionList({ data, onClose, onAddNew, onSuggestionClick }) {
   const { isMobile } = useContext(LayoutContext);
-  const root = document.getElementById("modal");
   // Suggestions
 
   const [filteredData, setFilteredData] = useState([]);

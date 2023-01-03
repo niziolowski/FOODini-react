@@ -1,14 +1,14 @@
 import { useContext } from "react";
 import { FiStar, FiTrash } from "react-icons/fi";
 import RecipesContext from "../../../contexts/recipes";
-import UserDataContext from "../../../contexts/user-data";
+import Tag from "../../UI/Tag/Tag";
 import BarIndicator from "../../UI/BarIndicator/BarIndicator";
 import Button from "../../UI/Button/Button";
 import DifficultyIndicator from "../../UI/DifficultyIndicator/DifficultyIndicator";
 import styles from "./RecipeItem.module.css";
 
 function RecipeItem({ item, onPreview }) {
-  const { tagsRec } = useContext(UserDataContext);
+  const { tags } = useContext(RecipesContext);
   const { editRecipe, removeRecipe } = useContext(RecipesContext);
 
   const handleClick = () => {
@@ -22,12 +22,16 @@ function RecipeItem({ item, onPreview }) {
   const handleRemove = () => {
     removeRecipe(item.id);
   };
+  console.log(item);
 
   return (
     <li className={styles["recipe-item"]}>
       <div className={styles["image-wrapper"]}>
         <img className={styles.image} src={item.image} alt="recipe" />
-        <div className={styles.tag}>{tagsRec[item.tag]}</div>
+        <Tag className={styles.tag} tag={item.tag} small>
+          {tags[item.tag]}
+        </Tag>
+        {/* <div className={styles.tag}>{tags[item.tag]}</div> */}
       </div>
 
       <div className={styles.col}>

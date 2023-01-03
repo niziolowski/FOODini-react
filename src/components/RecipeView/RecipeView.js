@@ -3,15 +3,17 @@ import LayoutContext from "../../contexts/layout";
 import styles from "./RecipeView.module.css";
 import ReactDOM from "react-dom";
 import { FiEdit, FiX, FiStar, FiCheck, FiChevronRight } from "react-icons/fi";
-import UserDataContext from "../../contexts/user-data";
+
 import BarIndicator from "../UI/BarIndicator/BarIndicator";
 import Button from "../UI/Button/Button";
 import DifficultyIndicator from "../UI/DifficultyIndicator/DifficultyIndicator";
 import Tag from "../UI/Tag/Tag";
 
+import RecipesContext from "../../contexts/recipes";
+
 function RecipeView({ data, onClose, onEdit }) {
   const { isMobile } = useContext(LayoutContext);
-  const { tagsRec } = useContext(UserDataContext);
+  const { tags } = useContext(RecipesContext);
 
   const root = document.getElementById("modal");
 
@@ -34,7 +36,7 @@ function RecipeView({ data, onClose, onEdit }) {
           <section className={styles.summary}>
             <img src={data.image} alt="recipe" />
             <Tag className={styles.tag} tag={data.tag}>
-              {tagsRec[data.tag]}
+              {tags[data.tag]}
             </Tag>
             {isMobile && header}
             <div className={styles.indicators}>

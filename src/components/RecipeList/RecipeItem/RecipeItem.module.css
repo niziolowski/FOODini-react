@@ -27,6 +27,8 @@
 /* tag inside the image wrapper */
 .tag {
   position: absolute;
+  bottom: 5px;
+  /* position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,8 +40,7 @@
   height: 18px;
   padding: 0 10px;
   border-radius: 10px;
-  background-color: var(--tag-2-color);
-  color: var(--font-color);
+  color: var(--font-color); */
 }
 
 .col {
