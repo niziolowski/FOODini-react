@@ -4,10 +4,13 @@ import styles from "./InputWithSuggestions.module.css";
 import { FiEdit } from "react-icons/fi";
 
 const InputWithSuggestions = React.forwardRef(
-  ({ query, data, onAddNew, onSuggestionClick, ...rest }, ref) => {
+  ({ query, id, data, onAddNew, onSuggestionClick, ...rest }, ref) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
+    // Reference for keyboard navigation
     const suggestionsEl = useRef();
+
     const [filteredData, setFilteredData] = useState([]);
+    const [isFocused, setIsFocused] = useState(true);
 
     // Not using onChange to trigger filtering data because the useForm is already using it.
     const filterData = useMemo(() => {
@@ -51,6 +54,11 @@ const InputWithSuggestions = React.forwardRef(
         if (!target) return;
         target.click();
       }
+
+      // On 'Escape' and 'Tab focus out
+      if (e.key === "Escape" || e.key === "Tab") {
+        setIsFocused(false);
+      }
     };
 
     const handleSuggestionClick = (e) => {
@@ -59,29 +67,41 @@ const InputWithSuggestions = React.forwardRef(
 
       // Pass id UP using prop
       onSuggestionClick(id);
+      setIsFocused(false);
     };
 
-    const handleAddClick = () => {
-      // Pass to form
-      onAddNew(query);
-    };
+    // Show suggestions
+    const handleFocus = () => setIsFocused(true);
+
+    // Pass query up to create a new template
+    const handleAddClick = () => onAddNew(query);
 
     useEffect(() => {
-      [...suggestionsEl.current.children].forEach((item, i) => {
-        item.classList.remove(styles.hover);
-        if (i === selectedIndex) item.classList.add(styles.hover);
-      });
+      if (suggestionsEl.current)
+        [...suggestionsEl.current.children].forEach((item, i) => {
+          item.classList.remove(styles.hover);
+          if (i === selectedIndex) item.classList.add(styles.hover);
+        });
     }, [selectedIndex, query]);
+
+    // Hide suggestions if user clicks outside of this component
+    useEffect(() => {
+      const handler = (e) => {
+        const target = e.target.closest("[data-id]")?.dataset?.id;
+        if (target !== id) setIsFocused(false);
+      };
+
+      // Listen for clicks
+      window.addEventListener("click", handler);
+      return () => {
+        window.removeEventListener("click", handler);
+      };
+    }, []);
 
     const suggestions = (
       <ul ref={suggestionsEl} className={styles["suggestion-list"]}>
         {filteredData.map((item) => (
-          <li
-            onClick={handleSuggestionClick}
-            key={item.id}
-            item={item}
-            data-id={item.id}
-          >
+          <li onClick={handleSuggestionClick} key={item.id} data-id={item.id}>
             {item.name}
           </li>
         ))}
@@ -94,9 +114,15 @@ const InputWithSuggestions = React.forwardRef(
     );
 
     return (
-      <div>
-        <Input onKeyDown={handleKeyDown} ref={ref} {...rest} />
-        {suggestions}
+      <div data-id={id}>
+        <Input
+          onKeyDown={handleKeyDown}
+          ref={ref}
+          onFocusIn={handleFocus}
+          autoComplete="off"
+          {...rest}
+        />
+        {isFocused && suggestions}
       </div>
     );
   }

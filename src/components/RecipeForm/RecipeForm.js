@@ -125,13 +125,13 @@ function RecipeForm({ data, onClose }) {
   };
 
   // Fill the form with suggestion data
-  const handleSuggestionClick = (id) => {
+  const handleSuggestionClick = (id, index) => {
     const ingredient = getIngredientById(id);
 
     // fill the row with ingredient values
-    setValue(`ingredients.${ingredientIndex}.name`, ingredient.name);
-    setValue(`ingredients.${ingredientIndex}.amount`, ingredient.amount);
-    setValue(`ingredients.${ingredientIndex}.unit`, ingredient.unit);
+    setValue(`ingredients.${index}.name`, ingredient.name);
+    setValue(`ingredients.${index}.amount`, ingredient.amount);
+    setValue(`ingredients.${index}.unit`, ingredient.unit);
   };
 
   const onSubmit = async (data) => {
@@ -183,8 +183,9 @@ function RecipeForm({ data, onClose }) {
               onAddNew={(query) => {
                 handleCreateTemplate(query, index);
               }}
-              onSuggestionClick={handleSuggestionClick}
+              onSuggestionClick={(id) => handleSuggestionClick(id, index)}
               data={suggestions}
+              id={field.id}
               placeholder="Nazwa"
               isValid={!errors?.ingredients?.at(index)?.name}
             />
