@@ -39,6 +39,7 @@ function RecipeList() {
   };
 
   // When recipe state changes and recipeData exists, update recipeData. Probably not optimal
+  //? Maybe refactor this with useMemo and useState combination?
   useEffect(() => {
     if (recipeData) {
       const updatedRec = recipes.find((rec) => rec.id === recipeData.id);
