@@ -60,7 +60,7 @@ function StorageList() {
     setIsCatalogForm(false);
   };
 
-  // Pass storage form with suggestion data
+  // Fill storage form with suggestion data
   const handleSuggestionClick = (id) => {
     const product = getIngredientById(id);
 

@@ -9,18 +9,35 @@ import ReactDOM from "react-dom";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toBase64 } from "../../utils/helpers";
 import { img } from "../../assets/images/recipe-placeholder";
+import IngredientsContext from "../../contexts/ingredients";
+import InputWithSuggestions from "../UI/InputWithSuggestions/InputWithSuggestions";
+import AddCatalog from "../AddCatalog/AddCatalog";
 
 function RecipeForm({ data, onClose }) {
-  const { tags } = useContext(RecipesContext);
   const root = document.getElementById("modal");
+
+  // Add Template state
+  const [isCatalogForm, setIsCatalogForm] = useState(false);
+  const [catalogFormData, setCatalogFormData] = useState(null);
+
+  // User data
+  const { ingredients, getIngredientById } = useContext(IngredientsContext);
+  const { tags, addRecipe, editRecipe } = useContext(RecipesContext);
+
+  // Ingredients Suggestions
+  const suggestions = ingredients.filter((item) => item.type === "template");
+  const [ingredientIndex, setIngredientIndex] = useState(0); // reference for filling the form on suggestion click
+
+  // Form state
   const [message, setMessage] = useState("test message");
   const [isEditing] = useState(data ? true : false);
-  const { addRecipe, editRecipe } = useContext(RecipesContext);
   const {
     register,
     formState: { errors },
     handleSubmit,
     control,
+    watch,
+    setValue,
   } = useForm({
     defaultValues: data ? { ...data, tag: tags[data.tag] } : null,
   });
@@ -86,6 +103,37 @@ function RecipeForm({ data, onClose }) {
     errors,
   ]);
 
+  // Show form to add new template to catalog
+  const handleCreateTemplate = (query, index) => {
+    // Set current ingredient index for later reference
+    setIngredientIndex(index);
+
+    const data = { name: query };
+    setCatalogFormData(data);
+    setIsCatalogForm(true);
+  };
+
+  // On form submit, automatically add new ingredient to storage
+  const handleCreateTemplateSubmit = (ingredient) => {
+    if (ingredient) {
+      // fill the row with ingredient values
+      setValue(`ingredients.${ingredientIndex}.name`, ingredient.name);
+      setValue(`ingredients.${ingredientIndex}.amount`, ingredient.amount);
+      setValue(`ingredients.${ingredientIndex}.unit`, ingredient.unit);
+    }
+    setIsCatalogForm(false);
+  };
+
+  // Fill the form with suggestion data
+  const handleSuggestionClick = (id) => {
+    const ingredient = getIngredientById(id);
+
+    // fill the row with ingredient values
+    setValue(`ingredients.${ingredientIndex}.name`, ingredient.name);
+    setValue(`ingredients.${ingredientIndex}.amount`, ingredient.amount);
+    setValue(`ingredients.${ingredientIndex}.unit`, ingredient.unit);
+  };
+
   const onSubmit = async (data) => {
     let image = data.image;
 
@@ -127,14 +175,19 @@ function RecipeForm({ data, onClose }) {
       {ingredientsFields.map((field, index) => {
         return (
           <div key={field.id} className={styles.row}>
-            <Input
+            <InputWithSuggestions
               {...register(`ingredients.${index}.name`, {
                 required: "Wybierz składnik",
               })}
+              query={watch(`ingredients.${index}.name`)}
+              onAddNew={(query) => {
+                handleCreateTemplate(query, index);
+              }}
+              onSuggestionClick={handleSuggestionClick}
+              data={suggestions}
               placeholder="Nazwa"
               isValid={!errors?.ingredients?.at(index)?.name}
             />
-
             <Input
               {...register(`ingredients.${index}.amount`, {
                 required: "Podaj ilość składnika",
@@ -269,18 +322,27 @@ function RecipeForm({ data, onClose }) {
   );
 
   const content = (
-    <div className={styles.content}>
-      {header}
-      {form}
-      <div className={styles.message}>
-        {message && <FiInfo />}
-        {message}
+    <>
+      <div className={styles.content}>
+        {header}
+        {form}
+        <div className={styles.message}>
+          {message && <FiInfo />}
+          {message}
+        </div>
+        <Button type="submit" form="add-recipe" primary>
+          {isEditing ? "Zapisz" : "Stwórz"}
+        </Button>
       </div>
-      <Button type="submit" form="add-recipe" primary>
-        {isEditing ? "Zapisz" : "Stwórz"}
-      </Button>
-    </div>
+      <AddCatalog
+        data={catalogFormData}
+        isActive={isCatalogForm}
+        isEditing={false}
+        onClose={handleCreateTemplateSubmit}
+      />
+    </>
   );
+
   return ReactDOM.createPortal(content, root);
 }
 
