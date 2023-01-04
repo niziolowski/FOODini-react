@@ -55,8 +55,8 @@ const InputWithSuggestions = React.forwardRef(
         target.click();
       }
 
-      // On 'Escape' and 'Tab focus out
-      if (e.key === "Escape" || e.key === "Tab") {
+      // On 'Tab focus out
+      if (e.key === "Tab") {
         setIsFocused(false);
       }
     };
@@ -87,7 +87,11 @@ const InputWithSuggestions = React.forwardRef(
     // Hide suggestions if user clicks outside of this component
     useEffect(() => {
       const handler = (e) => {
+        // get parent id
         const target = e.target.closest("[data-id]")?.dataset?.id;
+        if (!target) return;
+
+        // If parent id is different than id from props, hide suggestions
         if (target !== id) setIsFocused(false);
       };
 
