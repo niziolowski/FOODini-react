@@ -185,7 +185,6 @@ function RecipeForm({ data, onClose }) {
               }}
               onSuggestionClick={(id) => handleSuggestionClick(id, index)}
               data={suggestions}
-              id={field.id}
               placeholder="Nazwa"
               isValid={!errors?.ingredients?.at(index)?.name}
             />
@@ -242,6 +241,7 @@ function RecipeForm({ data, onClose }) {
               })}
               placeholder="Nazwa"
               isValid={!errors?.spices?.at(index)?.name}
+              autoComplete="off"
             />
             <Button
               onClick={() => spicesRemove(index)}

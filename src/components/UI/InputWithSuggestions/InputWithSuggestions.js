@@ -1,31 +1,18 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Input from "../Input/Input";
 import styles from "./InputWithSuggestions.module.css";
 import { FiEdit } from "react-icons/fi";
 
 const InputWithSuggestions = React.forwardRef(
-  ({ query, id, data, onAddNew, onSuggestionClick, ...rest }, ref) => {
+  ({ query, data, onAddNew, onSuggestionClick, ...rest }, ref) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     // Reference for keyboard navigation
     const suggestionsEl = useRef();
+    // Reference for clicks outside component
+    const parentEl = useRef();
 
+    const [isFocused, setIsFocused] = useState(false);
     const [filteredData, setFilteredData] = useState([]);
-    const [isFocused, setIsFocused] = useState(true);
-
-    // Not using onChange to trigger filtering data because the useForm is already using it.
-    const filterData = useMemo(() => {
-      // Filter data with value
-      const filtered = data.filter((item) =>
-        item.name.toLowerCase().startsWith(query.toLowerCase())
-      );
-
-      // Reset selected index
-      setSelectedIndex(0);
-      // Set filtered data
-      const output = query.length === 0 ? [] : filtered;
-      setFilteredData(output);
-      return output;
-    }, [query]);
 
     // Handle keyboard navigation
     const handleKeyDown = (e) => {
@@ -76,31 +63,43 @@ const InputWithSuggestions = React.forwardRef(
     // Pass query up to create a new template
     const handleAddClick = () => onAddNew(query);
 
+    // Hide suggestions if user clicks outside of this component
     useEffect(() => {
-      if (suggestionsEl.current)
+      const handler = (e) => {
+        if (parentEl.current && !parentEl.current.contains(e.target))
+          setIsFocused(false);
+      };
+
+      document.addEventListener("mousedown", handler);
+
+      return () => {
+        document.removeEventListener("mousedown", handler);
+      };
+    }, []);
+
+    // Filter the data when the query value changes
+    useEffect(() => {
+      // Filter data with value
+      const filtered = data.filter((item) =>
+        item.name.toLowerCase().includes(query.toLowerCase())
+      );
+
+      // Reset selected index
+      setSelectedIndex(0);
+      // Set filtered data
+      const output = query.length === 0 ? data : filtered;
+      setFilteredData(output);
+    }, [query, data]);
+
+    // Update the suggestions hover state based on keyboard navigation
+    useEffect(() => {
+      if (suggestionsEl.current) {
         [...suggestionsEl.current.children].forEach((item, i) => {
           item.classList.remove(styles.hover);
           if (i === selectedIndex) item.classList.add(styles.hover);
         });
-    }, [selectedIndex, query]);
-
-    // Hide suggestions if user clicks outside of this component
-    useEffect(() => {
-      const handler = (e) => {
-        // get parent id
-        const target = e.target.closest("[data-id]")?.dataset?.id;
-        if (!target) return;
-
-        // If parent id is different than id from props, hide suggestions
-        if (target !== id) setIsFocused(false);
-      };
-
-      // Listen for clicks
-      window.addEventListener("click", handler);
-      return () => {
-        window.removeEventListener("click", handler);
-      };
-    }, []);
+      }
+    }, [selectedIndex, filteredData, isFocused]);
 
     const suggestions = (
       <ul ref={suggestionsEl} className={styles["suggestion-list"]}>
@@ -109,17 +108,17 @@ const InputWithSuggestions = React.forwardRef(
             {item.name}
           </li>
         ))}
-        {query.length > 0 && (
-          <li onClick={handleAddClick} className={styles["btn-add"]}>
-            Stwórz nowy produkt <FiEdit />
-          </li>
-        )}
+
+        <li onClick={handleAddClick} className={styles["btn-add"]}>
+          Stwórz nowy produkt <FiEdit />
+        </li>
       </ul>
     );
 
     return (
-      <div data-id={id}>
+      <div className={styles.content} ref={parentEl}>
         <Input
+          className={styles.input}
           onKeyDown={handleKeyDown}
           ref={ref}
           onFocusIn={handleFocus}
