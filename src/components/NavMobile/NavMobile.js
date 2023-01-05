@@ -38,7 +38,7 @@ function NavMobile() {
       icon: <FiShoppingBag />,
     },
     {
-      name: "settings",
+      name: "profile",
       icon: <FiSettings />,
     },
   ];

@@ -14,16 +14,18 @@ import LoginPage from "./components/LoginPage/LoginPage";
 import AuthContext from "./contexts/auth";
 import { IngredientsContextProvider } from "./contexts/ingredients";
 import { RecipesContextProvider } from "./contexts/recipes";
+import Profile from "./components/Profile/Profile";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
+
   const { isLoggedIn } = useContext(AuthContext);
 
   const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;
   // Hide all windows when switching to mobile view
   useEffect(() => {
     dispatchIsVisible({ type: "home", mode: "switch" });
-  }, [isMobile, dispatchIsVisible]);
+  }, [isLoggedIn, dispatchIsVisible]);
 
   // This is to prevent weird scrolling animation on iOS. Not ideal, can flicker sometimes
   useEffect(() => {
@@ -56,6 +58,7 @@ function App() {
               isVisible.sidebar ? styles.shift : ""
             }`}
           >
+            {isMobile && isVisible.profile && <Profile />}
             {!isMobile ? <Nav /> : <NavMobile />}
 
             <Plan />

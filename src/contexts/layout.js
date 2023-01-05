@@ -11,6 +11,7 @@ const visibilityInitialState = {
   catalog: false,
   addCatalog: false,
   recipeView: false,
+  profile: false,
 };
 
 /**
@@ -29,6 +30,11 @@ function visibilityReducer(state, action) {
         return {
           ...state,
           settings: !state.settings,
+        };
+      case "profile":
+        return {
+          ...state,
+          profile: !state.profile,
         };
       case "sidebar":
         return {
@@ -58,6 +64,8 @@ function visibilityReducer(state, action) {
         return { ...visibilityInitialState, shoppingList: true };
       case "settings":
         return { ...visibilityInitialState, settings: true };
+      case "profile":
+        return { ...visibilityInitialState, profile: true };
       case "storage":
         return { ...visibilityInitialState, storage: true };
       case "recipes":

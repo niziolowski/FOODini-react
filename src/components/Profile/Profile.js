@@ -7,23 +7,24 @@ import styles from "./Profile.module.css";
 
 function Profile({ onClose }) {
   const { name, email, logout } = useContext(AuthContext);
-  const { dispatchIsVisible } = useContext(LayoutContext);
+  const { isMobile, dispatchIsVisible } = useContext(LayoutContext);
 
   const handleLogout = () => {
     logout();
   };
 
-  // * Catalog should be called 'templates'
+  // * Catalog should really be called 'templates'
   const handleCatalog = () => {
+    console.log("test");
     dispatchIsVisible({ type: "catalog", mode: "toggle" });
-    onClose();
+    dispatchIsVisible({ type: "profile", mode: "toggle" });
   };
 
-  // Close panel when on mouseleave
+  // Close panel on mouseleave
   useEffect(() => {
     const handleClose = (e) => {
       const parentEl = e.target.closest(`.${styles.content}`);
-      if (!parentEl) onClose();
+      if (!parentEl) dispatchIsVisible({ type: "profile", mode: "toggle" });
     };
 
     window.addEventListener("touchstart", handleClose);
@@ -34,23 +35,36 @@ function Profile({ onClose }) {
   }, [onClose]);
 
   return (
-    <div onMouseLeave={onClose} className={styles.content}>
-      <Button className={styles["btn-toggle"]} onClick={onClose} round mini>
-        <FiSettings />
-      </Button>
-      <div className={styles.col}>
-        <h1>{name}</h1>
-        <p>{email}</p>
+    <div
+      onMouseLeave={onClose}
+      className={`${styles.content} ${isMobile && styles.mobile}`}
+    >
+      <div className={styles.box}>
+        {!isMobile && (
+          <Button className={styles["btn-toggle"]} onClick={onClose} round mini>
+            <FiSettings />
+          </Button>
+        )}
+        <div className={styles.col}>
+          <h1>{name}</h1>
+          <p>{email}</p>
+        </div>
+        <Button primary wide outline>
+          Wygląd
+        </Button>
+        <Button
+          disabled={isMobile}
+          onClick={handleCatalog}
+          primary
+          wide
+          outline
+        >
+          Szablony produktów
+        </Button>
+        <Button onClick={handleLogout} primary wide>
+          Wyloguj się
+        </Button>
       </div>
-      <Button primary wide outline>
-        Wygląd
-      </Button>
-      <Button onClick={handleCatalog} primary wide outline>
-        Szablony produktów
-      </Button>
-      <Button onClick={handleLogout} primary wide>
-        Wyloguj się
-      </Button>
     </div>
   );
 }
