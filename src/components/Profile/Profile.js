@@ -15,7 +15,6 @@ function Profile({ onClose }) {
 
   // * Catalog should really be called 'templates'
   const handleCatalog = () => {
-    console.log("test");
     dispatchIsVisible({ type: "catalog", mode: "toggle" });
     dispatchIsVisible({ type: "profile", mode: "toggle" });
   };

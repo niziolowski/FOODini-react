@@ -27,9 +27,9 @@ export const IngredientsContextProvider = ({ children }) => {
         // Update State
         setIngredients((current) => [...current, res.data]);
       }
+      return res;
     } catch (error) {
-      console.log(error);
-      alert(error);
+      throw error;
     }
   };
 

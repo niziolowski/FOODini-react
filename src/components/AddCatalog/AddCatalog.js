@@ -7,20 +7,29 @@ import Button from "../UI/Button/Button";
 import styles from "./AddCatalog.module.css";
 import Input from "../UI/Input/Input";
 import Select from "../UI/Select/Select";
-import UserDataContext from "../../contexts/user-data";
 import IngredientsContext from "../../contexts/ingredients";
 import { useForm } from "react-hook-form";
+import Spinner from "../UI/Spinner/Spinner";
 
 // data gets passed in and out from other places to quickly create a new template
 function AddCatalog({ isActive, isEditing, data, onClose }) {
   const { isMobile } = useContext(LayoutContext);
-  const { tagsIng } = useContext(UserDataContext);
+
+  // Btn for setting expiry to Infinite
   const [isExpiry, setIsExpiry] = useState(true);
+
+  // Ingredients context
   const { tags, addIngredient, editIngredient } =
     useContext(IngredientsContext);
 
+  // Validation message
   const [message, setMessage] = useState(null);
+
+  // Rendering location
   const root = document.getElementById("modal");
+
+  // React-Form-Hook setup
+  const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
     formState: { errors },
@@ -35,35 +44,43 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
     onClose();
   };
 
-  function onSubmit(form) {
-    console.log("submit");
-    const tag = tags.indexOf(form.tag);
+  async function onSubmit(form) {
+    try {
+      setLoading(true);
 
-    // Create new Ingredient object
-    const newProduct = {
-      id: isEditing ? data?.id : null,
-      app_id: isEditing ? data?.app_id : null,
-      name: form.name,
-      type: "template",
-      amount: form.amount,
-      unit: form.unit,
-      expiry: form.expiry,
-      purchase_date: new Date(),
-      tag: tag,
-      bookmark: form?.bookmark || false,
-      created_at: null,
-      users_id: null, // ID is added in IngredientsContext
-      recipes_id: null,
-    };
+      const tag = tags.indexOf(form.tag);
 
-    if (isEditing) {
-      editIngredient(newProduct);
+      // Create new Ingredient object
+      const newProduct = {
+        id: isEditing ? data?.id : null,
+        app_id: isEditing ? data?.app_id : null,
+        name: form.name,
+        type: "template",
+        amount: form.amount,
+        unit: form.unit,
+        expiry: form.expiry === 0 ? Infinity : form.expiry,
+        purchase_date: new Date(),
+        tag: tag,
+        bookmark: form?.bookmark || false,
+        created_at: null,
+        users_id: null, // ID is added in IngredientsContext
+        recipes_id: null,
+      };
+
+      if (isEditing) {
+        await editIngredient(newProduct);
+      }
+      // Create mode
+      if (!isEditing) await addIngredient(newProduct);
+      setLoading(false);
+
+      // close the form and pass the data
+      onClose(newProduct);
+    } catch (error) {
+      console.error(error);
+      setMessage(error.message);
+      setLoading(false);
     }
-    // Create mode
-    if (!isEditing) addIngredient(newProduct);
-
-    // close the form and pass the data
-    onClose(newProduct);
   }
 
   // handle BTN no expiry
@@ -74,6 +91,7 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
     setIsExpiry(!isExpiry);
   }
 
+  // Update validation message on error change
   useEffect(() => {
     if (errors.name) return setMessage(errors.name.message);
 
@@ -125,7 +143,7 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
           </div>
           <div className={styles.col}>
             <label>Grupa</label>
-            <Select options={tagsIng} name="tag" {...register("tag")} />
+            <Select options={tags} name="tag" {...register("tag")} />
           </div>
 
           <div className={styles.col}>
@@ -158,7 +176,7 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
               type="number"
               placeholder="ilość dni"
               disabled={!isExpiry}
-              min={0}
+              min={1}
               {...register("expiry", {
                 required: "Wpisz wazność produktu lub zaznacz opcję '∞'",
                 min: 0,
@@ -182,9 +200,13 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
             {message}
           </div>
         </form>
-        <Button form="addCatalog" type="submit" primary>
-          Zapisz
-        </Button>
+        {loading ? (
+          <Spinner></Spinner>
+        ) : (
+          <Button form="addCatalog" type="submit" primary>
+            Zapisz
+          </Button>
+        )}
       </div>
     </>
   );

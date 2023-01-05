@@ -60,6 +60,11 @@
   align-self: center;
 }
 
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
 @media (max-width: 950px) {
   .form {
     grid-template-columns: 80px 80px 110px 120px;

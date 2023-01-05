@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/ingredients";
+const baseURL = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/ingredient";
 const addMultipleURL =
   "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/add_or_edit_ingredients";
 

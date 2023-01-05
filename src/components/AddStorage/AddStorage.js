@@ -10,6 +10,7 @@ import Input from "../UI/Input/Input";
 import Select from "../UI/Select/Select";
 import styles from "./AddStorage.module.css";
 import { formatDate } from "../../utils/dates";
+import Spinner from "../UI/Spinner/Spinner";
 
 function AddStorage({ onClose, data: { isEditing, data } }) {
   const { isMobile } = useContext(LayoutContext);
@@ -32,6 +33,7 @@ function AddStorage({ onClose, data: { isEditing, data } }) {
   });
   const [message, setMessage] = useState(null);
   const [isExpiry, setIsExpiry] = useState(true);
+  const [loading, setLoading] = useState(false);
   const root = document.getElementById("modal");
 
   const handleClose = () => {
@@ -44,23 +46,33 @@ function AddStorage({ onClose, data: { isEditing, data } }) {
     setIsExpiry(!isExpiry);
   }
 
-  const onSubmit = (form) => {
-    const tag = tags.indexOf(form.tag);
-    const newIngredient = {
-      id: isEditing ? data.id : null,
-      app_id: isEditing ? data.app_id : null,
-      name: form.name,
-      amount: form.amount,
-      unit: form.unit,
-      type: "storage",
-      expiry: form.expiry,
-      purchase_date: form.date,
-      tag: tag,
-      bookmark: isEditing ? data.bookmark : false,
-    };
+  const onSubmit = async (form) => {
+    try {
+      setLoading(true);
 
-    if (isEditing) editIngredient(newIngredient);
-    if (!isEditing) addIngredient(newIngredient);
+      const tag = tags.indexOf(form.tag);
+      const newIngredient = {
+        id: isEditing ? data.id : null,
+        app_id: isEditing ? data.app_id : null,
+        name: form.name,
+        amount: form.amount,
+        unit: form.unit,
+        type: "storage",
+        expiry: form.expiry,
+        purchase_date: form.date,
+        tag: tag,
+        bookmark: isEditing ? data.bookmark : false,
+      };
+
+      if (isEditing) await editIngredient(newIngredient);
+      if (!isEditing) await addIngredient(newIngredient);
+
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setMessage(error.message);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -165,14 +177,20 @@ function AddStorage({ onClose, data: { isEditing, data } }) {
           {message && <FiInfo />}
           {message}
         </div>
-        <Button
-          className={styles.submit}
-          type="submit"
-          form="add-storage"
-          primary
-        >
-          {isEditing ? "Zapisz" : "Dodaj"}
-        </Button>
+        <div className={styles.actions}>
+          {loading ? (
+            <Spinner />
+          ) : (
+            <Button
+              className={styles.submit}
+              type="submit"
+              form="add-storage"
+              primary
+            >
+              {isEditing ? "Zapisz" : "Dodaj"}
+            </Button>
+          )}
+        </div>
       </div>
     </>
   );
