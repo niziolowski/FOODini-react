@@ -3,9 +3,16 @@
   justify-content: center;
   align-items: center;
   width: fit-content;
-  height: 30px;
+  /* height: 30px; */
   padding: 5px 15px;
-  border-radius: 15px;
+  border-radius: 50px;
+}
+
+.small {
+  font-size: 0.7rem;
+  height: auto;
+  font-weight: 400;
+  padding: 2px 10px;
 }
 
 .tag span {

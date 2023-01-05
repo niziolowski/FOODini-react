@@ -5,7 +5,7 @@ import Input from "../../UI/Input/Input";
 import styles from "./LoginForm.module.css";
 import lemonSliceImage from "../../../assets/images/lemon-slice.png";
 import lemonSkinImage from "../../../assets/images/lemon-skin.png";
-import { FiInfo } from "react-icons/fi";
+import { FiArrowDown, FiInfo } from "react-icons/fi";
 import AuthContext from "../../../contexts/auth";
 import Spinner from "../../UI/Spinner/Spinner";
 import { animate } from "../../../utils/animate.js";
@@ -29,19 +29,16 @@ function LoginForm() {
     formState: { errors, isValid },
   } = useForm();
 
-  // Update error message on validation
-  useEffect(() => {
-    if (errors.name?.type === "minLength")
-      return setMessage("Imię powinno być dłuższe");
-    if (errors.name?.type === "required")
-      return setMessage(errors.name.message);
-    if (errors.email) return setMessage(errors.email.message);
-    if (errors.password?.type === "minLength")
-      return setMessage("Hasło musi mieć minimum 6 znaków");
-    if (errors.password?.type === "required") return setMessage("Podaj hasło");
+  // Toggle form between login and signUp
+  function handleToggleForm() {
+    setIsLogging((current) => !current);
+    setMessage(null);
+  }
 
-    return setMessage(null);
-  }, [errors.email, errors.password, errors.name]);
+  // Login function for demo account, skipping validation
+  const handleDemoLogin = () => {
+    login("demo@demo.com", 123456);
+  };
 
   // Function is called by useForm handleSubmit
   const onSubmit = async (data) => {
@@ -55,19 +52,27 @@ function LoginForm() {
     if (!response) animate(panelEl.current, "shake");
   };
 
-  // Update message on server error
-  useEffect(() => setMessage(error), [error]);
-
   // When submitting with invalid values, show animation
   const handleInvalidSubmit = () => {
     if (!isValid) animate(panelEl.current, "shake");
   };
 
-  // Toggle form between login and signUp
-  function handleToggleForm() {
-    setIsLogging((current) => !current);
-    setMessage(null);
-  }
+  // Update error message on form validation
+  useEffect(() => {
+    if (errors.name?.type === "minLength")
+      return setMessage("Imię powinno być dłuższe");
+    if (errors.name?.type === "required")
+      return setMessage(errors.name.message);
+    if (errors.email) return setMessage(errors.email.message);
+    if (errors.password?.type === "minLength")
+      return setMessage("Hasło musi mieć minimum 6 znaków");
+    if (errors.password?.type === "required") return setMessage("Podaj hasło");
+
+    return setMessage(null);
+  }, [errors.email, errors.password, errors.name]);
+
+  // Update message on server error
+  useEffect(() => setMessage(error), [error]);
 
   const btnSubmit = (
     <>
@@ -78,6 +83,21 @@ function LoginForm() {
           {isLogging ? "Zaloguj" : "Stwórz konto"}
         </Button>
       )}
+    </>
+  );
+
+  const btnDemo = (
+    <>
+      <div className={styles["demo-actions"]}>
+        {!loading && (
+          <>
+            <FiArrowDown className={`${styles["demo-arrow"]} bounce`} />
+            <Button onClick={handleDemoLogin} type="button" primary outline>
+              Demo
+            </Button>
+          </>
+        )}
+      </div>
     </>
   );
 
@@ -142,6 +162,7 @@ function LoginForm() {
     <>
       {isLogging && (
         <div className={styles.footer}>
+          {btnDemo}
           <span>Nie masz konta?</span>
           <Button onClick={handleToggleForm} primary outline>
             Zarejestruj się

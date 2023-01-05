@@ -3,31 +3,30 @@ import LayoutContext from "../../contexts/layout";
 import styles from "./RecipeView.module.css";
 import ReactDOM from "react-dom";
 import { FiEdit, FiX, FiStar, FiCheck, FiChevronRight } from "react-icons/fi";
-import UserDataContext from "../../contexts/user-data";
+
 import BarIndicator from "../UI/BarIndicator/BarIndicator";
 import Button from "../UI/Button/Button";
 import DifficultyIndicator from "../UI/DifficultyIndicator/DifficultyIndicator";
 import Tag from "../UI/Tag/Tag";
-import RecipeForm from "../RecipeForm/RecipeForm";
 
-function RecipeView({ data, onClose }) {
+import RecipesContext from "../../contexts/recipes";
+
+function RecipeView({ data, onClose, onEdit }) {
   const { isMobile } = useContext(LayoutContext);
-  const { tagsRec } = useContext(UserDataContext);
-
-  const onToggleEdit = () => {};
-
-  const handleClose = () => {
-    onClose();
-  };
+  const { tags, editRecipe } = useContext(RecipesContext);
 
   const root = document.getElementById("modal");
 
-  const controls = (
+  const handleBookmark = () => {
+    editRecipe({ ...data, bookmark: !data.bookmark });
+  };
+
+  const header = (
     <>
-      <Button className={styles["btn-edit"]} onClick={onToggleEdit} round>
+      <Button className={styles["btn-edit"]} onClick={onEdit} round>
         <FiEdit />
       </Button>
-      <h1 className={styles.title}>{data.title}</h1>
+      <h1 className={styles.title}>{data.name}</h1>
       <Button onClick={onClose} className={styles["btn-close"]} round>
         <FiX />
       </Button>
@@ -35,21 +34,24 @@ function RecipeView({ data, onClose }) {
   );
   const content = (
     <>
-      {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
+      {!isMobile && <div onClick={onClose} id="backdrop"></div>}
       <div className={`${styles.content} ${isMobile && styles.mobile}`}>
         <div className={styles.grid}>
           <section className={styles.summary}>
-            <img
-              src="https://na-talerzu.pl/wp-content/uploads/2021/05/Kulki-mocy-z-kokosem-5177.jpg"
-              alt="recipe"
-            />
+            <img src={data.image} alt="recipe" />
             <Tag className={styles.tag} tag={data.tag}>
-              {tagsRec[data.tag]}
+              {tags[data.tag]}
             </Tag>
-            {isMobile && controls}
+            {isMobile && header}
             <div className={styles.indicators}>
               <DifficultyIndicator value={data.difficulty} />
-              <Button round mini fillIcon active={data.bookmark}>
+              <Button
+                onClick={handleBookmark}
+                round
+                mini
+                fillIcon
+                active={data.bookmark}
+              >
                 <FiStar />
               </Button>
               <BarIndicator label="Składniki" value={50} />
@@ -71,22 +73,21 @@ function RecipeView({ data, onClose }) {
               <h2 className={styles.title}>Przyprawy</h2>
               <ul className={styles["spices-list"]}>
                 {data.spices.map((spice) => (
-                  <li key={spice} className={styles["list-item"]}>
+                  <li key={spice.name} className={styles["list-item"]}>
                     <FiChevronRight />
-                    <p className={styles.name}>{spice}</p>
+                    <p className={styles.name}>{spice.name}</p>
                   </li>
                 ))}
               </ul>
             </div>
           </section>
           <section className={styles.description}>
-            <header className={styles.header}>{!isMobile && controls}</header>
+            <header className={styles.header}>{!isMobile && header}</header>
             {isMobile && <h2>Sposób przygotowania</h2>}
             <div className={styles.instructions}>{data.instructions}</div>
           </section>
         </div>
       </div>
-      <RecipeForm isActive={false} />
     </>
   );
 

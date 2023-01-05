@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import {
   FiChevronLeft,
   FiChevronRight,
@@ -16,15 +16,9 @@ import styles from "./Nav.module.css";
  * Main navigation bar component
  */
 function Nav() {
-  const { dispatchIsVisible } = useContext(LayoutContext);
-  const [isProfileVisible, setIsProfileVisible] = useState(false);
+  const { isVisible, dispatchIsVisible } = useContext(LayoutContext);
   function handleClick(e) {
     const btn = e.target.closest("button");
-
-    // // Settings
-    // if (btn.classList.contains("js-btn-settings")) {
-    //   dispatchIsVisible({ type: "settings", mode: "toggle" });
-    // }
 
     // Sidebar
     if (btn.classList.contains("js-btn-sidebar")) {
@@ -33,7 +27,7 @@ function Nav() {
   }
 
   const handleToggleProfile = () => {
-    setIsProfileVisible((current) => !current);
+    dispatchIsVisible({ type: "profile", mode: "toggle" });
   };
 
   return (
@@ -43,14 +37,10 @@ function Nav() {
           <FiSidebar />
         </Button>
         <div className={styles.profile}>
-          <Button
-            className="js-btn-settings"
-            onClick={handleToggleProfile}
-            round
-          >
+          <Button onClick={handleToggleProfile} round>
             <FiSettings />
           </Button>
-          {isProfileVisible && <Profile onClose={handleToggleProfile} />}
+          {isVisible.profile && <Profile onClose={handleToggleProfile} />}
         </div>
       </div>
       <div className={styles.title}>

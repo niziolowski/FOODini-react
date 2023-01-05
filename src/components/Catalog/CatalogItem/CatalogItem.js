@@ -1,24 +1,27 @@
 import { useContext } from "react";
 import { FiEdit, FiStar, FiTrash } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
-import UserDataContext from "../../../contexts/user-data";
+import IngredientsContext from "../../../contexts/ingredients";
 import Button from "../../UI/Button/Button";
 import styles from "./CatalogItem.module.css";
 
 function CatalogItem({ item, onEdit }) {
-  const { tagsIng, deleteProduct, editProduct } = useContext(UserDataContext);
+  const { editIngredient, removeIngredient, tags } =
+    useContext(IngredientsContext);
   function handleEdit() {
     onEdit(item);
   }
 
   function handleDelete(e) {
-    deleteProduct(item.id);
+    removeIngredient(item.id);
   }
 
-  function handleBookmark() {
+  function handleBookmark(e) {
+    const btn = e.target.closest("button");
+    btn.classList.add("pulsate");
     const updatedProduct = { ...item, bookmark: !item.bookmark };
 
-    editProduct(updatedProduct);
+    editIngredient(updatedProduct);
   }
 
   return (
@@ -44,7 +47,7 @@ function CatalogItem({ item, onEdit }) {
             backgroundColor: `var(--tag-${item.tag}-color)`,
           }}
         >
-          {tagsIng[item.tag]}
+          {tags[item.tag]}
         </div>
       </td>
       <td>{item.expiry === 0 ? <TbInfinity /> : `${item.expiry} dni`}</td>

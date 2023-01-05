@@ -7,14 +7,14 @@
 .color-theme {
   /* UI dynamic colors */
   --bg-color: #ffffff;
-  --accent-color: #004391;
+  --accent-color: #0055bc;
   --font-color: #333333;
   --font-negative-color: #eee;
 
   /* UI static colors */
   --success-color: rgb(162, 199, 103);
   --warning-orange-color: orange;
-  --warning-red-color: orangered;
+  --warning-red-color: rgb(255, 89, 0);
   --grey-color: #cccccc;
   --hover-color: #dddddd;
 
@@ -93,7 +93,9 @@ h2 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: var(--bg-color);
+  filter: opacity(0.8);
+
   /* backdrop-filter: blur(5px); */
   z-index: 1;
 }
@@ -101,7 +103,6 @@ h2 {
 #modal {
   display: flex;
   justify-content: center;
-  /* align-items: center; */
   position: absolute;
   top: 0;
   left: 0;
@@ -173,8 +174,8 @@ h2 {
     transform: scale(1);
   }
   50% {
-    -webkit-transform: scale(1.1);
-    transform: scale(1.1);
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
   }
   100% {
     -webkit-transform: scale(1);
@@ -266,5 +267,25 @@ h2 {
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
+  }
+}
+
+.bounce {
+  -webkit-animation: bounce 1s ease-in-out infinite both;
+  animation: bounce 1s ease-in-out infinite both;
+}
+
+@keyframes bounce {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(-20%);
+    transform: translateY(-20%);
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
   }
 }

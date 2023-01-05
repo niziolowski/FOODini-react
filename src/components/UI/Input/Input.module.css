@@ -4,7 +4,7 @@
   background-color: var(--bg-color);
   filter: brightness(95%);
   padding: 0 10px;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   -webkit-appearance: none;
 }
 
@@ -13,6 +13,25 @@
   border: 1px solid var(--warning-red-color);
   background-color: rgba(255, 68, 0, 0.157);
   padding: 0 10px;
-  border-radius: 5px;
   -webkit-appearance: none;
+}
+
+/* Disable the arrow */
+.input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-indent: 1px;
+  text-overflow: "";
+}
+
+/* For IE */
+.input::-ms-expand {
+  display: none;
+}
+
+/* Disable arrows Chrome, Safari, Edge, Opera */
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

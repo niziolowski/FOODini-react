@@ -4,11 +4,12 @@
   position: absolute;
   top: 0;
   right: 0;
-  translate: 101%;
+  translate: 102%;
   width: 350px;
   height: 100%;
   border-left: 1px solid var(--grey-color);
-  backdrop-filter: blur(10px);
+  background-color: var(--bg-color);
+  /* backdrop-filter: blur(10px); */
   transition: var(--transition);
 }
 
@@ -29,7 +30,7 @@
   font-size: 0.8rem;
   font-weight: 400;
   border: none;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   left: 0;
   translate: -100%;
   transition: var(--transition);

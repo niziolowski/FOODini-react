@@ -1,76 +1,136 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import LayoutContext from "../../contexts/layout";
 import styles from "./StorageList.module.css";
 import StorageItem from "./StorageItem/StorageItem";
 import FilterOptions from "../UI/FilterOptions/FilterOptions";
 import Spotlight from "../Spotlight/Spotlight";
-import UserDataContext from "../../contexts/user-data";
 import AddCatalog from "../AddCatalog/AddCatalog";
 import IngredientsContext from "../../contexts/ingredients";
+import AddStorage from "../AddStorage/AddStorage";
 
 function StorageList() {
   const { isMobile } = useContext(LayoutContext);
-  const { ingredients } = useContext(IngredientsContext);
-  const { catalog, getProductByID } = useContext(UserDataContext);
+  const { ingredients, addIngredient, getIngredientById } =
+    useContext(IngredientsContext);
   const [isSpotlight, setIsSpotlight] = useState(false);
-  const [isAddCatalog, setIsAddCatalog] = useState(false);
-  const [addCatalogData, setAddCatalogData] = useState({});
+  // Templates catalog form state
+  const [isCatalogForm, setIsCatalogForm] = useState(false);
+  const [catalogFormData, setCatalogFormData] = useState({});
+  // Storage form state
+  const [isStorageForm, setIsStorageForm] = useState(false);
+  const [storageFormData, setStorageFormData] = useState(null);
+  // Storage data (ingredients of type 'storage')
+  const [storage, setStorage] = useState([]);
+  const [filteredStorage, setFilteredStorage] = useState(storage);
 
-  // Filter out storage ingredients
-  const filteredIngredients = ingredients.filter(
-    (ing) => ing.type === "storage"
+  // Filter out template ingredients
+  //TODO: refactor later
+  const filteredTemplates = ingredients.filter(
+    (ing) => ing.type === "template"
   );
 
+  // Toggle suggestion bar
   const toggleSpotlight = () => {
     setIsSpotlight(!isSpotlight);
   };
 
-  const handleFormAddCatalog = (query) => {
-    console.log(query);
+  // Show form to add new template to catalog
+  const handleCreateTemplate = (query) => {
     const data = { name: query };
     setIsSpotlight(false);
-    setIsAddCatalog(true);
-    setAddCatalogData(data);
+    setIsCatalogForm(true);
+    setCatalogFormData(data);
   };
 
-  const onFormAddCatalogSubmit = (newProduct) => {
-    if (newProduct) {
+  // On form submit, automatically add new ingredient to storage
+  //? Maybe first pass data to storage form for purchase_date edit?
+  const handleCreateTemplateSubmit = (template) => {
+    if (template) {
+      const newIngredient = {
+        ...template,
+        id: null,
+        app_id: null,
+        type: "storage",
+        created_at: null,
+        recipes_id: null,
+      };
       // Add to storage
+      addIngredient(newIngredient);
     }
-    setIsAddCatalog(false);
+    setIsCatalogForm(false);
   };
 
+  // Fill storage form with suggestion data
   const handleSuggestionClick = (id) => {
-    console.log(id);
-    const product = getProductByID(id);
-    console.log(product);
+    const product = getIngredientById(id);
+
+    const newIngredient = {
+      ...product,
+    };
+
+    setIsSpotlight(false);
+    setIsStorageForm(true);
+    setStorageFormData({ isEditing: false, data: newIngredient });
   };
+
+  // Close storage form
+  const handleStorageFormClose = () => {
+    setIsStorageForm(false);
+  };
+
+  // Fill storage form with clicked item data
+  const handleEditIngredient = (ingredient) => {
+    setStorageFormData({ isEditing: true, data: ingredient });
+    setIsStorageForm(true);
+  };
+
+  // Update filteredStorage on filter options change
+  const handleFilterChange = useCallback((data) => {
+    setFilteredStorage(data);
+  }, []);
+
+  // Update storage on ingredients change
+  useEffect(() => {
+    setStorage(ingredients.filter((ing) => ing.type === "storage"));
+  }, [ingredients]);
 
   return (
     <div
       className={`${styles["storage-list"]} ${isMobile ? styles.mobile : ""}`}
     >
+      {isStorageForm && (
+        <AddStorage onClose={handleStorageFormClose} data={storageFormData} />
+      )}
       {isSpotlight && (
         <Spotlight
           onClose={toggleSpotlight}
-          onAddNew={handleFormAddCatalog}
+          onAddNew={handleCreateTemplate}
           onSuggestionClick={handleSuggestionClick}
-          data={catalog}
+          data={filteredTemplates}
         />
       )}
 
-      {isAddCatalog && (
+      {isCatalogForm && (
         <AddCatalog
-          isActive={isAddCatalog}
-          data={addCatalogData}
-          onClose={onFormAddCatalogSubmit}
+          isActive={isCatalogForm}
+          isEditing={false}
+          data={catalogFormData}
+          onClose={handleCreateTemplateSubmit}
         />
       )}
-      {}
-      <FilterOptions onAddItem={toggleSpotlight} />
+      <FilterOptions
+        onAddItem={toggleSpotlight}
+        onFilterChange={handleFilterChange}
+        options={["ważność", "nazwa"]}
+        data={storage}
+      />
       <ul className={styles.list}>
-        {filteredIngredients.map((item) => (
-          <StorageItem key={item.id} item={item}></StorageItem>
+        {filteredStorage.map((item) => (
+          <StorageItem
+            key={item.id}
+            item={item}
+            onEdit={handleEditIngredient}
+          ></StorageItem>
         ))}
       </ul>
     </div>

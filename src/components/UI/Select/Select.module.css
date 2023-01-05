@@ -2,7 +2,8 @@
   height: 40px;
   border: 1px solid var(--grey-color);
   background-color: var(--bg-color);
+  filter: brightness(95%);
   padding: 0 10px;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   -webkit-appearance: none;
 }

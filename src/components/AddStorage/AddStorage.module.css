@@ -1,0 +1,101 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  padding: 20px;
+  align-items: stretch;
+  align-self: center;
+  background-color: var(--bg-color);
+  border: var(--border);
+  border-radius: var(--border-radius);
+  z-index: 1;
+  margin: 40px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.form {
+  display: grid;
+  align-self: center;
+  grid-template-columns: 250px 100px 80px 80px 110px 120px;
+  row-gap: 20px;
+  column-gap: 20px;
+  color: var(--font-color);
+  font-size: 0.8rem;
+  font-weight: 300;
+}
+
+.form label {
+  padding-left: 5px;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+.btn-expiry {
+  position: absolute;
+  right: 0;
+  top: -7px;
+}
+
+.message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--warning-red-color);
+}
+
+.submit {
+  align-self: center;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 950px) {
+  .form {
+    grid-template-columns: 80px 80px 110px 120px;
+  }
+
+  .name {
+    grid-column: 1/4;
+  }
+}
+
+/* § MOBILE */
+
+.content.mobile {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  border: none;
+  border-radius: var(--border-radius);
+}
+
+.content.mobile .form {
+}
+
+@media (max-width: 480px) {
+  .content.mobile .form {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+  .content.mobile .name {
+    grid-column: auto;
+  }
+}

@@ -9,6 +9,12 @@
   color: var(--font-color);
   border-bottom: 1px solid var(--grey-color);
   font-size: 0.7rem;
+  background-color: var(--bg-color);
+}
+
+.storage-item:hover {
+  filter: brightness(95%);
+  cursor: pointer;
 }
 
 .bookmark svg {

@@ -1,4 +1,4 @@
-import { useContext, useState, useReducer, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { FiInfo, FiX } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
@@ -7,207 +7,112 @@ import Button from "../UI/Button/Button";
 import styles from "./AddCatalog.module.css";
 import Input from "../UI/Input/Input";
 import Select from "../UI/Select/Select";
-import UserDataContext from "../../contexts/user-data";
+import IngredientsContext from "../../contexts/ingredients";
+import { useForm } from "react-hook-form";
+import Spinner from "../UI/Spinner/Spinner";
 
-const initialState = {
-  name: "",
-  tag: 0,
-  amount: 1,
-  unit: "szt.",
-  expiry: "",
-  isNameValid: true,
-  isAmountValid: true,
-  isExpiryValid: true,
-  isValid: false,
-  message: "",
-};
-
-const validateForm = (state) => {
-  if (state.name.trim().length === 0) {
-    return {
-      isNameValid: false,
-      isValid: false,
-      message: "Wpisz nazwę produktu",
-    };
-  }
-
-  if (+state.amount < 1)
-    return {
-      isAmountValid: false,
-      isValid: false,
-      message: "Wpisz poprawną ilość",
-    };
-
-  if (+state.expiry < 0 || state.expiry.length === 0)
-    return {
-      isExpiryValid: false,
-      isValid: false,
-      message: "Wpisz wazność produktu lub zaznacz opcję '∞'",
-    };
-
-  return {
-    isValid: true,
-  };
-};
-
-const validateField = (state, field) => {
-  if (field === "name") {
-    if (state[field].trim().length === 0)
-      return {
-        isNameValid: false,
-        message: "Wpisz nazwę produktu",
-      };
-    else return { isNameValid: true, message: "" };
-  }
-
-  if (field === "amount") {
-    if (+state[field] < 1)
-      return {
-        isAmountValid: false,
-        message: "Wpisz poprawną ilość",
-      };
-    else return { isAmountValid: true, message: "" };
-  }
-
-  if (field === "expiry") {
-    if (+state[field] < 0 || state[field].length === 0)
-      return {
-        isExpiryValid: false,
-        message: "Wpisz wazność produktu lub zaznacz opcję '∞'",
-      };
-    else return { isExpiryValid: true, message: "" };
-  }
-
-  return {};
-};
-
-const formReducer = (state, action) => {
-  switch (action.type) {
-    case "FILL_FORM":
-      return { ...initialState, ...action.data };
-    case "UPDATE_FIELD":
-      return { ...state, [action.field]: action.value };
-
-    case "VALIDATE_FIELD":
-      const results = validateField(state, action.field);
-      return { ...state, ...results };
-
-    case "VALIDATE_FORM":
-      const result = validateForm(state);
-      return { ...state, ...result };
-
-    case "RESET_FORM":
-      return { ...initialState };
-    default:
-      return state;
-  }
-};
-
-function AddCatalog({ isActive, data, onClose }) {
+// data gets passed in and out from other places to quickly create a new template
+function AddCatalog({ isActive, isEditing, data, onClose }) {
   const { isMobile } = useContext(LayoutContext);
-  const { tagsIng, addProduct, editProduct } = useContext(UserDataContext);
-  const [isExpiry, setIsExpiry] = useState(true);
-  const [form, dispatchForm] = useReducer(formReducer, initialState);
 
-  // A state that prevents the validation before user action
-  const [initialRender, setInitialRender] = useState(true);
+  // Btn for setting expiry to Infinite
+  const [isExpiry, setIsExpiry] = useState(true);
+
+  // Ingredients context
+  const { tags, addIngredient, editIngredient } =
+    useContext(IngredientsContext);
+
+  // Validation message
+  const [message, setMessage] = useState(null);
+
+  // Rendering location
   const root = document.getElementById("modal");
 
-  function handleClose(newProduct) {
-    setInitialRender(true);
-    dispatchForm({ type: "RESET_FORM" });
-    onClose(newProduct);
+  // React-Form-Hook setup
+  const [loading, setLoading] = useState(false);
+  const {
+    handleSubmit,
+    formState: { errors },
+    register,
+    setValue,
+    trigger,
+  } = useForm({
+    defaultValues: data ? { ...data, tag: tags[data.tag] } : null,
+  });
+
+  const handleClose = () => {
+    onClose();
+  };
+
+  async function onSubmit(form) {
+    try {
+      setLoading(true);
+
+      const tag = tags.indexOf(form.tag);
+
+      // Create new Ingredient object
+      const newProduct = {
+        id: isEditing ? data?.id : null,
+        app_id: isEditing ? data?.app_id : null,
+        name: form.name,
+        type: "template",
+        amount: form.amount,
+        unit: form.unit,
+        expiry: form.expiry === 0 ? Infinity : form.expiry,
+        purchase_date: new Date(),
+        tag: tag,
+        bookmark: form?.bookmark || false,
+        created_at: null,
+        users_id: null, // ID is added in IngredientsContext
+        recipes_id: null,
+      };
+
+      if (isEditing) {
+        await editIngredient(newProduct);
+      }
+      // Create mode
+      if (!isEditing) await addIngredient(newProduct);
+      setLoading(false);
+
+      // close the form and pass the data
+      onClose(newProduct);
+    } catch (error) {
+      console.error(error);
+      setMessage(error.message);
+      setLoading(false);
+    }
   }
 
   // handle BTN no expiry
   function handleBtnExpiry() {
-    // change inputExpiry value
-    dispatchForm({
-      type: "UPDATE_FIELD",
-      field: "expiry",
-      value: isExpiry ? 0 : 1,
-    });
-
-    // validate inputExpiry
-    dispatchForm({
-      type: "VALIDATE_FIELD",
-      field: "expiry",
-      value: form.expiry,
-    });
+    setValue("expiry", isExpiry ? 0 : 1);
+    trigger("expiry");
 
     setIsExpiry(!isExpiry);
   }
 
-  // handle input change
-  const handleChange = (e) => {
-    // update field
-    dispatchForm({
-      type: "UPDATE_FIELD",
-      field: e.target.name,
-      value: e.target.value,
-    });
-
-    // validate field
-    dispatchForm({
-      type: "VALIDATE_FIELD",
-      field: e.target.name,
-      value: e.target.value,
-    });
-
-    setInitialRender(false);
-  };
-
-  // when user clicks on form, change initialRender state
-  const handleParentClick = () => {
-    setInitialRender(false);
-  };
-
-  // function for skipping form validation before user input
+  // Update validation message on error change
   useEffect(() => {
-    if (!initialRender) dispatchForm({ type: "VALIDATE_FORM" });
-  }, [initialRender, form.isNameValid, form.isAmountValid, form.isExpiryValid]);
+    if (errors.name) return setMessage(errors.name.message);
 
-  // If there is data prop, fill the form (edit mode)
-  useEffect(() => {
-    if (initialRender && data) {
-      dispatchForm({ type: "FILL_FORM", data: data });
-    }
-  }, [initialRender, data]);
-  // handle submit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(e);
+    if (errors.amount?.type === "min")
+      return setMessage("Minimalna ilość to 1");
+    if (errors.amount?.type === "required")
+      return setMessage(errors.amount.message);
+    if (errors.amount) return setMessage(errors.amount.message);
 
-    dispatchForm({ type: "VALIDATE_FORM" });
+    if (errors.expiry?.type === "min")
+      return setMessage("Ujemne wartości nie są dozwolone");
+    if (errors.expiry?.type === "required")
+      return setMessage(errors.expiry.message);
 
-    // Define the newly added product
-    let newProduct;
-
-    if (form.isValid) {
-      newProduct = {
-        id: data?.id || Math.floor(Math.random() * 9999),
-        name: form.name,
-        amount: form.amount,
-        group: form.tag,
-        unit: form.unit,
-        expiry: form.expiry,
-        bookmark: form?.bookmark || false,
-      };
-
-      // Edit mode (we can pass data but if there is ID passed it's going to edit)
-      if (data.id) editProduct(newProduct);
-      // Create mode
-      if (!data.id) addProduct(newProduct);
-    }
-
-    // close the form and pass the data
-    handleClose(newProduct);
-  };
+    return setMessage(null);
+  }, [errors.name, errors.amount, errors.expiry]);
 
   const content = (
     <>
       {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
-      <div className={styles["add-catalog"]}>
+      <div className={`${styles["add-catalog"]} ${isMobile && styles.mobile}`}>
         <header className={styles.header}>
           <h1>szablon produktu</h1>
           <Button onClick={handleClose} round>
@@ -215,93 +120,93 @@ function AddCatalog({ isActive, data, onClose }) {
           </Button>
         </header>
         <form
-          onClick={handleParentClick}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           id="addCatalog"
           className={styles.form}
         >
-          <div className={styles["row-1"]}>
-            <div className={styles.col}>
-              <label>Produkt</label>
-              <Input
-                value={form.name}
-                onChange={handleChange}
-                type="text"
-                name="name"
-                maxLength={100}
-                autoComplete="off"
-                placeholder="Jajka od Pana Stefana"
-                isValid={form.isNameValid}
-                autoFocus
-              />
+          <div className={`${styles.col} ${styles.name}`}>
+            <label>Produkt</label>
+            <Input
+              type="text"
+              name="name"
+              maxLength={100}
+              autoComplete="off"
+              placeholder="Jajka od Pana Stefana"
+              autoFocus
+              {...register("name", {
+                required: "Podaj nazwę produktu",
+              })}
+              isValid={!errors.name}
+            />
 
-              <ul className="suggestions"></ul>
-            </div>
-            <div className={styles.col}>
-              <label>Grupa</label>
-              <Select
-                options={tagsIng}
-                name="tag"
-                onChange={handleChange}
-                value={form.tag}
-              />
-            </div>
+            <ul className="suggestions"></ul>
           </div>
-          <div className={styles["row-2"]}>
-            <div className={styles.col}>
-              <label>Ilość</label>
-              <Input
-                name="amount"
-                type="number"
-                value={form.amount}
-                onChange={handleChange}
-                autoComplete="off"
-                min={0}
-                isValid={form.isAmountValid}
-              />
-            </div>
-            <div className={styles.col}>
-              <label>Jedn.</label>
-              <Select
-                onChange={handleChange}
-                value={form.unit}
-                name="unit"
-                options={["szt.", "kg", "ml", "g"]}
-              />
-            </div>
+          <div className={styles.col}>
+            <label>Grupa</label>
+            <Select options={tags} name="tag" {...register("tag")} />
+          </div>
 
-            <div className={styles.col}>
-              <label>Wazność</label>
-              <Input
-                name="expiry"
-                type="number"
-                placeholder="ilość dni"
-                disabled={!isExpiry}
-                value={form.expiry}
-                onChange={handleChange}
-                min={0}
-                isValid={form.isExpiryValid}
-              />
-              <Button
-                onClick={handleBtnExpiry}
-                className={`${styles["btn-expiry"]}`}
-                type="button"
-                round
-                mini
-                primary={!isExpiry}
-              >
-                <TbInfinity />
-              </Button>
-            </div>
+          <div className={styles.col}>
+            <label>Ilość</label>
+            <Input
+              name="amount"
+              type="number"
+              min={1}
+              autoComplete="off"
+              {...register("amount", {
+                required: "Podaj ilość",
+                min: 1,
+              })}
+              isValid={!errors.amount}
+            />
           </div>
+          <div className={styles.col}>
+            <label>Jedn.</label>
+            <Select
+              name="unit"
+              options={["szt.", "kg", "ml", "g"]}
+              {...register("unit")}
+            />
+          </div>
+
+          <div className={styles.col}>
+            <label>Wazność</label>
+            <Input
+              name="expiry"
+              type="number"
+              placeholder="ilość dni"
+              disabled={!isExpiry}
+              min={1}
+              {...register("expiry", {
+                required: "Wpisz wazność produktu lub zaznacz opcję '∞'",
+                min: 0,
+              })}
+              isValid={!errors.expiry}
+            />
+            <Button
+              onClick={handleBtnExpiry}
+              className={`${styles["btn-expiry"]}`}
+              type="button"
+              round
+              mini
+              primary={!isExpiry}
+            >
+              <TbInfinity />
+            </Button>
+          </div>
+
           <div className={styles.message}>
-            {form.message.length > 0 && <FiInfo />}
-            {form.message}
+            {message && <FiInfo />}
+            {message}
           </div>
         </form>
-        <Button form="addCatalog" type="submit" primary={form.isValid}>
-          Zapisz
-        </Button>
+        {loading ? (
+          <Spinner></Spinner>
+        ) : (
+          <Button form="addCatalog" type="submit" primary>
+            Zapisz
+          </Button>
+        )}
       </div>
     </>
   );

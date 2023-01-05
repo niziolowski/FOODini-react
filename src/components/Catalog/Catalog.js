@@ -65,6 +65,7 @@ function Catalog() {
       {isFormActive && (
         <AddCatalog
           isActive={isFormActive}
+          isEditing={formData}
           data={formData}
           onClose={handleFormClose}
         />

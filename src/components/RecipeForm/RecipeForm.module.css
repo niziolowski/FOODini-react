@@ -1,14 +1,164 @@
-.recipe-form {
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: absolute;
+  row-gap: 20px;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   background-color: var(--bg-color);
   border-radius: var(--border-radius);
   z-index: 1;
+  padding-bottom: 20px;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
 .header {
-  padding: 20px;
+  position: relative;
+  align-self: stretch;
+  margin: 20px;
+  padding-right: 60px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+}
+
+.header button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.form {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  color: var(--font-color);
+  font-weight: 300;
+  font-size: 0.8rem;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.form h2 {
+  color: var(--accent-color);
+  padding-left: 5px;
+}
+
+.form label {
+  padding-left: 5px;
+}
+
+.form input[type="file"] {
+  display: none;
+}
+
+label.custom-file-upload {
+  display: flex;
+  min-width: max-content;
+  justify-content: center;
+  align-items: center;
+  border: var(--border);
+  border-radius: var(--border-radius);
+  font-size: 0.8rem;
+  color: var(--font-negative-color);
+  background-color: var(--accent-color);
+  padding: 0 15px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  max-width: 100%;
+  flex: 1;
+}
+
+.message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 5px;
+  font-weight: 300;
+  font-size: 0.8rem;
+  color: var(--warning-red-color);
+}
+
+.row {
+  position: relative;
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+  column-gap: 10px;
+  max-width: 100%;
+}
+
+.row input,
+.row div {
+  flex: 1;
+}
+
+.form section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  width: 100%;
+}
+
+.form section > button:last-child {
+  margin-top: 5px;
+}
+
+.ingredients,
+.title {
+  max-width: 500px;
+}
+
+.ingredients-amount {
+  max-width: 60px;
+  flex: 0 0 60px;
+}
+
+.instructions {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  grid-column: 1/3;
+}
+
+.instructions textarea {
+  padding: 10px;
+  background-color: var(--bg-color);
+  filter: brightness(95%);
+  border: var(--border);
+  border-radius: var(--border-radius);
+  resize: vertical;
+  width: 100%;
+  min-height: 150px;
+  line-height: 1rem;
+  -webkit-appearance: none;
+}
+
+.instructions textarea.invalid {
+  border: 1px solid var(--warning-red-color);
+  background-color: rgba(255, 68, 0, 0.157);
+}
+
+@media (max-width: 700px) {
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+  }
+  .ingredients,
+  .title {
+    max-width: none;
+  }
+  .instructions {
+    grid-column: 1;
+  }
 }

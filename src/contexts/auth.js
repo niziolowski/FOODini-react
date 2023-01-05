@@ -13,14 +13,24 @@ export const AuthContextProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const saveToken = (token) => {
-    setToken(token);
-    localStorage.setItem("authToken", token);
+  const loadUserData = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    return user;
   };
 
-  const removeToken = () => {
+  const saveUserData = (user) => {
+    setToken(user.token);
+    setName(user.name);
+    setEmail(user.email);
+    localStorage.setItem("user", JSON.stringify(user));
+  };
+
+  const removeUserData = () => {
     setToken(null);
-    localStorage.removeItem("authToken");
+    setName(null);
+    setEmail(null);
+    localStorage.removeItem("user");
   };
 
   const handleSignUp = async (name, email, password) => {
@@ -42,10 +52,17 @@ export const AuthContextProvider = ({ children }) => {
       if (res.ok) {
         const data = await res.json();
         setError(null);
-        saveToken(data.authToken);
+
+        const user = {
+          id: data.userInfo.id,
+          name: data.userInfo.name,
+          email: data.userInfo.email,
+          token: data.authToken,
+        };
+
+        // Save user data in context and localStorage
+        saveUserData(user);
         setIsLoggedIn(true);
-        setName(data.userInfo.name);
-        setEmail(data.userInfo.email);
         return data;
       }
 
@@ -80,16 +97,22 @@ export const AuthContextProvider = ({ children }) => {
       if (res.ok) {
         const data = await res.json();
         setError(null);
-        saveToken(data.authToken);
-        setName(data.userInfo.name);
-        setEmail(data.userInfo.email);
+
+        const user = {
+          id: data.userInfo.id,
+          name: data.userInfo.name,
+          email: data.userInfo.email,
+          token: data.authToken,
+        };
+
+        saveUserData(user);
+        
         setIsLoggedIn(true);
         return data;
       }
 
       if (!res.ok) {
         if (res.status === 500) {
-          console.log(res);
           const error = await res.json();
           setError("Podano niepoprawny login lub hasło");
           throw new Error(error.message);
@@ -102,10 +125,18 @@ export const AuthContextProvider = ({ children }) => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    removeToken();
-    setName("");
-    setEmail("");
+    removeUserData();
   };
+
+  // Check if user already logged in
+  useEffect(() => {
+    const user = loadUserData();
+
+    if (user) {
+      saveUserData(user);
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const value = {
     name,
@@ -118,14 +149,6 @@ export const AuthContextProvider = ({ children }) => {
     logout: handleLogout,
     signUp: handleSignUp,
   };
-
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      setToken(token);
-      setIsLoggedIn(true);
-    }
-  }, []);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

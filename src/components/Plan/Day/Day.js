@@ -20,7 +20,7 @@ function Day({ title }) {
     <div className={classes}>
       <div className={styles.title}>{title}</div>
       <ul className={styles.list}>
-        <Meal title="Jajecznica" />
+        <Meal title="Meal" />
       </ul>
       {isMobile && btnAdd}
     </div>
