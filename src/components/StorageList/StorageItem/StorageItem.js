@@ -32,7 +32,9 @@ function StorageItem({ item, onEdit, ...rest }) {
   };
 
   // Toggle favorites
-  const handleBookmark = () => {
+  const handleBookmark = (e) => {
+    const btn = e.target.closest("button");
+    btn.classList.add("pulsate");
     const updated = { ...item, bookmark: !item.bookmark };
     editIngredient(updated);
   };

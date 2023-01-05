@@ -16,7 +16,9 @@ function CatalogItem({ item, onEdit }) {
     removeIngredient(item.id);
   }
 
-  function handleBookmark() {
+  function handleBookmark(e) {
+    const btn = e.target.closest("button");
+    btn.classList.add("pulsate");
     const updatedProduct = { ...item, bookmark: !item.bookmark };
 
     editIngredient(updatedProduct);
