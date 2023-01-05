@@ -15,7 +15,6 @@ function AddStorage({ onClose, data: { isEditing, data } }) {
   const { isMobile } = useContext(LayoutContext);
   const { tags, addIngredient, editIngredient } =
     useContext(IngredientsContext);
-  console.log(data);
   const {
     register,
     handleSubmit,
@@ -83,7 +82,7 @@ function AddStorage({ onClose, data: { isEditing, data } }) {
   const content = (
     <>
       {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
-      <div className={styles.content}>
+      <div className={`${styles.content} ${isMobile && styles.mobile}`}>
         <div className={styles.header}>
           <h1>{isEditing ? "Edytuj składnik" : "Dodaj składnik"}</h1>
           <Button onClick={handleClose} round>
@@ -95,74 +94,71 @@ function AddStorage({ onClose, data: { isEditing, data } }) {
           onSubmit={handleSubmit(onSubmit)}
           className={styles.form}
         >
-          <div className={styles.row}>
-            <div className={`${styles.field} ${styles.name}`}>
-              <label>Produkt</label>
-              <Input
-                type="text"
-                name="name"
-                {...register("name", { required: "Podaj nazwę produktu" })}
-                disabled
-                isValid={!errors.name}
-              />
-            </div>
-            <div className={`${styles.field} ${styles.medium}`}>
-              <label>Grupa</label>
-              <Select name="tag" options={tags} {...register("tag")} />
-            </div>
+          <div className={`${styles.field} ${styles.name}`}>
+            <label>Produkt</label>
+            <Input
+              type="text"
+              name="name"
+              {...register("name", { required: "Podaj nazwę produktu" })}
+              disabled
+              isValid={!errors.name}
+            />
           </div>
-          <div className={styles.row}>
-            <div className={`${styles.field} ${styles.small}`}>
-              <label>Ilość</label>
-              <Input
-                type="number"
-                name="amount"
-                {...register("amount", { required: "Podaj ilość", min: 1 })}
-                isValid={!errors.amount}
-              />
-            </div>
-            <div className={`${styles.field} ${styles.small}`}>
-              <label>Jedn.</label>
-              <Select
-                name="unit"
-                options={["szt.", "kg", "ml", "g"]}
-                {...register("unit")}
-              />
-            </div>
-            <div className={`${styles.field} ${styles.medium}`}>
-              <label>Ważność</label>
-              <Input
-                name="expiry"
-                type="number"
-                placeholder="ilość dni"
-                disabled={!isExpiry}
-                min={0}
-                {...register("expiry", {
-                  required: "Wpisz wazność produktu lub zaznacz opcję '∞'",
-                  min: 0,
-                })}
-                isValid={!errors.expiry}
-              />
-              <Button
-                onClick={handleBtnExpiry}
-                className={`${styles["btn-expiry"]}`}
-                type="button"
-                round
-                mini
-                primary={!isExpiry}
-              >
-                <TbInfinity />
-              </Button>
-            </div>
-            <div className={`${styles.field} ${styles.medium}`}>
-              <label>Data zakupu</label>
-              <Input
-                type="date"
-                name="date"
-                {...register("date", { required: "Podaj datę zakupu" })}
-                isValid={!errors.date}
-              />
-            </div>
+          <div className={`${styles.field} ${styles.medium}`}>
+            <label>Grupa</label>
+            <Select name="tag" options={tags} {...register("tag")} />
+          </div>
+
+          <div className={`${styles.field} ${styles.small}`}>
+            <label>Ilość</label>
+            <Input
+              type="number"
+              name="amount"
+              {...register("amount", { required: "Podaj ilość", min: 1 })}
+              isValid={!errors.amount}
+            />
+          </div>
+          <div className={`${styles.field} ${styles.small}`}>
+            <label>Jedn.</label>
+            <Select
+              name="unit"
+              options={["szt.", "kg", "ml", "g"]}
+              {...register("unit")}
+            />
+          </div>
+          <div className={`${styles.field} ${styles.medium}`}>
+            <label>Ważność</label>
+            <Input
+              name="expiry"
+              type="number"
+              placeholder="ilość dni"
+              disabled={!isExpiry}
+              min={0}
+              {...register("expiry", {
+                required: "Wpisz wazność produktu lub zaznacz opcję '∞'",
+                min: 0,
+              })}
+              isValid={!errors.expiry}
+            />
+            <Button
+              onClick={handleBtnExpiry}
+              className={`${styles["btn-expiry"]}`}
+              type="button"
+              round
+              mini
+              primary={!isExpiry}
+            >
+              <TbInfinity />
+            </Button>
+          </div>
+          <div className={`${styles.field} ${styles.medium}`}>
+            <label>Data zakupu</label>
+            <Input
+              type="date"
+              name="date"
+              {...register("date", { required: "Podaj datę zakupu" })}
+              isValid={!errors.date}
+            />
           </div>
         </form>
         <div className={styles.message}>

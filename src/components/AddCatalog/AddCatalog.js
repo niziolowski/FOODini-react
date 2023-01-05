@@ -106,79 +106,77 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
           id="addCatalog"
           className={styles.form}
         >
-          <div className={styles["row-1"]}>
-            <div className={styles.col}>
-              <label>Produkt</label>
-              <Input
-                type="text"
-                name="name"
-                maxLength={100}
-                autoComplete="off"
-                placeholder="Jajka od Pana Stefana"
-                autoFocus
-                {...register("name", {
-                  required: "Podaj nazwę produktu",
-                })}
-                isValid={!errors.name}
-              />
+          <div className={`${styles.col} ${styles.name}`}>
+            <label>Produkt</label>
+            <Input
+              type="text"
+              name="name"
+              maxLength={100}
+              autoComplete="off"
+              placeholder="Jajka od Pana Stefana"
+              autoFocus
+              {...register("name", {
+                required: "Podaj nazwę produktu",
+              })}
+              isValid={!errors.name}
+            />
 
-              <ul className="suggestions"></ul>
-            </div>
-            <div className={styles.col}>
-              <label>Grupa</label>
-              <Select options={tagsIng} name="tag" {...register("tag")} />
-            </div>
+            <ul className="suggestions"></ul>
           </div>
-          <div className={styles["row-2"]}>
-            <div className={styles.col}>
-              <label>Ilość</label>
-              <Input
-                name="amount"
-                type="number"
-                min={1}
-                autoComplete="off"
-                {...register("amount", {
-                  required: "Podaj ilość",
-                  min: 1,
-                })}
-                isValid={!errors.amount}
-              />
-            </div>
-            <div className={styles.col}>
-              <label>Jedn.</label>
-              <Select
-                name="unit"
-                options={["szt.", "kg", "ml", "g"]}
-                {...register("unit")}
-              />
-            </div>
+          <div className={styles.col}>
+            <label>Grupa</label>
+            <Select options={tagsIng} name="tag" {...register("tag")} />
+          </div>
 
-            <div className={styles.col}>
-              <label>Wazność</label>
-              <Input
-                name="expiry"
-                type="number"
-                placeholder="ilość dni"
-                disabled={!isExpiry}
-                min={0}
-                {...register("expiry", {
-                  required: "Wpisz wazność produktu lub zaznacz opcję '∞'",
-                  min: 0,
-                })}
-                isValid={!errors.expiry}
-              />
-              <Button
-                onClick={handleBtnExpiry}
-                className={`${styles["btn-expiry"]}`}
-                type="button"
-                round
-                mini
-                primary={!isExpiry}
-              >
-                <TbInfinity />
-              </Button>
-            </div>
+          <div className={styles.col}>
+            <label>Ilość</label>
+            <Input
+              name="amount"
+              type="number"
+              min={1}
+              autoComplete="off"
+              {...register("amount", {
+                required: "Podaj ilość",
+                min: 1,
+              })}
+              isValid={!errors.amount}
+            />
           </div>
+          <div className={styles.col}>
+            <label>Jedn.</label>
+            <Select
+              name="unit"
+              options={["szt.", "kg", "ml", "g"]}
+              {...register("unit")}
+            />
+          </div>
+
+          <div className={styles.col}>
+            <label>Wazność</label>
+            <Input
+              name="expiry"
+              type="number"
+              placeholder="ilość dni"
+              disabled={!isExpiry}
+              min={0}
+              {...register("expiry", {
+                required: "Wpisz wazność produktu lub zaznacz opcję '∞'",
+                min: 0,
+              })}
+              isValid={!errors.expiry}
+            />
+            <Button
+              onClick={handleBtnExpiry}
+              className={`${styles["btn-expiry"]}`}
+              type="button"
+              round
+              mini
+              primary={!isExpiry}
+            >
+              <TbInfinity />
+            </Button>
+          </div>
+
           <div className={styles.message}>
             {message && <FiInfo />}
             {message}
