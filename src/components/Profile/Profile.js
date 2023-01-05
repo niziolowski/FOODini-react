@@ -31,7 +31,7 @@ function Profile({ onClose }) {
     return () => {
       window.removeEventListener("touchstart", handleClose);
     };
-  }, [onClose]);
+  }, [onClose, dispatchIsVisible]);
 
   return (
     <div

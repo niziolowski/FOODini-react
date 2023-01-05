@@ -27,7 +27,6 @@ export const PlanContextProvider = ({ children }) => {
       const response = await fetchPlan();
 
       setPlan(response.data);
-      console.log(plan);
     }
     fetchData();
   }, []);
