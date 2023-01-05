@@ -15,6 +15,7 @@ import AuthContext from "./contexts/auth";
 import { IngredientsContextProvider } from "./contexts/ingredients";
 import { RecipesContextProvider } from "./contexts/recipes";
 import Profile from "./components/Profile/Profile";
+import { PlanContextProvider } from "./contexts/plan";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
@@ -61,7 +62,9 @@ function App() {
             {isMobile && isVisible.profile && <Profile />}
             {!isMobile ? <Nav /> : <NavMobile />}
 
-            <Plan />
+            <PlanContextProvider>
+              <Plan />
+            </PlanContextProvider>
             <ShoppingList />
             <IngredientsContextProvider>
               <Catalog />

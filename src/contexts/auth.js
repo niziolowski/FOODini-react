@@ -106,6 +106,7 @@ export const AuthContextProvider = ({ children }) => {
         };
 
         saveUserData(user);
+        
         setIsLoggedIn(true);
         return data;
       }
