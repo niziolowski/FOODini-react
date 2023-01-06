@@ -37,7 +37,7 @@ function RecipeForm({ data, onClose }) {
   const [isEditing] = useState(data ? true : false);
   const {
     register,
-    formState: { errors, isValid },
+    formState: { errors, isValid, submitCount },
     handleSubmit,
     control,
     watch,
@@ -66,50 +66,6 @@ function RecipeForm({ data, onClose }) {
     name: "spices",
     control,
   });
-
-  // Validate form
-  useEffect(() => {
-    // 1. Title
-    if (errors.name) return setMessage(errors.name.message);
-
-    // 2. Ingredients (find first case and display)
-
-    // if ingredients are missing
-    if (errors.ingredients?.root)
-      return setMessage(errors.ingredients.root.message);
-
-    // if name is missing
-    let error = errors?.ingredients?.find((err) => err?.name);
-    if (error) return setMessage(error.name.message);
-
-    // if amount is missing
-    error = errors?.ingredients?.find((err) => err?.amount);
-    if (error) return setMessage(error.amount.message);
-
-    // if amount is too low
-    error = errors?.ingredients?.find((err) => err?.amount?.min);
-    if (error) return setMessage(error);
-
-    // 3. Spices
-    error = errors?.spices?.find((err) => err?.name);
-    if (error) return setMessage(error.name.message);
-
-    // 4. Instructions
-    if (errors.instructions) return setMessage(errors.instructions.message);
-
-    // 5. No errors
-    return setMessage(null);
-  }, [
-    errors.name,
-    errors.ingredients,
-    errors.spices,
-    errors.instructions,
-    errors,
-  ]);
-
-  const handleInvalidSubmit = () => {
-    if (!isValid) animate(formEl.current, "shake");
-  };
 
   // Show form to add new template to catalog
   const handleCreateTemplate = (query, index) => {
@@ -178,6 +134,53 @@ function RecipeForm({ data, onClose }) {
       animate(formEl.current, "shake");
     }
   };
+
+  // animate the form on invalid submit
+  useEffect(() => {
+    // Skip the first render and valid submits
+    if (!isValid && submitCount > 0) animate(formEl.current, "shake");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submitCount]);
+
+  // Validate form
+  useEffect(() => {
+    // 1. Title
+    if (errors.name) return setMessage(errors.name.message);
+
+    // 2. Ingredients (find first case and display)
+
+    // if ingredients are missing
+    if (errors.ingredients?.root)
+      return setMessage(errors.ingredients.root.message);
+
+    // if name is missing
+    let error = errors?.ingredients?.find((err) => err?.name);
+    if (error) return setMessage(error.name.message);
+
+    // if amount is missing
+    error = errors?.ingredients?.find((err) => err?.amount);
+    if (error) return setMessage(error.amount.message);
+
+    // if amount is too low
+    error = errors?.ingredients?.find((err) => err?.amount?.min);
+    if (error) return setMessage(error);
+
+    // 3. Spices
+    error = errors?.spices?.find((err) => err?.name);
+    if (error) return setMessage(error.name.message);
+
+    // 4. Instructions
+    if (errors.instructions) return setMessage(errors.instructions.message);
+
+    // 5. No errors
+    return setMessage(null);
+  }, [
+    errors.name,
+    errors.ingredients,
+    errors.spices,
+    errors.instructions,
+    errors,
+  ]);
 
   const header = (
     <header className={styles.header}>
@@ -354,12 +357,7 @@ function RecipeForm({ data, onClose }) {
         {loading ? (
           <Spinner />
         ) : (
-          <Button
-            onClick={handleInvalidSubmit}
-            type="submit"
-            form="add-recipe"
-            primary
-          >
+          <Button type="submit" form="add-recipe" primary>
             {isEditing ? "Zapisz" : "Stwórz"}
           </Button>
         )}
