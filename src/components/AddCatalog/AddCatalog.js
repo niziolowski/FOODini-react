@@ -61,7 +61,7 @@ function AddCatalog({ isEditing, data, onClose }) {
         type: "template",
         amount: form.amount,
         unit: form.unit,
-        expiry: form.expiry === 0 ? Infinity : form.expiry,
+        expiry: form.expiry,
         purchase_date: new Date(),
         tag: tag,
         bookmark: form?.bookmark || false,

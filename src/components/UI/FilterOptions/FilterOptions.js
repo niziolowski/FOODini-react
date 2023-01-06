@@ -40,6 +40,9 @@ function FilterOptions({ onAddItem, onFilterChange, options, data }) {
     // By expiry date
     if (sorting === "ważność")
       results = results.sort((a, b) => {
+        // If there is no expiration time, move to the end
+        if (a.expiry === 0) return 1;
+
         // Calculate days until the ingredient expires
         const aExpiry = calcDaysToExpiry(a.purchase_date, a.expiry);
         const bExpiry = calcDaysToExpiry(b.purchase_date, b.expiry);

@@ -70,10 +70,8 @@ function StorageItem({ item, onEdit, ...rest }) {
       <div className={styles.amount}>{item.amount}</div>
       <div className={styles.unit}>{item.unit}</div>
       <BarIndicator
-        label={
-          item.expiry === Infinity ? <TbInfinity /> : `${daysToExpiry} dni`
-        }
-        value={indicatorValue}
+        label={item.expiry === 0 ? <TbInfinity /> : `${daysToExpiry} dni`}
+        value={item.expiry === 0 ? null : indicatorValue}
         small
       />
       <Button onClick={handleDelete} doubleAction round mini>

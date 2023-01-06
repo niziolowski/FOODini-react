@@ -9,9 +9,11 @@ function BarIndicator({ label, value, small }) {
   return (
     <div className={`${styles.indicator} ${small && styles.small}`}>
       <p>{label}</p>
-      <div className={styles.bar}>
-        <div className={styles.fill} style={{ width: `${value}%` }}></div>
-      </div>
+      {value !== null && (
+        <div className={styles.bar}>
+          <div className={styles.fill} style={{ width: `${value}%` }}></div>
+        </div>
+      )}
     </div>
   );
 }
