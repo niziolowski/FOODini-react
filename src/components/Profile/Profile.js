@@ -15,8 +15,7 @@ function Profile({ onClose }) {
 
   // * Catalog should really be called 'templates'
   const handleCatalog = () => {
-    dispatchIsVisible({ type: "catalog", mode: "toggle" });
-    dispatchIsVisible({ type: "profile", mode: "toggle" });
+    dispatchIsVisible({ type: "catalog", mode: "switch" });
   };
 
   // Close panel on mouseleave

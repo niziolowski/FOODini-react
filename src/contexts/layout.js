@@ -70,6 +70,8 @@ function visibilityReducer(state, action) {
         return { ...visibilityInitialState, storage: true };
       case "recipes":
         return { ...visibilityInitialState, recipes: true };
+      case "catalog":
+        return { ...visibilityInitialState, catalog: true };
       default:
         return { ...visibilityInitialState };
     }
