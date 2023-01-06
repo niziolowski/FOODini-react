@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import Spinner from "../UI/Spinner/Spinner";
 
 // data gets passed in and out from other places to quickly create a new template
-function AddCatalog({ isActive, isEditing, data, onClose }) {
+function AddCatalog({ isEditing, data, onClose }) {
   const { isMobile } = useContext(LayoutContext);
 
   // Btn for setting expiry to Infinite
@@ -215,7 +215,7 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
     </>
   );
 
-  return <>{isActive && ReactDOM.createPortal(content, root)}</>;
+  return <>{ReactDOM.createPortal(content, root)}</>;
 }
 
 export default AddCatalog;

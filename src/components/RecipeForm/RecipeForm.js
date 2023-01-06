@@ -117,8 +117,8 @@ function RecipeForm({ data, onClose }) {
     setIngredientIndex(index);
 
     const data = { name: query };
-    setCatalogFormData(data);
     setIsCatalogForm(true);
+    setCatalogFormData(data);
   };
 
   // On form submit, automatically add new ingredient to storage
@@ -364,12 +364,14 @@ function RecipeForm({ data, onClose }) {
           </Button>
         )}
       </div>
-      <AddCatalog
-        data={catalogFormData}
-        isActive={isCatalogForm}
-        isEditing={false}
-        onClose={handleCreateTemplateSubmit}
-      />
+      {isCatalogForm && (
+        <AddCatalog
+          data={catalogFormData}
+          isActive={isCatalogForm}
+          isEditing={false}
+          onClose={handleCreateTemplateSubmit}
+        />
+      )}
     </>
   );
 
