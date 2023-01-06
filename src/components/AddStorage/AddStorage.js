@@ -68,9 +68,10 @@ function AddStorage({ onClose, data: { isEditing, data } }) {
       if (!isEditing) await addIngredient(newIngredient);
 
       setLoading(false);
+      onClose();
     } catch (error) {
       console.error(error);
-      setMessage(error.message);
+      setMessage(error.response.data.message);
       setLoading(false);
     }
   };

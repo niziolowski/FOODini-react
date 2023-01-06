@@ -29,6 +29,7 @@ export const IngredientsContextProvider = ({ children }) => {
       }
       return res;
     } catch (error) {
+      console.error(error);
       throw error;
     }
   };
@@ -52,7 +53,8 @@ export const IngredientsContextProvider = ({ children }) => {
         });
       }
     } catch (error) {
-      alert(error);
+      console.error(error);
+      throw error;
     }
   };
 
@@ -66,7 +68,8 @@ export const IngredientsContextProvider = ({ children }) => {
         ]);
       }
     } catch (error) {
-      alert(error);
+      console.error(error);
+      throw error;
     }
   };
 

@@ -25,6 +25,7 @@ export const RecipesContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 
@@ -49,6 +50,7 @@ export const RecipesContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 
@@ -61,15 +63,21 @@ export const RecipesContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 
   useEffect(() => {
     async function fetchData() {
-      console.log("fetching recipes..."); //*: dev only line
-      const response = await fetchRecipes();
+      try {
+        console.log("fetching recipes..."); //*: dev only line
+        const response = await fetchRecipes();
 
-      setRecipes(response.data);
+        setRecipes(response.data);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
     }
     fetchData();
   }, []);

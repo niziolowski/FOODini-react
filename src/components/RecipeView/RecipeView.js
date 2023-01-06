@@ -10,6 +10,7 @@ import DifficultyIndicator from "../UI/DifficultyIndicator/DifficultyIndicator";
 import Tag from "../UI/Tag/Tag";
 
 import RecipesContext from "../../contexts/recipes";
+import { animate } from "../../utils/animate";
 
 function RecipeView({ data, onClose, onEdit }) {
   const { isMobile } = useContext(LayoutContext);
@@ -17,8 +18,14 @@ function RecipeView({ data, onClose, onEdit }) {
 
   const root = document.getElementById("modal");
 
-  const handleBookmark = () => {
-    editRecipe({ ...data, bookmark: !data.bookmark });
+  const handleBookmark = async (e) => {
+    const btn = e.target.closest("button");
+    try {
+      animate(btn, "pulsate");
+      await editRecipe({ ...data, bookmark: !data.bookmark });
+    } catch (error) {
+      animate(btn, "shake");
+    }
   };
 
   const header = (

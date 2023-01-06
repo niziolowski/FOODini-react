@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FiInfo, FiTrash, FiX } from "react-icons/fi";
 import RecipesContext from "../../contexts/recipes";
 import Button from "../UI/Button/Button";
@@ -12,6 +12,8 @@ import { img } from "../../assets/images/recipe-placeholder";
 import IngredientsContext from "../../contexts/ingredients";
 import InputWithSuggestions from "../UI/InputWithSuggestions/InputWithSuggestions";
 import AddCatalog from "../AddCatalog/AddCatalog";
+import Spinner from "../UI/Spinner/Spinner";
+import { animate } from "../../utils/animate";
 
 function RecipeForm({ data, onClose }) {
   const root = document.getElementById("modal");
@@ -29,11 +31,13 @@ function RecipeForm({ data, onClose }) {
   const [ingredientIndex, setIngredientIndex] = useState(0); // reference for filling the form on suggestion click
 
   // Form state
+  const formEl = useRef(null);
   const [message, setMessage] = useState("test message");
+  const [loading, setLoading] = useState(false);
   const [isEditing] = useState(data ? true : false);
   const {
     register,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
     control,
     watch,
@@ -103,6 +107,10 @@ function RecipeForm({ data, onClose }) {
     errors,
   ]);
 
+  const handleInvalidSubmit = () => {
+    if (!isValid) animate(formEl.current, "shake");
+  };
+
   // Show form to add new template to catalog
   const handleCreateTemplate = (query, index) => {
     // Set current ingredient index for later reference
@@ -135,29 +143,40 @@ function RecipeForm({ data, onClose }) {
   };
 
   const onSubmit = async (data) => {
-    let image = data.image;
+    try {
+      setLoading(true);
+      let image = data.image;
 
-    if (typeof data.image === "object") {
-      image = await toBase64(data?.image[0]);
+      if (typeof data.image === "object") {
+        image = await toBase64(data?.image[0]);
+      }
+
+      const tag = tags.indexOf(data.tag);
+      const newRecipe = {
+        name: data.name,
+        tag,
+        difficulty: data.difficulty,
+        ingredients: data.ingredients,
+        spices: data.spices,
+        instructions: data.instructions,
+        image: image || img,
+        bookmark: false,
+      };
+
+      // Edit existing recipe
+      if (isEditing) await editRecipe({ ...newRecipe, id: data.id });
+
+      // Create new recipe
+      if (!isEditing) await addRecipe({ ...newRecipe, id: null });
+
+      setLoading(false);
+      onClose();
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      setMessage(error.response.data.message);
+      animate(formEl.current, "shake");
     }
-
-    const tag = tags.indexOf(data.tag);
-    const newRecipe = {
-      name: data.name,
-      tag,
-      difficulty: data.difficulty,
-      ingredients: data.ingredients,
-      spices: data.spices,
-      instructions: data.instructions,
-      image: image || img,
-      bookmark: false,
-    };
-
-    // Edit existing recipe
-    if (isEditing) editRecipe({ ...newRecipe, id: data.id });
-
-    // Create new recipe
-    if (!isEditing) addRecipe({ ...newRecipe, id: null });
   };
 
   const header = (
@@ -270,6 +289,7 @@ function RecipeForm({ data, onClose }) {
 
   const form = (
     <form
+      ref={formEl}
       onSubmit={handleSubmit(onSubmit)}
       id="add-recipe"
       className={styles.form}
@@ -331,9 +351,18 @@ function RecipeForm({ data, onClose }) {
           {message && <FiInfo />}
           {message}
         </div>
-        <Button type="submit" form="add-recipe" primary>
-          {isEditing ? "Zapisz" : "Stwórz"}
-        </Button>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <Button
+            onClick={handleInvalidSubmit}
+            type="submit"
+            form="add-recipe"
+            primary
+          >
+            {isEditing ? "Zapisz" : "Stwórz"}
+          </Button>
+        )}
       </div>
       <AddCatalog
         data={catalogFormData}

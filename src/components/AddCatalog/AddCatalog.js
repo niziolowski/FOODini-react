@@ -28,8 +28,10 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
   // Rendering location
   const root = document.getElementById("modal");
 
-  // React-Form-Hook setup
+  // loading Spinner state
   const [loading, setLoading] = useState(false);
+
+  // React-Form-Hook setup
   const {
     handleSubmit,
     formState: { errors },
@@ -46,6 +48,7 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
 
   async function onSubmit(form) {
     try {
+      // Show loading spinner
       setLoading(true);
 
       const tag = tags.indexOf(form.tag);
@@ -78,7 +81,8 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
       onClose(newProduct);
     } catch (error) {
       console.error(error);
-      setMessage(error.message);
+      setMessage(error.response.data.message);
+      // Hide loading spinner
       setLoading(false);
     }
   }
