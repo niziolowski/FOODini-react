@@ -9,8 +9,7 @@ import styles from "./BarIndicator.module.css";
 function BarIndicator({ label, value, small }) {
   let color = useMemo(() => {
     let color = "--success-color";
-    if (value < 90) color = "--accent-color";
-    if (value < 50) color = "--warning-orange-color";
+    if (value < 70) color = "--warning-orange-color";
     if (value < 20) color = "--warning-red-color";
     return color;
   }, [value]);
