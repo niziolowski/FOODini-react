@@ -1,8 +1,9 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import { FiEdit, FiSearch } from "react-icons/fi";
+import { FiEdit, FiSearch, FiX } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout";
 import StorageItem from "../StorageList/StorageItem/StorageItem";
+import Button from "../UI/Button/Button";
 
 import styles from "./Spotlight.module.css";
 
@@ -76,6 +77,7 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
     onAddNew(query);
   };
 
+  // Set hover state on selected index
   useEffect(() => {
     [...suggestionsEl.current.children].forEach((item, i) => {
       item.classList.remove(styles.hover);
@@ -112,6 +114,11 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
             onKeyDown={handleKeyDown}
             autoFocus
           ></input>
+          {isMobile && (
+            <Button onClick={onClose} round mini>
+              <FiX />
+            </Button>
+          )}
         </div>
         {suggestions}
       </div>
