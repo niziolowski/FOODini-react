@@ -2,10 +2,15 @@
   position: relative;
   display: grid;
   justify-content: center;
-  grid-template-columns: repeat(4, minmax(150px, 200px));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 200px));
+  grid-template-rows: repeat(auto-fill, minmax(fit-content, 1fr));
   gap: 20px;
   padding: 40px;
+  max-width: 940px;
+  width: 100%;
+  align-self: center;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
 /* § MOBILE */
