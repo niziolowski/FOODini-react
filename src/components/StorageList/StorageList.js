@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import LayoutContext from "../../contexts/layout";
 import styles from "./StorageList.module.css";
 import StorageItem from "./StorageItem/StorageItem";
@@ -25,9 +25,9 @@ function StorageList() {
 
   // Filter out template ingredients
   //TODO: refactor later
-  const filteredTemplates = ingredients.filter(
-    (ing) => ing.type === "template"
-  );
+  const filteredTemplates = useMemo(() => {
+    ingredients.filter((ing) => ing.type === "template");
+  }, [ingredients]);
 
   // Toggle suggestion bar
   const toggleSpotlight = () => {
