@@ -26,7 +26,7 @@ function StorageList() {
   // Filter out template ingredients
   //TODO: refactor later
   const filteredTemplates = useMemo(() => {
-    ingredients.filter((ing) => ing.type === "template");
+    return ingredients.filter((ing) => ing.type === "template");
   }, [ingredients]);
 
   // Toggle suggestion bar
