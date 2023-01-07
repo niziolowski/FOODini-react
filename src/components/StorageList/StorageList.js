@@ -24,7 +24,6 @@ function StorageList() {
   const [filteredStorage, setFilteredStorage] = useState(storage);
 
   // Filter out template ingredients
-  //TODO: refactor later
   const filteredTemplates = useMemo(() => {
     return ingredients.filter((ing) => ing.type === "template");
   }, [ingredients]);
