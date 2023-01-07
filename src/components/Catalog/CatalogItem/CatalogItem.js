@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { FiEdit, FiStar, FiTrash } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
 import IngredientsContext from "../../../contexts/ingredients";
+import { animate } from "../../../utils/animate";
 import Button from "../../UI/Button/Button";
 import styles from "./CatalogItem.module.css";
 
@@ -12,16 +13,27 @@ function CatalogItem({ item, onEdit }) {
     onEdit(item);
   }
 
-  function handleDelete(e) {
-    removeIngredient(item.id);
+  async function handleDelete(e) {
+    const btn = e.target.closest("button");
+    try {
+      animate(btn, "pulsate");
+      await removeIngredient(item.id);
+    } catch (error) {
+      animate(btn, "shake");
+    }
   }
 
-  function handleBookmark(e) {
+  async function handleBookmark(e) {
     const btn = e.target.closest("button");
     btn.classList.add("pulsate");
-    const updatedProduct = { ...item, bookmark: !item.bookmark };
+    try {
+      animate(btn, "pulsate");
+      const updatedProduct = { ...item, bookmark: !item.bookmark };
 
-    editIngredient(updatedProduct);
+      await editIngredient(updatedProduct);
+    } catch (error) {
+      animate(btn, "shake");
+    }
   }
 
   return (

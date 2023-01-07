@@ -26,7 +26,7 @@ function App() {
   // Hide all windows when switching to mobile view
   useEffect(() => {
     dispatchIsVisible({ type: "home", mode: "switch" });
-  }, [isLoggedIn, dispatchIsVisible]);
+  }, [isLoggedIn, dispatchIsVisible, isMobile]);
 
   // This is to prevent weird scrolling animation on iOS. Not ideal, can flicker sometimes
   useEffect(() => {

@@ -6,6 +6,7 @@ import BarIndicator from "../../UI/BarIndicator/BarIndicator";
 import Button from "../../UI/Button/Button";
 import DifficultyIndicator from "../../UI/DifficultyIndicator/DifficultyIndicator";
 import styles from "./RecipeItem.module.css";
+import { animate } from "../../../utils/animate";
 
 function RecipeItem({ item, onPreview }) {
   const { tags } = useContext(RecipesContext);
@@ -16,14 +17,24 @@ function RecipeItem({ item, onPreview }) {
     if (!e.target.closest("button")) onPreview(item);
   };
 
-  const handleBookmark = (e) => {
+  const handleBookmark = async (e) => {
     const btn = e.target.closest("button");
-    btn.classList.add("pulsate");
-    editRecipe({ ...item, bookmark: !item.bookmark });
+    try {
+      animate(btn, "pulsate");
+      await editRecipe({ ...item, bookmark: !item.bookmark });
+    } catch (error) {
+      animate(btn, "shake");
+    }
   };
 
-  const handleRemove = () => {
-    removeRecipe(item.id);
+  const handleRemove = async (e) => {
+    const btn = e.target.closest("button");
+    try {
+      animate(btn, "pulsate");
+      await removeRecipe(item.id);
+    } catch (error) {
+      animate(btn, "shake");
+    }
   };
 
   return (

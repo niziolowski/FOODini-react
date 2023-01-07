@@ -67,13 +67,14 @@ export const AuthContextProvider = ({ children }) => {
       }
 
       if (!res.ok) {
-        if (res.status === "403") console.log(res);
         const error = await res.json();
-        setError("Ten adres e-mail jest już zajęty");
+        if (res.status === "403") {
+          setError("Ten adres e-mail jest już zajęty");
+        } else {
+          setError("Coś poszło nie tak");
+        }
         throw new Error(error.message);
       }
-
-      return res;
     } catch (error) {
       console.error(error);
     }
@@ -106,17 +107,19 @@ export const AuthContextProvider = ({ children }) => {
         };
 
         saveUserData(user);
-        
+
         setIsLoggedIn(true);
         return data;
       }
 
       if (!res.ok) {
+        const error = await res.json();
         if (res.status === 500) {
-          const error = await res.json();
           setError("Podano niepoprawny login lub hasło");
-          throw new Error(error.message);
+        } else {
+          setError("Coś poszło nie tak");
         }
+        throw new Error(error.message);
       }
     } catch (error) {
       console.error(error);

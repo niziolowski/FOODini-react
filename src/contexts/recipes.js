@@ -1,16 +1,18 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import {
   fetchRecipes,
   createRecipe,
   updateRecipe,
   deleteRecipe,
 } from "../apis/recipes";
+import AuthContext from "./auth";
 
 const RecipesContext = createContext();
 
 export const RecipesContextProvider = ({ children }) => {
   const [recipes, setRecipes] = useState([]);
   const [tags] = useState(["śniadanie", "obiad", "przekąska"]);
+  const {token} = useContext(AuthContext);
 
   const addRecipe = async (rec) => {
     const { id } = JSON.parse(localStorage.getItem("user"));
@@ -25,6 +27,7 @@ export const RecipesContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 
@@ -49,6 +52,7 @@ export const RecipesContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 
@@ -61,18 +65,24 @@ export const RecipesContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
+      throw error;
     }
   };
 
   useEffect(() => {
     async function fetchData() {
-      console.log("fetching recipes..."); //*: dev only line
-      const response = await fetchRecipes();
+      try {
+        console.log("fetching recipes..."); //*: dev only line
+        const response = await fetchRecipes(token);
 
-      setRecipes(response.data);
+        setRecipes(response.data);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
     }
     fetchData();
-  }, []);
+  }, [token]);
 
   const value = {
     tags,

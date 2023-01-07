@@ -36,8 +36,9 @@ function LoginForm() {
   }
 
   // Login function for demo account, skipping validation
-  const handleDemoLogin = () => {
-    login("demo@demo.com", 123456);
+  const handleDemoLogin = async () => {
+    const res = await login("demo@demo.com", 123456);
+    if (!res) animate(panelEl.current, "shake");
   };
 
   // Function is called by useForm handleSubmit

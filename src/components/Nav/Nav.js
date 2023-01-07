@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import {
   FiChevronLeft,
   FiChevronRight,
@@ -17,6 +17,8 @@ import styles from "./Nav.module.css";
  */
 function Nav() {
   const { isVisible, dispatchIsVisible } = useContext(LayoutContext);
+
+  const parentEl = useRef();
   function handleClick(e) {
     const btn = e.target.closest("button");
 
@@ -30,8 +32,11 @@ function Nav() {
     dispatchIsVisible({ type: "profile", mode: "toggle" });
   };
 
+  // Adjust title size and alignment
+  useEffect(() => {}, [isVisible.sidebar]);
+
   return (
-    <nav className={styles.nav}>
+    <nav ref={parentEl} className={styles.nav}>
       <div className={styles.actions}>
         <Button className="js-btn-sidebar" onClick={handleClick} round>
           <FiSidebar />

@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import Spinner from "../UI/Spinner/Spinner";
 
 // data gets passed in and out from other places to quickly create a new template
-function AddCatalog({ isActive, isEditing, data, onClose }) {
+function AddCatalog({ isEditing, data, onClose }) {
   const { isMobile } = useContext(LayoutContext);
 
   // Btn for setting expiry to Infinite
@@ -28,8 +28,10 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
   // Rendering location
   const root = document.getElementById("modal");
 
-  // React-Form-Hook setup
+  // loading Spinner state
   const [loading, setLoading] = useState(false);
+
+  // React-Form-Hook setup
   const {
     handleSubmit,
     formState: { errors },
@@ -46,6 +48,7 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
 
   async function onSubmit(form) {
     try {
+      // Show loading spinner
       setLoading(true);
 
       const tag = tags.indexOf(form.tag);
@@ -58,7 +61,7 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
         type: "template",
         amount: form.amount,
         unit: form.unit,
-        expiry: form.expiry === 0 ? Infinity : form.expiry,
+        expiry: form.expiry,
         purchase_date: new Date(),
         tag: tag,
         bookmark: form?.bookmark || false,
@@ -78,7 +81,8 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
       onClose(newProduct);
     } catch (error) {
       console.error(error);
-      setMessage(error.message);
+      setMessage(error.response.data.message);
+      // Hide loading spinner
       setLoading(false);
     }
   }
@@ -211,7 +215,7 @@ function AddCatalog({ isActive, isEditing, data, onClose }) {
     </>
   );
 
-  return <>{isActive && ReactDOM.createPortal(content, root)}</>;
+  return <>{ReactDOM.createPortal(content, root)}</>;
 }
 
 export default AddCatalog;
