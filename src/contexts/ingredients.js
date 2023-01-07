@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import {
   fetchIngredients,
   createIngredient,
@@ -7,10 +7,13 @@ import {
   createOrEditIngredients,
 } from "../apis/ingredients";
 import { v4 as uuid } from "uuid";
+import AuthContext from "./auth";
 
 const IngredientsContext = createContext();
 
 export const IngredientsContextProvider = ({ children }) => {
+  const { token } = useContext(AuthContext);
+  console.log(token);
   const [ingredients, setIngredients] = useState([]);
 
   const [tags] = useState(["świeże", "suche", "mrożone"]);
