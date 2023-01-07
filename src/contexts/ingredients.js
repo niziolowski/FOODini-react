@@ -13,7 +13,6 @@ const IngredientsContext = createContext();
 
 export const IngredientsContextProvider = ({ children }) => {
   const { token } = useContext(AuthContext);
-  console.log(token);
   const [ingredients, setIngredients] = useState([]);
 
   const [tags] = useState(["świeże", "suche", "mrożone"]);
@@ -32,7 +31,6 @@ export const IngredientsContextProvider = ({ children }) => {
       }
       return res;
     } catch (error) {
-      console.error(error);
       throw error;
     }
   };
@@ -71,8 +69,7 @@ export const IngredientsContextProvider = ({ children }) => {
         ]);
       }
     } catch (error) {
-      console.error(error);
-      throw error;
+      alert(error);
     }
   };
 
@@ -107,12 +104,12 @@ export const IngredientsContextProvider = ({ children }) => {
   useEffect(() => {
     async function fetchData() {
       console.log("fetching ingredients..."); //*: dev only line
-      const response = await fetchIngredients();
+      const response = await fetchIngredients(token);
 
       setIngredients(response.data);
     }
     fetchData();
-  }, []);
+  }, [token]);
 
   const value = {
     tags,

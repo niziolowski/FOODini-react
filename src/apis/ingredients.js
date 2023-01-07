@@ -4,19 +4,16 @@ const baseURL = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/ingredients";
 const addMultipleURL =
   "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/add_or_edit_ingredients";
 
-// Get authToken from local storage
-const user = JSON?.parse(localStorage.getItem("user"));
-const token = user?.token;
 
 // Create axios instance with authorization header
-const axiosAuthorized = axios.create({
+const axiosAuthorized = (token) => axios.create({
   headers: {
     Authorization: `Bearer ${token}`,
   },
 });
 
 // Get all ingredients
-export const fetchIngredients = () => axiosAuthorized.get(baseURL);
+export const fetchIngredients = (token) => axiosAuthorized(token).get(baseURL);
 
 // Create ingredient
 export const createIngredient = (ing) => axiosAuthorized.post(baseURL, ing);

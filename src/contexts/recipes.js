@@ -1,16 +1,18 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import {
   fetchRecipes,
   createRecipe,
   updateRecipe,
   deleteRecipe,
 } from "../apis/recipes";
+import AuthContext from "./auth";
 
 const RecipesContext = createContext();
 
 export const RecipesContextProvider = ({ children }) => {
   const [recipes, setRecipes] = useState([]);
   const [tags] = useState(["śniadanie", "obiad", "przekąska"]);
+  const {token} = useContext(AuthContext);
 
   const addRecipe = async (rec) => {
     const { id } = JSON.parse(localStorage.getItem("user"));
@@ -71,7 +73,7 @@ export const RecipesContextProvider = ({ children }) => {
     async function fetchData() {
       try {
         console.log("fetching recipes..."); //*: dev only line
-        const response = await fetchRecipes();
+        const response = await fetchRecipes(token);
 
         setRecipes(response.data);
       } catch (error) {
@@ -80,7 +82,7 @@ export const RecipesContextProvider = ({ children }) => {
       }
     }
     fetchData();
-  }, []);
+  }, [token]);
 
   const value = {
     tags,

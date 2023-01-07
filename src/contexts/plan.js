@@ -1,10 +1,12 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { createWeek, fetchPlan } from "../apis/plan";
+import AuthContext from "./auth";
 
 const PlanContext = createContext();
 
 export const PlanContextProvider = ({ children }) => {
   const [plan, setPlan] = useState([]);
+  const {token} = useContext(AuthContext);
 
   const addWeek = async (week) => {
     const { id } = JSON.parse(localStorage.getItem("user"));
@@ -24,12 +26,12 @@ export const PlanContextProvider = ({ children }) => {
   useEffect(() => {
     async function fetchData() {
       console.log("fetching plan..."); //*: dev only line
-      const response = await fetchPlan();
+      const response = await fetchPlan(token);
 
       setPlan(response.data);
     }
     fetchData();
-  }, []);
+  }, [token]);
 
   const value = { plan, addWeek };
   return <PlanContext.Provider value={value}>{children}</PlanContext.Provider>;
