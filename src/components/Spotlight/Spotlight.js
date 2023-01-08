@@ -113,6 +113,7 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             autoFocus
+            placeholder="Wpisz nazwę składnika"
           ></input>
           {isMobile && (
             <Button onClick={onClose} round mini>
