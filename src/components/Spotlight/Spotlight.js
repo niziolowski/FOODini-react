@@ -12,7 +12,7 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
   const root = document.getElementById("modal");
   // Suggestions
 
-  const [filteredData, setFilteredData] = useState([]);
+  const [filteredData, setFilteredData] = useState(data);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [query, setQuery] = useState("");
   const suggestionsEl = useRef();
@@ -29,7 +29,7 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
     );
 
     // Set filtered data
-    setFilteredData(value.length === 0 ? [] : filteredData);
+    setFilteredData(value.length === 0 ? data : filteredData);
 
     // Reset selected index
     setSelectedIndex(0);
@@ -62,6 +62,9 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
       if (!target) return;
       target.click();
     }
+
+    // On 'Enter' click on selected item
+    if (e.key === "Escape") onClose();
   };
 
   const handleSuggestionClick = (e) => {
@@ -95,11 +98,10 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
           data-id={item.id}
         />
       ))}
-      {query.length > 0 && (
-        <li onClick={handleAddClick} className={styles["btn-add"]}>
-          Stwórz nowy produkt <FiEdit />
-        </li>
-      )}
+
+      <li onClick={handleAddClick} className={styles["btn-add"]}>
+        Stwórz nowy produkt <FiEdit />
+      </li>
     </ul>
   );
 
