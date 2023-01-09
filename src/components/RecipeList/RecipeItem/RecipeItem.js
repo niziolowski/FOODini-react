@@ -14,7 +14,7 @@ function RecipeItem({ item, onPreview }) {
   const { editRecipe, removeRecipe } = useContext(RecipesContext);
   const { ingredients } = useContext(IngredientsContext);
 
-  // Calculate how many percentage of all ingredients are available in storage
+  // Calculate how much percentage of all ingredients are available in storaeg
   const indicatorValue = useMemo(() => {
     // Add percentage of every ingredient
     let sumPercentages = [];
