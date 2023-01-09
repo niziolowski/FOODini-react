@@ -1,6 +1,7 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { FiStar, FiTrash } from "react-icons/fi";
 import RecipesContext from "../../../contexts/recipes";
+import IngredientsContext from "../../../contexts/ingredients";
 import Tag from "../../UI/Tag/Tag";
 import BarIndicator from "../../UI/BarIndicator/BarIndicator";
 import Button from "../../UI/Button/Button";
@@ -11,6 +12,38 @@ import { animate } from "../../../utils/animate";
 function RecipeItem({ item, onPreview }) {
   const { tags } = useContext(RecipesContext);
   const { editRecipe, removeRecipe } = useContext(RecipesContext);
+  const { ingredients } = useContext(IngredientsContext);
+
+  // Calculate how many percentage of all ingredients are available in storage
+  const indicatorValue = useMemo(() => {
+    // Add percentage of every ingredient
+    let sumPercentages = [];
+
+    item.ingredients.forEach((ing) => {
+      // Required amount
+      const required = ing.amount;
+
+      // Check how much is in storage
+      const inStorage = ingredients
+        .filter((item) => item.name === ing.name && item.type === "storage")
+        .reduce((acc, cur) => (acc += cur.amount), 0);
+
+      // Calculate available percentage of required amount
+      const proportion = inStorage / required;
+      const percentage = proportion > 1 ? 100 : proportion * 100;
+
+      sumPercentages.push(percentage);
+    });
+
+    // Add values together
+    const sum = sumPercentages.reduce((acc, cur) => (acc += cur), 0);
+    // Divide by the number of values
+    const indicatorValue = sum / sumPercentages.length;
+
+    return indicatorValue;
+  }, [ingredients, item.ingredients]);
+
+  console.log(indicatorValue);
 
   const handleClick = (e) => {
     // If target is not a button, show recipe preview
@@ -51,7 +84,7 @@ function RecipeItem({ item, onPreview }) {
         <div className={styles.title}>{item.name}</div>
         <div className={styles.info}>
           <DifficultyIndicator value={item.difficulty} />
-          <BarIndicator label="Składniki" value={30} />
+          <BarIndicator label="Składniki" value={indicatorValue} />
         </div>
       </div>
       <div className={styles.col}>
