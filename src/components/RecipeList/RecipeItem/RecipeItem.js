@@ -14,6 +14,7 @@ function RecipeItem({ item, onPreview }) {
   const { editRecipe, removeRecipe } = useContext(RecipesContext);
   const { ingredients } = useContext(IngredientsContext);
 
+  //? Think about refactoring in the future. This code is used in multiple places with slight variation
   // Calculate how much percentage of all ingredients are available in storaeg
   const indicatorValue = useMemo(() => {
     // Add percentage of every ingredient
@@ -42,8 +43,6 @@ function RecipeItem({ item, onPreview }) {
 
     return indicatorValue;
   }, [ingredients, item.ingredients]);
-
-  console.log(indicatorValue);
 
   const handleClick = (e) => {
     // If target is not a button, show recipe preview
