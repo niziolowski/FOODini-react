@@ -22,7 +22,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://foodini-react.netlify.app">
     <img src="images/icon.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -62,7 +62,7 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Product Name Screen Shot][product-screenshot]](https://foodini-react.netlify.app)
 This application aims to automate every day tasks related to diet making it easier to manage nutrition and reduce food waste. From storage management, product shelf life and recipes, to meal planning and shopping list.
 
 Everything is connected to everything so after the user fills the storage for the first time, if he sticks to his plan, he will never have to do it again. The app will track the ingredients and their shelf life, the shopping list will be generated from the meal plan based on available storage and then with just one click, the user can fill up their storage again.
