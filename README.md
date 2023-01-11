@@ -1,3 +1,4 @@
+
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 
 <a name="readme-top"></a>
@@ -23,7 +24,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/icon.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">FOODini</h3>
@@ -66,18 +67,16 @@
 ## About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
+This application aims to automate every day tasks related to diet making it easier to manage nutrition and reduce food waste. From storage management, product shelf life and recipes, to meal planning and shopping list. 
 
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+Everything is connected to everything so after the user fills the storage for the first time, if he sticks to his plan, he will never have to do it again. The app will track the ingredients and their shelf life, the shopping list will be generated from the meal plan based on available storage and then with just one click, the user can fill up their storage again.
 
-Here's why:
+### Why?
+Wasting food in a world where over 800 million people are hungry or undernourished is a serious problem. It is estimated that **33%** of the food produced in the world is wasted. This is **1.3 billion tons** annually.
 
-- Your time should be focused on creating something amazing. A project that solves a problem and helps others
-- You shouldn't be doing the same tasks over and over like creating a README from scratch
-- You should implement DRY principles to the rest of your life :smile:
+A staggering part of this problem originates in our homes. The largest portion of wasted food, as much as 60%, comes from households. The cause is very often bad habits or busyness. Neglecting the expiration date, buying too much or unwise, or lack of ideas for using ingredients are some of the most common reasons for throwing food away.
 
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
-
-Use the `BLANK_README.md` to get started.
+**FOODini** is an idea for a web application that changes the user's shopping habits by automating tasks related to nutrition.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -118,29 +117,23 @@ npm install npm@latest -g
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- USAGE EXAMPLES -->
-
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- ROADMAP -->
 
 ## Roadmap
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-  - [ ] Chinese
-  - [ ] Spanish
+- [x] Design the UI
+- [x] Build a prototype - basic functionality ([demo](http://foodini-dev.netlify.app)) 
+- [x] Create an API server and database
+- [ ] Build professional application using React (WIP)
+- [ ] Publish the application
+- [ ] Add language Support
+  - [ ] Polish
+  - [ ] English 
+- [ ] Develop new features:
+	- [ ] Recipes database (with sharing capability)
+  - [ ] Different diet plan templates (keto,paleo,vegan, etc.)
+  - [ ] Calories calculator
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -201,32 +194,4 @@ Project Link: https://github.com/niziolowski/FOODini-react
 [jquery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [jquery-url]: https://jquery.com
 
-# FOODini
 
-My first real-life project. App for reducing food waste by tracking storage expiration date, planning meals, shopping list generation and finally refilling the storage.
-
-## DEMO (work in progress): https://foodini-react.netlify.app/
-
-## Biggest challenges:
-
-### API Database:
-
-This app might look simple but the data is very interconnected. Recipes indicate available ingredients, meal plan is calculating and using the storage items, shopping list is generated based on meal plan and storage. This level of complexity could be easily solved on the back-end side but i'm learning Front-end so i want to focus only on one thing at once.
-
-Therefore I am using a free API database platform that has a request limit of 10 requests per 20 seconds so i have to think about how and when the app is making requests and try to reduce them to a bare minimum while still preserving the flexibility even when only one user is active.
-
-### CSS:
-
-I wanted the app to look simple but great and while this is achievable, making it look as good on mobile devices or different web browsers is a real challenge. It might be the thing that will take me the most time overall. And i have to say Safari is by far the worst thing that could happen to me while coding.
-
-### Forms:
-
-Forms take forever to build, so after a lot of trials and errors i found a library called 'react-form-hook' and decided to use it. This thing saved my life. It created some new problems but almost all of them were described in the documentation or on the community forum.
-
-### Lack of mentoring:
-
-I have only a single programmer friend and i try to respect his time not using him to much so i've experienced a lot of frustration in the beginning when i got stuck. Later i started using ChatGPT as my personal programming assistant and it is quite useful. Even when using external libraries, it can show me examples relevant to my context and specific problems. Often helps me with simple debugging and saves me a lot of time that i would spend on searching the web.
-
-## DEMO of the previous version (MVC Prototype): https://foodini-dev.netlify.app/
-
-I built it using only JS and MVC architecture. This was a learning project i started when i finished JS course. A lot of things don't work as expected or at all. I have never finished it as i started learning React and decided to build it from scratch using React framework.
