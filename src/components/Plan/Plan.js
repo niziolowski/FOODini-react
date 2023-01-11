@@ -8,9 +8,11 @@ import styles from "./Plan.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
+// import PlanContext from "../../contexts/plan";
 
 function Plan() {
   const { isMobile } = useContext(LayoutContext);
+  // const { plan } = useContext(PlanContext);
 
   const fakeData = [
     {

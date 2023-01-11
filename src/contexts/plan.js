@@ -23,77 +23,50 @@ export const PlanContextProvider = ({ children }) => {
     }
   };
 
-  const testData = {
-    days: {
-      monday: {
-        meals: {
-          recipes_id: [99, 66],
-          ingredients_id: [544, 545],
-        },
-      },
-      tuesday: {
-        meals: {
-          recipes_id: [],
-          ingredients_id: [],
-        },
-      },
-      wednesday: {
-        meals: {
-          recipes_id: [],
-          ingredients_id: [],
-        },
-      },
-      thursday: {
-        meals: {
-          recipes_id: [],
-          ingredients_id: [],
-        },
-      },
-      friday: {
-        meals: {
-          recipes_id: [],
-          ingredients_id: [],
-        },
-      },
-      saturday: {
-        meals: {
-          recipes_id: [],
-          ingredients_id: [],
-        },
-      },
-      sunday: {
-        meals: {
-          recipes_id: [],
-          ingredients_id: [],
-        },
-      },
-    },
-    users_id: 21,
-    sync: "false",
-    start_date: "2022-01-10",
-    end_date: "2022-01-16",
-  };
+  // !!Dev only
+  // const testData = {
+  //   id: null,
+  //   days: {
+  //     monday: {
+  //       meals: [
+  //         {
+  //           id: 1,
+  //           type: "ingredient",
+  //           name: "Jajka",
+  //           amount: 4,
+  //           unit: "szt.",
+  //         },
+  //       ],
+  //     },
+  //     tuesday: {
+  //       meals: [],
+  //     },
+  //     wednesday: {
+  //       meals: [],
+  //     },
+  //     thursday: {
+  //       meals: [],
+  //     },
+  //     friday: {
+  //       meals: [],
+  //     },
+  //     saturday: {
+  //       meals: [],
+  //     },
+  //     sunday: {
+  //       meals: [],
+  //     },
+  //   },
+  //   users_id: 21,
+  //   sync: "false",
+  //   start_date: "2023-01-09",
+  //   end_date: "2023-01-15",
+  // };
 
   useEffect(() => {
     async function fetchData() {
       console.log("fetching plan..."); //*: dev only line
       const response = await fetchPlan(token);
-
-      // Change response key names for ingtegrity (recipes_id and ingredients_id are converted but names persist)
-      // ? Not optimal but i don't know how to change object key names inside xano.com after conversion from just an id
-      response.data.forEach((week) => {
-        for (const [key, value] of Object.entries(week.days)) {
-          const ingredients = value.meals.ingredients_id;
-          const recipes = value.meals.recipes_id;
-
-          delete Object.assign(week.days[key].meals, { recipes: recipes })[
-            "recipes_id"
-          ];
-          delete Object.assign(week.days[key].meals, {
-            ingredients: ingredients,
-          })["ingredients_id"];
-        }
-      });
 
       setPlan(response.data);
     }
@@ -103,3 +76,5 @@ export const PlanContextProvider = ({ children }) => {
   const value = { plan, addWeek };
   return <PlanContext.Provider value={value}>{children}</PlanContext.Provider>;
 };
+
+export default PlanContext;
