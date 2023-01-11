@@ -1,4 +1,3 @@
-
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 
 <a name="readme-top"></a>
@@ -64,11 +63,12 @@
 ## About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
-This application aims to automate every day tasks related to diet making it easier to manage nutrition and reduce food waste. From storage management, product shelf life and recipes, to meal planning and shopping list. 
+This application aims to automate every day tasks related to diet making it easier to manage nutrition and reduce food waste. From storage management, product shelf life and recipes, to meal planning and shopping list.
 
 Everything is connected to everything so after the user fills the storage for the first time, if he sticks to his plan, he will never have to do it again. The app will track the ingredients and their shelf life, the shopping list will be generated from the meal plan based on available storage and then with just one click, the user can fill up their storage again.
 
 ### Why?
+
 Wasting food in a world where over 800 million people are hungry or undernourished is a serious problem. It is estimated that **33%** of the food produced in the world is wasted. This is **1.3 billion tons** annually.
 
 A staggering part of this problem originates in our homes. The largest portion of wasted food, as much as 60%, comes from households. The cause is very often bad habits or busyness. Neglecting the expiration date, buying too much or unwise, or lack of ideas for using ingredients are some of the most common reasons for throwing food away.
@@ -119,18 +119,17 @@ npm install npm@latest -g
 ## Roadmap
 
 - [x] Design the UI
-- [x] Build a prototype - basic functionality ([demo](http://foodini-dev.netlify.app)) 
+- [x] Build a prototype - basic functionality ([demo](http://foodini-dev.netlify.app))
 - [x] Create an API server and database
 - [ ] Build professional application using React (WIP)
 - [ ] Publish the application
 - [ ] Add language Support
   - [ ] Polish
-  - [ ] English 
+  - [ ] English
 - [ ] Develop new features:
-	- [ ] Recipes database (with sharing capability)
+  - [ ] Recipes database (with sharing capability)
   - [ ] Different diet plan templates (keto,paleo,vegan, etc.)
   - [ ] Calories calculator
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -190,5 +189,3 @@ Project Link: https://github.com/niziolowski/FOODini-react
 [bootstrap-url]: https://getbootstrap.com
 [jquery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [jquery-url]: https://jquery.com
-
-
