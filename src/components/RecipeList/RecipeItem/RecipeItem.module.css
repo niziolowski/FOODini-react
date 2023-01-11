@@ -13,6 +13,7 @@
 .title {
   text-decoration: none;
   color: var(--accent-color);
+  font-size: 0.8rem;
 }
 
 .image-wrapper {

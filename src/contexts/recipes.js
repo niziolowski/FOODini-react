@@ -11,8 +11,9 @@ const RecipesContext = createContext();
 
 export const RecipesContextProvider = ({ children }) => {
   const [recipes, setRecipes] = useState([]);
+
   const [tags] = useState(["śniadanie", "obiad", "przekąska"]);
-  const {token} = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
 
   const addRecipe = async (rec) => {
     const { id } = JSON.parse(localStorage.getItem("user"));

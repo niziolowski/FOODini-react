@@ -305,6 +305,7 @@ function RecipeForm({ data, onClose }) {
             {...register("name", { required: "Podaj tytuł przepisu" })}
             className={styles.title}
             isValid={!errors.name}
+            placeholder="np. Pierogi Babci Hanii"
           />
         </div>
       </section>

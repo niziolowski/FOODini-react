@@ -4,9 +4,9 @@
   position: relative;
   box-shadow: var(--shadow);
   width: 500px;
-  max-height: 80%;
+  max-height: 70vmin;
   align-self: flex-start;
-  margin-top: 10%;
+  margin-top: 10vmin;
   border: var(--border);
   background-color: var(--bg-color);
   border-radius: var(--border-radius);
@@ -57,6 +57,8 @@
 }
 
 .btn-add {
+  position: sticky;
+  bottom: 0;
   padding: 15px;
   font-style: italic;
   color: var(--accent-color);
@@ -64,6 +66,8 @@
   justify-content: space-between;
   font-size: 0.9rem;
   font-weight: 300;
+  border-top: var(--border);
+  box-shadow: rgba(0, 0, 0, 0.1) 0 0px 10px;
 }
 
 .btn-add svg {

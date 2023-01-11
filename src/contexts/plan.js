@@ -6,7 +6,7 @@ const PlanContext = createContext();
 
 export const PlanContextProvider = ({ children }) => {
   const [plan, setPlan] = useState([]);
-  const {token} = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
 
   const addWeek = async (week) => {
     const { id } = JSON.parse(localStorage.getItem("user"));
@@ -23,6 +23,46 @@ export const PlanContextProvider = ({ children }) => {
     }
   };
 
+  // !!Dev only
+  // const testData = {
+  //   id: null,
+  //   days: {
+  //     monday: {
+  //       meals: [
+  //         {
+  //           id: 1,
+  //           type: "ingredient",
+  //           name: "Jajka",
+  //           amount: 4,
+  //           unit: "szt.",
+  //         },
+  //       ],
+  //     },
+  //     tuesday: {
+  //       meals: [],
+  //     },
+  //     wednesday: {
+  //       meals: [],
+  //     },
+  //     thursday: {
+  //       meals: [],
+  //     },
+  //     friday: {
+  //       meals: [],
+  //     },
+  //     saturday: {
+  //       meals: [],
+  //     },
+  //     sunday: {
+  //       meals: [],
+  //     },
+  //   },
+  //   users_id: 21,
+  //   sync: "false",
+  //   start_date: "2023-01-09",
+  //   end_date: "2023-01-15",
+  // };
+
   useEffect(() => {
     async function fetchData() {
       console.log("fetching plan..."); //*: dev only line
@@ -36,3 +76,5 @@ export const PlanContextProvider = ({ children }) => {
   const value = { plan, addWeek };
   return <PlanContext.Provider value={value}>{children}</PlanContext.Provider>;
 };
+
+export default PlanContext;

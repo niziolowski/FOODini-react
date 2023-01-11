@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   FiChevronLeft,
   FiChevronRight,
@@ -18,7 +18,9 @@ import styles from "./Nav.module.css";
 function Nav() {
   const { isVisible, dispatchIsVisible } = useContext(LayoutContext);
 
-  const parentEl = useRef();
+  const parentRef = useRef();
+  const titleRef = useRef();
+  const [titleSize, setTitleSize] = useState("m");
   function handleClick(e) {
     const btn = e.target.closest("button");
 
@@ -32,11 +34,33 @@ function Nav() {
     dispatchIsVisible({ type: "profile", mode: "toggle" });
   };
 
-  // Adjust title size and alignment
-  useEffect(() => {}, [isVisible.sidebar]);
+  // Adjust title size and alignment to nav bar width
+  useEffect(() => {
+    const handler = () => {
+      setTitleSize("m");
+      // get window width, subtract sidebar width if active
+      const windowWidth = window.innerWidth;
+      const sidebarWidth = isVisible.sidebar ? 400 : 0;
+      const threshold = windowWidth - sidebarWidth;
+
+      // Set title size accordingly
+      if (threshold > 1060) return setTitleSize("l");
+      if (threshold < 850) return setTitleSize("s");
+    };
+
+    // Run calculations on sidebar toggle
+    handler();
+
+    // Run calculations on resize event
+    window.addEventListener("resize", handler);
+
+    return () => {
+      window.removeEventListener("resize", handler);
+    };
+  }, [isVisible.sidebar]);
 
   return (
-    <nav ref={parentEl} className={styles.nav}>
+    <nav ref={parentRef} className={styles.nav}>
       <div className={styles.actions}>
         <Button className="js-btn-sidebar" onClick={handleClick} round>
           <FiSidebar />
@@ -48,7 +72,7 @@ function Nav() {
           {isVisible.profile && <Profile onClose={handleToggleProfile} />}
         </div>
       </div>
-      <div className={styles.title}>
+      <div ref={titleRef} className={`${styles.title} ${styles[titleSize]}`}>
         <h1>PLAN POSIŁKÓW</h1>
         <h2>BIEŻĄCY TYDZIEŃ</h2>
       </div>
