@@ -8,6 +8,7 @@ import {
   FiShoppingBag,
 } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout.js";
+import PlanContext from "../../contexts/plan.js";
 import Profile from "../Profile/Profile.js";
 import Button from "./../UI/Button/Button.js";
 import styles from "./Nav.module.css";
@@ -17,6 +18,9 @@ import styles from "./Nav.module.css";
  */
 function Nav() {
   const { isVisible, dispatchIsVisible } = useContext(LayoutContext);
+
+  const { activeWeek, currentWeek, previousWeek, nextWeek, setActiveWeek } =
+    useContext(PlanContext);
 
   const parentRef = useRef();
   const titleRef = useRef();
@@ -32,6 +36,19 @@ function Nav() {
 
   const handleToggleProfile = () => {
     dispatchIsVisible({ type: "profile", mode: "toggle" });
+  };
+
+  const handleControls = (e) => {
+    const btn = e.target.closest("button");
+
+    // Previous week
+    if (btn.classList.contains("js-previous-week")) previousWeek();
+
+    // Current week
+    if (btn.classList.contains("js-current-week")) setActiveWeek(currentWeek);
+
+    // Next week
+    if (btn.classList.contains("js-next-week")) nextWeek();
   };
 
   // Adjust title size and alignment to nav bar width
@@ -74,17 +91,31 @@ function Nav() {
       </div>
       <div ref={titleRef} className={`${styles.title} ${styles[titleSize]}`}>
         <h1>PLAN POSIŁKÓW</h1>
-        <h2>BIEŻĄCY TYDZIEŃ</h2>
+        <h2>
+          {activeWeek
+            ? `${activeWeek.start_date} - ${activeWeek.end_date}`
+            : "data"}
+        </h2>
       </div>
       <div className={styles.actions}>
         <div className={styles.controls}>
-          <Button round mini>
+          <Button
+            className="js-previous-week"
+            onClick={handleControls}
+            round
+            mini
+          >
             <FiChevronLeft />
           </Button>
-          <Button round mini>
+          <Button
+            className="js-current-week"
+            onClick={handleControls}
+            round
+            mini
+          >
             <FiHome />
           </Button>
-          <Button round mini>
+          <Button className="js-next-week" onClick={handleControls} round mini>
             <FiChevronRight />
           </Button>
         </div>
