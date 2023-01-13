@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   FiChevronLeft,
   FiChevronRight,
@@ -46,6 +46,23 @@ function Nav() {
     if (btn.classList.contains("js-next-week")) nextWeek();
   };
 
+  // Format the subtitle when user changes active week
+  const subtitleText = useMemo(() => {
+    if (!activeWeek) return;
+    const startDate = new Date(activeWeek.start_date).toLocaleDateString(
+      "pl-PL",
+      {
+        month: "long",
+        day: "numeric",
+      }
+    );
+    const endDate = new Date(activeWeek.end_date).toLocaleDateString("pl-PL", {
+      month: "long",
+      day: "numeric",
+    });
+    return `${startDate} - ${endDate}`;
+  }, [activeWeek]);
+
   // Adjust title size and alignment to nav bar width
   useEffect(() => {
     const handler = () => {
@@ -86,11 +103,7 @@ function Nav() {
       </div>
       <div ref={titleRef} className={`${styles.title} ${styles[titleSize]}`}>
         <h1>PLAN POSIŁKÓW</h1>
-        <h2>
-          {activeWeek
-            ? `${activeWeek.start_date} - ${activeWeek.end_date}`
-            : "data"}
-        </h2>
+        <h2>{subtitleText}</h2>
       </div>
       <div className={styles.actions}>
         <div className={styles.controls}>
