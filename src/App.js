@@ -60,9 +60,8 @@ function App() {
             }`}
           >
             {isMobile && isVisible.profile && <Profile />}
-            {!isMobile ? <Nav /> : <NavMobile />}
-
             <PlanContextProvider>
+              {!isMobile ? <Nav /> : <NavMobile />}
               <Plan />
             </PlanContextProvider>
             <ShoppingList />
