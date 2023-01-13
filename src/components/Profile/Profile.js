@@ -9,13 +9,19 @@ function Profile({ onClose }) {
   const { name, email, logout } = useContext(AuthContext);
   const { isMobile, dispatchIsVisible } = useContext(LayoutContext);
 
-  const handleLogout = () => {
-    logout();
-  };
+  const handleClick = (e) => {
+    const btn = e.target.closest("button");
 
-  // * Catalog should really be called 'templates'
-  const handleCatalog = () => {
-    dispatchIsVisible({ type: "catalog", mode: "switch" });
+    // BTN logout
+    if (btn.classList.contains("js-logout")) logout();
+
+    // BTN catalog
+    if (btn.classList.contains("js-catalog"))
+      dispatchIsVisible({ type: "catalog", mode: "switch" }); //* Catalog should really be called 'templates'
+
+    // BTN appearance
+    if (btn.classList.contains("js-settings"))
+      dispatchIsVisible({ type: "settings", mode: "switch" });
   };
 
   // Close panel on mouseleave
@@ -47,19 +53,26 @@ function Profile({ onClose }) {
           <h1>{name}</h1>
           <p>{email}</p>
         </div>
-        <Button primary wide outline>
-          Wygląd
+        <Button
+          onClick={handleClick}
+          className="js-settings"
+          primary
+          wide
+          outline
+        >
+          Ustawienia
         </Button>
         <Button
+          className="js-catalog"
           disabled={isMobile}
-          onClick={handleCatalog}
+          onClick={handleClick}
           primary
           wide
           outline
         >
           Szablony produktów
         </Button>
-        <Button onClick={handleLogout} primary wide>
+        <Button className="js-logout" onClick={handleClick} primary wide>
           Wyloguj się
         </Button>
       </div>
