@@ -14,6 +14,7 @@ import NavMobileBar from "./NavMobileBar";
 import Button from "../UI/Button/Button";
 import LayoutContext from "../../contexts/layout";
 import PlanContext from "../../contexts/plan";
+import { animate } from "../../utils/animate";
 
 function NavMobile() {
   const [activeTab, setActiveTab] = useState("home");
@@ -56,19 +57,29 @@ function NavMobile() {
     dispatchIsVisible({ type: tab, mode: "switch" });
   }
 
-  const handleControlsClick = (e) => {
+  const handleControlsClick = async (e) => {
     const btn = e.target.closest("button");
+    try {
+      // Previous week
+      if (btn.classList.contains("js-previous-week")) previousWeek();
 
-    // Previous week
-    if (btn.classList.contains("js-previous-week")) previousWeek();
-
-    // Next week
-    if (btn.classList.contains("js-next-week")) nextWeek();
+      // Next week
+      if (btn.classList.contains("js-next-week")) {
+        animate(btn, "pulsate");
+        await nextWeek();
+        animate(btn, "empty");
+      }
+    } catch (error) {
+      console.error(error);
+      animate(btn, "empty");
+    }
   };
 
   // Format the subtitle when user changes active week
   const subtitleText = useMemo(() => {
-    if (!activeWeek) return;
+    // If no data, display an error message
+    if (!activeWeek) return "Nie można załadować danych";
+
     const startDate = new Date(activeWeek.start_date).toLocaleDateString(
       "pl-PL",
       {
