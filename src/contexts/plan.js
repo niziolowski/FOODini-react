@@ -37,8 +37,6 @@ export const PlanContextProvider = ({ children }) => {
       // Create new week if no current week
       if (!currentWeek) currentWeek = await addWeek(now);
 
-      console.log(plan);
-
       return currentWeek;
     } catch (error) {
       console.error(error);
@@ -167,7 +165,6 @@ export const PlanContextProvider = ({ children }) => {
 
       // Get current week
       const currentWeek = await getCurrentWeek(plan);
-      console.log(currentWeek);
 
       // Set current week
       setCurrentWeek(currentWeek);
