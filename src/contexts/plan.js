@@ -12,11 +12,14 @@ import AuthContext from "./auth";
 const PlanContext = createContext();
 
 export const PlanContextProvider = ({ children }) => {
+  // Get authToken
+  const { token } = useContext(AuthContext);
+  // Define plan state
   const [plan, setPlan] = useState([]);
   const [currentWeek, setCurrentWeek] = useState(null);
   const [activeWeek, setActiveWeek] = useState(null);
-  const { token } = useContext(AuthContext);
 
+  // Look for today's week and if it doesn't exist, create one
   const getCurrentWeek = useCallback(async (plan) => {
     // Get current time
     const now = new Date().getTime();
@@ -42,6 +45,7 @@ export const PlanContextProvider = ({ children }) => {
     }
   }, []);
 
+  // Create an empty week with current date
   const addWeek = async (dateString) => {
     //! Dev only
     console.log("adding week...");
@@ -69,18 +73,17 @@ export const PlanContextProvider = ({ children }) => {
       end_date: endDate,
       sync: false,
       days: {
-        monday: { meals: [{ name: "test" }] },
-        tuesday: { meals: [{ name: "test" }] },
-        wednesday: { meals: [{ name: "test" }] },
-        thursday: { meals: [{ name: "test" }] },
-        friday: { meals: [{ name: "test" }] },
-        saturday: { meals: [{ name: "test" }] },
-        sunday: { meals: [{ name: "test" }] },
+        monday: { meals: [] },
+        tuesday: { meals: [] },
+        wednesday: { meals: [] },
+        thursday: { meals: [] },
+        friday: { meals: [] },
+        saturday: { meals: [] },
+        sunday: { meals: [] },
       },
     };
 
     // 3. Upload to plan
-
     const { id } = JSON.parse(localStorage.getItem("user"));
     try {
       const updatedWeek = { ...week, users_id: id };
@@ -150,46 +153,7 @@ export const PlanContextProvider = ({ children }) => {
     return previousWeek;
   };
 
-  // !!Dev only
-  // const testData = {
-  //   id: null,
-  //   days: {
-  //     monday: {
-  //       meals: [
-  //         {
-  //           id: 1,
-  //           type: "ingredient",
-  //           name: "Jajka",
-  //           amount: 4,
-  //           unit: "szt.",
-  //         },
-  //       ],
-  //     },
-  //     tuesday: {
-  //       meals: [],
-  //     },
-  //     wednesday: {
-  //       meals: [],
-  //     },
-  //     thursday: {
-  //       meals: [],
-  //     },
-  //     friday: {
-  //       meals: [],
-  //     },
-  //     saturday: {
-  //       meals: [],
-  //     },
-  //     sunday: {
-  //       meals: [],
-  //     },
-  //   },
-  //   users_id: 21,
-  //   sync: "false",
-  //   start_date: "2023-01-09",
-  //   end_date: "2023-01-15",
-  // };
-
+  // Fetch the plan and set it up
   useEffect(() => {
     async function fetchData() {
       console.log("fetching plan..."); //*: dev only line

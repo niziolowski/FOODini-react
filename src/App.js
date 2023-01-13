@@ -60,8 +60,8 @@ function App() {
             }`}
           >
             {isMobile && isVisible.profile && <Profile />}
-
             <PlanContextProvider>
+              {/* Navigation needs PlanContext for changing the current week and displaying a subtitle */}
               {!isMobile ? <Nav /> : <NavMobile />}
               <Plan />
             </PlanContextProvider>
