@@ -19,8 +19,15 @@ import styles from "./Nav.module.css";
  */
 function Nav() {
   const { isVisible, dispatchIsVisible } = useContext(LayoutContext);
-  const { activeWeek, currentWeek, previousWeek, nextWeek, setActiveWeek } =
-    useContext(PlanContext);
+  const {
+    plan,
+    activeWeek,
+    currentWeek,
+    previousWeek,
+    nextWeek,
+    setActiveWeek,
+    toggleWeekSync,
+  } = useContext(PlanContext);
 
   const parentRef = useRef();
   const titleRef = useRef();
@@ -50,6 +57,18 @@ function Nav() {
 
         // Wait for response
         await nextWeek();
+
+        // Clear the animation
+        animate(btn, "empty");
+      }
+
+      // Toggle sync
+      if (btn.classList.contains("js-sync")) {
+        // Animate button
+        animate(btn, "pulsate");
+
+        // Update API
+        await toggleWeekSync(activeWeek);
 
         // Clear the animation
         animate(btn, "empty");
@@ -133,7 +152,12 @@ function Nav() {
             <FiChevronRight />
           </Button>
         </div>
-        <Button round>
+        <Button
+          className="js-sync"
+          onClick={handleClick}
+          primary={activeWeek?.sync}
+          round
+        >
           <FiShoppingBag />
         </Button>
       </div>

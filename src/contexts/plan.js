@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { createWeek, fetchPlan } from "../apis/plan";
+import { createWeek, fetchPlan, updateWeek } from "../apis/plan";
 import { formatDate } from "../utils/dates";
 import AuthContext from "./auth";
 
@@ -97,6 +97,65 @@ export const PlanContextProvider = ({ children }) => {
     }
   };
 
+  // Update existing week
+  const editWeek = async (week) => {
+    //! Dev only
+    console.log("updating week...");
+
+    const { id } = JSON.parse(localStorage.getItem("user"));
+    try {
+      const updatedWeek = { ...week, users_id: id };
+      const res = await updateWeek(updatedWeek);
+
+      if (res.status === 200) {
+        // Update State
+        setPlan((current) => {
+          const el = current.find((item) => item.id === week.id);
+          const index = current.indexOf(el);
+          const updated = [...current];
+          updated.splice(index, 1, res.data);
+
+          return [...updated];
+        });
+      }
+      return res;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Toggle week sync parameter
+  const toggleWeekSync = async (week) => {
+    //! Dev only
+    console.log("updating week...");
+
+    const { id } = JSON.parse(localStorage.getItem("user"));
+    try {
+      const updatedWeek = { ...week, users_id: id, sync: !week.sync };
+
+      const res = await updateWeek(updatedWeek);
+
+      if (res.status === 200) {
+        // Update State
+        setPlan((current) => {
+          const el = current.find((item) => item.id === week.id);
+          const index = current.indexOf(el);
+          const updated = [...current];
+
+          updated.splice(index, 1, res.data);
+
+          return [...updated];
+        });
+
+        // Update active week
+        setActiveWeek(res.data);
+      }
+      return res;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // Swich the week to the next one and if it doesn't exist, create one
   const nextWeek = async () => {
     try {
@@ -178,11 +237,13 @@ export const PlanContextProvider = ({ children }) => {
   const value = {
     plan,
     addWeek,
+    editWeek,
     currentWeek,
     activeWeek,
     previousWeek,
     nextWeek,
     setActiveWeek,
+    toggleWeekSync,
   };
   return <PlanContext.Provider value={value}>{children}</PlanContext.Provider>;
 };
