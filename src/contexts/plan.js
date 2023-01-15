@@ -15,19 +15,19 @@ export const PlanContextProvider = ({ children }) => {
   // Get authToken
   const { token } = useContext(AuthContext);
   // Define plan state
-  const [plan, setPlan] = useState([]);
+  const [plan, setPlan] = useState(null);
   const [currentWeek, setCurrentWeek] = useState(null);
   const [activeWeek, setActiveWeek] = useState(null);
 
   // Look for today's week and if it doesn't exist, create one
   const getCurrentWeek = useCallback(async (plan) => {
-    // Get current time
-    const now = new Date().getTime();
+    // Get current time, convert to date string and then to date obj. That way we get the beginning of day timestamp
+    const now = new Date(formatDate(new Date()));
 
     // return current week if exists
     let currentWeek = plan.find((week) => {
-      const startDate = new Date(week.start_date).getTime();
-      const endDate = new Date(week.end_date).getTime();
+      const startDate = new Date(week.start_date);
+      const endDate = new Date(week.end_date);
 
       if (now >= startDate && now <= endDate) return week;
       return null;
