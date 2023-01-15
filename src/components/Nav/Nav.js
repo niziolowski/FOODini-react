@@ -20,7 +20,6 @@ import styles from "./Nav.module.css";
 function Nav() {
   const { isVisible, dispatchIsVisible } = useContext(LayoutContext);
   const {
-    plan,
     activeWeek,
     currentWeek,
     previousWeek,
