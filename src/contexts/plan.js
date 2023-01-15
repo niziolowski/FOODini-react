@@ -53,7 +53,7 @@ export const PlanContextProvider = ({ children }) => {
 
     // Get day of the week (minus one because we want to get to monday)
     const dayNum = date.getDay();
-    const daysIn = dayNum === 0 ? -1 : dayNum - 1;
+    const daysIn = dayNum === 0 ? 6 : dayNum - 1;
 
     // Set monday as start date
     let startDate = new Date(date - daysIn * 1000 * 60 * 60 * 24);
