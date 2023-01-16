@@ -154,7 +154,7 @@ function Nav() {
         <Button
           className="js-sync"
           onClick={handleClick}
-          primary={activeWeek?.sync}
+          outline={activeWeek?.sync}
           round
         >
           <FiShoppingBag />

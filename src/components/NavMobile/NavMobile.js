@@ -65,13 +65,19 @@ function NavMobile() {
 
       // Next week
       if (btn.classList.contains("js-next-week")) {
+        // Animate button
         animate(btn, "pulsate");
+
+        // Wait for response
         await nextWeek();
+
+        // Clear the animation
         animate(btn, "empty");
       }
     } catch (error) {
-      console.error(error);
+      // Clear the animation
       animate(btn, "empty");
+      console.error(error);
     }
   };
 
