@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 import LayoutContext from "../../contexts/layout";
 import Day from "./Day/Day";
 import styles from "./Plan.module.css";
@@ -9,21 +9,36 @@ import PlanContext from "../../contexts/plan";
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
+import Spotlight from "../Spotlight/Spotlight";
+import IngredientsContext from "../../contexts/ingredients";
+import RecipesContext from "../../contexts/recipes";
 
 function Plan() {
   const { isMobile } = useContext(LayoutContext);
-  const { activeWeek } = useContext(PlanContext);
+  const { activeWeek, editWeek } = useContext(PlanContext);
+  const { ingredients } = useContext(IngredientsContext);
+  const { recipes } = useContext(RecipesContext);
+  const [isSpotlight, setIsSpotlight] = useState(false);
+  const [targetDay, setTargetDay] = useState(null);
+
+  // Filter out template ingredients for spotlight
+  const filteredIngredients = useMemo(
+    () => ingredients.filter((ing) => ing.type === "template"),
+    [ingredients]
+  );
 
   // Create meals array from active week
-  let meals = useMemo(() => {
+  const days = useMemo(() => {
     // If undefined, return
-    if (!activeWeek?.days) return;
-
+    if (!activeWeek?.days) return [];
+    const days = Object.entries(activeWeek.days).map((day) => {
+      return { name: day[0], meals: day[1].meals.meals };
+    });
     // Destructure meals data
-    return Object.values(activeWeek.days).map((data) => data.meals);
+    return days;
   }, [activeWeek]);
 
-  const days = [
+  const dayNames = [
     "Poniedziałek",
     "Wtorek",
     "Środa",
@@ -32,6 +47,41 @@ function Plan() {
     "Sobota",
     "Niedziela",
   ];
+
+  const toggleSpotlight = () => {
+    setIsSpotlight((current) => !current);
+  };
+
+  const handleNewMeal = (dayName) => {
+    // Save target day index for reference
+    setTargetDay(dayName);
+    toggleSpotlight();
+  };
+
+  const handleSuggestionClick = (id, type) => {
+    // Get suggested object (check if recipe or ingredient)
+    let meal;
+    if (type === "recipe") meal = recipes.find((item) => item.id === id);
+    if (type === "template") meal = ingredients.find((item) => item.id === id);
+
+    // Get current meals
+    const meals = activeWeek.days[targetDay].meals;
+
+    // Add new meal to meals
+    meals.push(meal);
+
+    // Create an updated Week object
+    const updatedWeek = {
+      ...activeWeek,
+      days: { ...activeWeek.days, [targetDay]: { meals } },
+    };
+
+    // Upload updated Week
+    editWeek(updatedWeek);
+
+    // Toggle spotlight modal
+    toggleSpotlight();
+  };
 
   if (isMobile) {
     return (
@@ -44,8 +94,12 @@ function Plan() {
           onSwiper={(swiper) => console.log(swiper)}
         >
           {days.map((day, i) => (
-            <SwiperSlide key={day}>
-              <Day title={day} meals={meals[i]} />
+            <SwiperSlide key={day.name}>
+              <Day
+                title={dayNames[i]}
+                meals={day.meals}
+                onNewMeal={() => handleNewMeal(day.name)}
+              />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -55,11 +109,28 @@ function Plan() {
 
   if (!isMobile) {
     return (
-      <div className={styles.plan}>
-        {days.map((day, i) => {
-          return <Day key={day} title={day} meals={meals[i]} />;
-        })}
-      </div>
+      <>
+        <div className={styles.plan}>
+          {days.map((day, i) => {
+            return (
+              <Day
+                key={day.name}
+                title={dayNames[i]}
+                meals={day.meals}
+                onNewMeal={() => handleNewMeal(day.name)}
+              />
+            );
+          })}
+        </div>
+        {isSpotlight && (
+          <Spotlight
+            data={[...filteredIngredients, ...recipes]}
+            onClose={toggleSpotlight}
+            onSuggestionClick={handleSuggestionClick}
+          />
+        )}
+        ;
+      </>
     );
   }
 }
