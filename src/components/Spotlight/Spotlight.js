@@ -71,8 +71,11 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
     // Get item id
     const id = +e.target.closest("li").dataset.id;
 
+    // Get type (if undefined, then return 'recipe')
+    const type = e.target.closest("li").dataset.type || "recipe";
+
     // Pass id UP using prop
-    onSuggestionClick(id);
+    onSuggestionClick(id, type);
   };
 
   const handleAddClick = () => {
@@ -90,14 +93,17 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
 
   const suggestions = (
     <ul ref={suggestionsEl} className={styles["suggestion-list"]}>
-      {filteredData.map((item) => (
-        <StorageItem
-          onClick={handleSuggestionClick}
-          key={item.id}
-          item={item}
-          data-id={item.id}
-        />
-      ))}
+      {filteredData.map((item) => {
+        return (
+          <StorageItem
+            onClick={handleSuggestionClick}
+            key={item.id}
+            item={item}
+            data-id={item.id}
+            data-type={item.type}
+          />
+        );
+      })}
 
       <li onClick={handleAddClick} className={styles["btn-add"]}>
         Stwórz nowy produkt <FiEdit />
