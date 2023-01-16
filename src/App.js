@@ -63,7 +63,12 @@ function App() {
             <PlanContextProvider>
               {/* Navigation needs PlanContext for changing the current week and displaying a subtitle */}
               {!isMobile ? <Nav /> : <NavMobile />}
-              <Plan />
+              <IngredientsContextProvider>
+                <RecipesContextProvider>
+                  {/* Plan needs IngredientsContext and RecipesContext for adding meals */}
+                  <Plan />
+                </RecipesContextProvider>
+              </IngredientsContextProvider>
             </PlanContextProvider>
             <ShoppingList />
             <IngredientsContextProvider>
