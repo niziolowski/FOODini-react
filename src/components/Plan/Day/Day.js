@@ -5,7 +5,7 @@ import { useContext } from "react";
 import LayoutContext from "../../../contexts/layout";
 import Meal from "./Meal/Meal";
 
-function Day({ title }) {
+function Day({ title, meals }) {
   const { isMobile } = useContext(LayoutContext);
 
   const btnAdd = (
@@ -20,9 +20,11 @@ function Day({ title }) {
     <div className={classes}>
       <div className={styles.title}>{title}</div>
       <ul className={styles.list}>
-        <Meal title="Meal" />
+        {meals.map((meal) => (
+          <Meal key={meal.app_id} title={meal.name} />
+        ))}
       </ul>
-      {isMobile && btnAdd}
+      {btnAdd}
     </div>
   );
 }

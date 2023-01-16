@@ -1,48 +1,36 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import LayoutContext from "../../contexts/layout";
 import Day from "./Day/Day";
 import styles from "./Plan.module.css";
+import PlanContext from "../../contexts/plan";
 
 //* § Library for swipe slider effect - https://swiperjs.com/react
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
-// import PlanContext from "../../contexts/plan";
 
 function Plan() {
   const { isMobile } = useContext(LayoutContext);
-  // const { plan } = useContext(PlanContext);
+  const { activeWeek } = useContext(PlanContext);
 
-  const fakeData = [
-    {
-      title: "Poniedziałek",
-      meals: ["1", "2"],
-    },
-    {
-      title: "Wtorek",
-      meals: ["1", "2"],
-    },
-    {
-      title: "Środa",
-      meals: ["1", "2"],
-    },
-    {
-      title: "Czwartek",
-      meals: ["1", "2"],
-    },
-    {
-      title: "Piątek",
-      meals: ["1", "2"],
-    },
-    {
-      title: "Sobota",
-      meals: ["1", "2"],
-    },
-    {
-      title: "Niedziela",
-      meals: ["1", "2"],
-    },
+  // Create meals array from active week
+  let meals = useMemo(() => {
+    // If undefined, return
+    if (!activeWeek?.days) return;
+
+    // Destructure meals data
+    return Object.values(activeWeek.days).map((data) => data.meals);
+  }, [activeWeek]);
+
+  const days = [
+    "Poniedziałek",
+    "Wtorek",
+    "Środa",
+    "Czwartek",
+    "Piątek",
+    "Sobota",
+    "Niedziela",
   ];
 
   if (isMobile) {
@@ -55,9 +43,9 @@ function Plan() {
           onSlideChange={() => console.log("slide change")}
           onSwiper={(swiper) => console.log(swiper)}
         >
-          {fakeData.map((day) => (
-            <SwiperSlide key={day.title}>
-              <Day title={day.title} />
+          {days.map((day, i) => (
+            <SwiperSlide key={day}>
+              <Day title={day} meals={meals[i]} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -68,9 +56,9 @@ function Plan() {
   if (!isMobile) {
     return (
       <div className={styles.plan}>
-        {fakeData.map((day) => (
-          <Day key={day.title} title={day.title} />
-        ))}
+        {days.map((day, i) => {
+          return <Day key={day} title={day} meals={meals[i]} />;
+        })}
       </div>
     );
   }
