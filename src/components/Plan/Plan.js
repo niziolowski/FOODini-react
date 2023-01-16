@@ -3,6 +3,7 @@ import LayoutContext from "../../contexts/layout";
 import Day from "./Day/Day";
 import styles from "./Plan.module.css";
 import PlanContext from "../../contexts/plan";
+import { v4 as uuid } from "uuid";
 
 //* § Library for swipe slider effect - https://swiperjs.com/react
 // Import Swiper React components
@@ -12,6 +13,7 @@ import "swiper/css";
 import Spotlight from "../Spotlight/Spotlight";
 import IngredientsContext from "../../contexts/ingredients";
 import RecipesContext from "../../contexts/recipes";
+import { animate } from "../../utils/animate";
 
 function Plan() {
   const { isMobile } = useContext(LayoutContext);
@@ -32,7 +34,7 @@ function Plan() {
     // If undefined, return
     if (!activeWeek?.days) return [];
     const days = Object.entries(activeWeek.days).map((day) => {
-      return { name: day[0], meals: day[1].meals.meals };
+      return { name: day[0], meals: day[1].meals };
     });
     // Destructure meals data
     return days;
@@ -58,6 +60,38 @@ function Plan() {
     toggleSpotlight();
   };
 
+  const handleDeleteMeal = async (e, meal, targetDay) => {
+    // Get button for animation reference
+    const btn = e.target.closest("button");
+    // Copy meals array from correct day
+    const meals = [...activeWeek.days[targetDay].meals];
+    // Get target index
+    const index = meals.indexOf(meal);
+
+    // Delete the target meal from copied meals array
+    meals.splice(index, 1);
+
+    // Create an updated Week object
+    const updatedWeek = {
+      ...activeWeek,
+      days: { ...activeWeek.days, [targetDay]: { meals } },
+    };
+    try {
+      // Animate button
+      animate(btn, "pulsate");
+
+      // Update week with updated meals
+      await editWeek(updatedWeek);
+
+      // Clear button animation
+      animate(btn, "empty");
+    } catch (error) {
+      console.error(error);
+      // Clear button animation
+      animate(btn, "empty");
+    }
+  };
+
   const handleSuggestionClick = (id, type) => {
     // Get suggested object (check if recipe or ingredient)
     let meal;
@@ -68,7 +102,7 @@ function Plan() {
     const meals = activeWeek.days[targetDay].meals;
 
     // Add new meal to meals
-    meals.push(meal);
+    meals.push({ ...meal, app_id: uuid() });
 
     // Create an updated Week object
     const updatedWeek = {
@@ -99,6 +133,7 @@ function Plan() {
                 title={dayNames[i]}
                 meals={day.meals}
                 onNewMeal={() => handleNewMeal(day.name)}
+                onDeleteMeal={(meal) => handleDeleteMeal(meal, day.name)}
               />
             </SwiperSlide>
           ))}
@@ -118,6 +153,9 @@ function Plan() {
                 title={dayNames[i]}
                 meals={day.meals}
                 onNewMeal={() => handleNewMeal(day.name)}
+                onDeleteMeal={(e, mealAppID) =>
+                  handleDeleteMeal(e, mealAppID, day.name)
+                }
               />
             );
           })}

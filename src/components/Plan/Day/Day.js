@@ -5,7 +5,7 @@ import { useContext, useMemo } from "react";
 import LayoutContext from "../../../contexts/layout";
 import Meal from "./Meal/Meal";
 
-function Day({ title, meals, onNewMeal }) {
+function Day({ title, meals, onNewMeal, onDeleteMeal }) {
   const { isMobile } = useContext(LayoutContext);
 
   const handleClick = (e) => {
@@ -25,8 +25,14 @@ function Day({ title, meals, onNewMeal }) {
 
   const mealsContent = useMemo(() => {
     if (!meals) return null;
-    meals.map((meal) => <Meal key={meal.app_id} title={meal.name} />);
-  }, [meals]);
+    return meals.map((meal) => (
+      <Meal
+        onDeleteMeal={(e) => onDeleteMeal(e, meal)}
+        key={meal.app_id}
+        title={meal.name}
+      />
+    ));
+  }, [meals, onDeleteMeal]);
 
   return (
     <div className={classes}>
