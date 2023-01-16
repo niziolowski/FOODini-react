@@ -29,7 +29,7 @@ function Day({ title, meals, onNewMeal, onDeleteMeal }) {
       <Meal
         onDeleteMeal={(e) => onDeleteMeal(e, meal)}
         key={meal.app_id}
-        title={meal.name}
+        meal={meal}
       />
     ));
   }, [meals, onDeleteMeal]);
