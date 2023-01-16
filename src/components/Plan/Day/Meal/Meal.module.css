@@ -1,4 +1,5 @@
 .meal {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -7,4 +8,12 @@
   border: 1px solid var(--grey-color);
   border-radius: 5px;
   font-size: 0.8rem;
+  box-shadow: var(--shadow);
+}
+.tag {
+  position: absolute;
+  right: 0;
+  width: 5px;
+  height: 100%;
+  background-color: var(--tag-3-color);
 }
