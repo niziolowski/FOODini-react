@@ -102,7 +102,7 @@ function Plan() {
     const meals = activeWeek.days[targetDay].meals;
 
     // Add new meal to meals
-    meals.push({ ...meal, app_id: uuid() });
+    meals.push({ ...meal, app_id: uuid(), type });
 
     // Create an updated Week object
     const updatedWeek = {
@@ -119,26 +119,37 @@ function Plan() {
 
   if (isMobile) {
     return (
-      <div className={styles.mobile}>
-        <Swiper
-          className={styles.swiper}
-          spaceBetween={15}
-          slidesPerView={1}
-          onSlideChange={() => console.log("slide change")}
-          onSwiper={(swiper) => console.log(swiper)}
-        >
-          {days.map((day, i) => (
-            <SwiperSlide key={day.name}>
-              <Day
-                title={dayNames[i]}
-                meals={day.meals}
-                onNewMeal={() => handleNewMeal(day.name)}
-                onDeleteMeal={(meal) => handleDeleteMeal(meal, day.name)}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
+      <>
+        <div className={styles.mobile}>
+          <Swiper
+            className={styles.swiper}
+            spaceBetween={15}
+            slidesPerView={1}
+            onSlideChange={() => console.log("slide change")}
+            onSwiper={(swiper) => console.log(swiper)}
+          >
+            {days.map((day, i) => (
+              <SwiperSlide key={day.name}>
+                <Day
+                  title={dayNames[i]}
+                  meals={day.meals}
+                  onNewMeal={() => handleNewMeal(day.name)}
+                  onDeleteMeal={(e, mealAppID) =>
+                    handleDeleteMeal(e, mealAppID, day.name)
+                  }
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+        {isSpotlight && (
+          <Spotlight
+            data={[...filteredIngredients, ...recipes]}
+            onClose={toggleSpotlight}
+            onSuggestionClick={handleSuggestionClick}
+          />
+        )}
+      </>
     );
   }
 

@@ -3,8 +3,6 @@ import Button from "../../../UI/Button/Button";
 import { FiTrash } from "react-icons/fi";
 
 function Meal({ meal, onDeleteMeal }) {
-  console.log(meal.tag);
-
   return (
     <li className={styles.meal}>
       <div>{meal.name}</div>
