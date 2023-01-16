@@ -19,30 +19,6 @@ export const PlanContextProvider = ({ children }) => {
   const [currentWeek, setCurrentWeek] = useState(null);
   const [activeWeek, setActiveWeek] = useState(null);
 
-  // Look for today's week and if it doesn't exist, create one
-  const getCurrentWeek = useCallback(async (plan) => {
-    // Get current time, convert to date string and then to date obj. That way we get the beginning of day timestamp
-    const now = new Date(formatDate(new Date()));
-
-    // return current week if exists
-    let currentWeek = plan.find((week) => {
-      const startDate = new Date(week.start_date);
-      const endDate = new Date(week.end_date);
-
-      if (now >= startDate && now <= endDate) return week;
-      return null;
-    });
-
-    try {
-      // Create new week if no current week
-      if (!currentWeek) currentWeek = await addWeek(now);
-
-      return currentWeek;
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
-
   // Create an empty week with current date
   const addWeek = async (dateString) => {
     //! Dev only
@@ -146,9 +122,6 @@ export const PlanContextProvider = ({ children }) => {
 
           return [...updated];
         });
-
-        // Update active week
-        setActiveWeek(res.data);
       }
       return res;
     } catch (error) {
@@ -156,7 +129,7 @@ export const PlanContextProvider = ({ children }) => {
     }
   };
 
-  // Swich the week to the next one and if it doesn't exist, create one
+  // Swich activeWeek to the next one and if it doesn't exist, create one
   const nextWeek = async () => {
     try {
       // Get active week end date
@@ -184,7 +157,7 @@ export const PlanContextProvider = ({ children }) => {
     }
   };
 
-  // Swich the week to the previous one
+  // Swich activeWeek to the previous one
   const previousWeek = () => {
     // Get active week start date
     const startDate = activeWeek.start_date;
@@ -210,7 +183,31 @@ export const PlanContextProvider = ({ children }) => {
     return previousWeek;
   };
 
-  // Fetch the plan and set it up
+  // Look for today's week and if it doesn't exist, create one
+  const getCurrentWeek = useCallback(async (plan) => {
+    // Get current time, convert to date string and then to date obj. That way we get the beginning of day timestamp
+    const now = new Date(formatDate(new Date()));
+
+    // return current week if exists
+    let currentWeek = plan.find((week) => {
+      const startDate = new Date(week.start_date);
+      const endDate = new Date(week.end_date);
+
+      if (now >= startDate && now <= endDate) return week;
+      return null;
+    });
+
+    try {
+      // Create new week if no current week
+      if (!currentWeek) currentWeek = await addWeek(now);
+
+      return currentWeek;
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  // Fetch the plan
   useEffect(() => {
     async function fetchData() {
       console.log("fetching plan..."); //*: dev only line
@@ -219,9 +216,14 @@ export const PlanContextProvider = ({ children }) => {
       setPlan(response.data);
       return response.data;
     }
-    async function handler() {
-      const plan = await fetchData();
+    fetchData();
+  }, [token]);
 
+  // Update activeWeek and currentWeek
+  useEffect(() => {
+    if (!plan) return;
+
+    const handler = async () => {
       // Get current week
       const currentWeek = await getCurrentWeek(plan);
 
@@ -230,9 +232,10 @@ export const PlanContextProvider = ({ children }) => {
 
       // Set current week as active
       setActiveWeek(currentWeek);
-    }
+    };
+
     handler();
-  }, [token, getCurrentWeek]);
+  }, [plan, getCurrentWeek]);
 
   const value = {
     plan,
