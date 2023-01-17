@@ -54,32 +54,28 @@ function App() {
     return (
       <div className="wrapper">
         <div className={classes}>
-          <div
-            className={`${styles.wrapper} ${
-              isVisible.sidebar ? styles.shift : ""
-            }`}
-          >
-            {isMobile && isVisible.profile && <Profile />}
-            <PlanContextProvider>
-              {/* Navigation needs PlanContext for changing the current week and displaying a subtitle */}
-              {!isMobile ? <Nav /> : <NavMobile />}
-              <IngredientsContextProvider>
-                <RecipesContextProvider>
+          <IngredientsContextProvider>
+            <RecipesContextProvider>
+              <div
+                className={`${styles.wrapper} ${
+                  isVisible.sidebar ? styles.shift : ""
+                }`}
+              >
+                {isMobile && isVisible.profile && <Profile />}
+                <PlanContextProvider>
+                  {/* Navigation needs PlanContext for changing the current week and displaying a subtitle */}
+                  {!isMobile ? <Nav /> : <NavMobile />}
+
                   {/* Plan needs IngredientsContext and RecipesContext for adding meals */}
                   <Plan />
-                </RecipesContextProvider>
-              </IngredientsContextProvider>
-            </PlanContextProvider>
-            <ShoppingList />
-            <IngredientsContextProvider>
-              <Catalog />
-            </IngredientsContextProvider>
-          </div>
-          <Settings />
-          <IngredientsContextProvider>
-            {isVisible.storage && <StorageList />}
+                </PlanContextProvider>
+                <ShoppingList />
+                <Catalog />
+              </div>
+              <Settings />
 
-            <RecipesContextProvider>
+              {isVisible.storage && <StorageList />}
+
               {/* Sidebar doesn't really need context but inside there is a StoragaList and RecipeList. Think through in the future */}
               <Sidebar />
               {isVisible.recipes && <RecipeList />}
