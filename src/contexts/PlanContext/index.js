@@ -1,11 +1,5 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import { fetchPlan, updateWeek } from "../../apis/plan";
+import { createContext, useContext, useEffect, useState } from "react";
+import { fetchPlan } from "../../apis/plan";
 import { formatDate } from "../../utils/dates";
 import AuthContext from "../auth";
 
@@ -21,15 +15,17 @@ export const PlanContextProvider = ({ children }) => {
   const [currentWeek, setCurrentWeek] = useState(null);
   const [activeWeek, setActiveWeek] = useState(null);
 
-  // Create an empty week with current date
+  // Create a new Week from a given date
   const addWeek = async (dateString) => {
     try {
-      // Create week and send to API
+      // Create an empty week from a given date
       const res = await model.addWeek(dateString);
 
       if (res.status === 200) {
         // Update State
         setPlan((current) => [...current, res.data]);
+
+        // Set new week as active
         setActiveWeek(res.data);
         return res.data;
       }
@@ -40,13 +36,9 @@ export const PlanContextProvider = ({ children }) => {
 
   // Update existing week
   const editWeek = async (week) => {
-    //! Dev only
-    console.log("updating week...");
-
-    const { id } = JSON.parse(localStorage.getItem("user"));
     try {
-      const updatedWeek = { ...week, users_id: id };
-      const res = await updateWeek(updatedWeek);
+      // Update week
+      const res = await model.editWeek(week);
 
       if (res.status === 200) {
         // Update State
@@ -58,8 +50,11 @@ export const PlanContextProvider = ({ children }) => {
 
           return [...updated];
         });
+
+        // Update active week
         setActiveWeek(res.data);
       }
+
       return res;
     } catch (error) {
       console.error(error);
@@ -68,14 +63,8 @@ export const PlanContextProvider = ({ children }) => {
 
   // Toggle week sync parameter
   const toggleWeekSync = async (week) => {
-    //! Dev only
-    console.log("updating week...");
-
-    const { id } = JSON.parse(localStorage.getItem("user"));
     try {
-      const updatedWeek = { ...week, users_id: id, sync: !week.sync };
-
-      const res = await updateWeek(updatedWeek);
+      const res = await model.toggleWeekSync(week);
 
       if (res.status === 200) {
         // Update State
@@ -88,8 +77,11 @@ export const PlanContextProvider = ({ children }) => {
 
           return [...updated];
         });
+
+        // Update active week
         setActiveWeek(res.data);
       }
+
       return res;
     } catch (error) {
       console.error(error);
@@ -126,22 +118,10 @@ export const PlanContextProvider = ({ children }) => {
 
   // Swich activeWeek to the previous one
   const previousWeek = () => {
-    // Get active week start date
-    const startDate = activeWeek.start_date;
+    // Get previous week
+    const previousWeek = model.getPreviousWeek(activeWeek, plan);
 
-    // Subtract one day to get endDate of the previous week
-    const newDate = new Date(startDate).getTime() - 7 * 1000 * 60 * 60 * 24;
-
-    // Format the date
-    const previousWeekDate = formatDate(new Date(newDate));
-
-    // Check if next week exist
-    let previousWeek = plan.find((week) =>
-      previousWeekDate >= week.start_date && previousWeekDate <= week.end_date
-        ? week
-        : null
-    );
-
+    // If no previous week, return
     if (!previousWeek) return;
 
     // Set new week as active
@@ -150,51 +130,45 @@ export const PlanContextProvider = ({ children }) => {
     return previousWeek;
   };
 
-  // Look for today's week and if it doesn't exist, create one
-  const getCurrentWeek = useCallback(async (plan) => {
-    // Get current time, convert to date string and then to date obj. That way we get the beginning of day timestamp
-    const now = new Date(formatDate(new Date()));
-
-    // return current week if exists
-    let currentWeek = plan.find((week) => {
-      const startDate = new Date(week.start_date);
-      const endDate = new Date(week.end_date);
-
-      if (now >= startDate && now <= endDate) return week;
-      return null;
-    });
-
-    try {
-      // Create new week if no current week
-      if (!currentWeek) currentWeek = await addWeek(now);
-
-      return currentWeek;
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
-
   // Fetch the plan
   useEffect(() => {
     async function fetchData() {
       console.log("fetching plan..."); //*: dev only line
       const response = await fetchPlan(token);
-
+      // Update plan state
       setPlan(response.data);
 
-      // Get current week
-      const currentWeek = await getCurrentWeek(response.data);
+      // Get current week from updated plan
+      let currentWeek = model.getCurrentWeek(response.data);
 
-      // Set current week
-      setCurrentWeek(currentWeek);
+      try {
+        // If no currentWeek then create new
+        if (!currentWeek) currentWeek = await addWeek();
 
-      // Set current week as active
-      setActiveWeek(currentWeek);
+        // Set current week
+        setCurrentWeek(currentWeek);
 
-      return response.data;
+        // Set current week as active
+        setActiveWeek(currentWeek);
+
+        return response.data;
+      } catch (error) {
+        console.error(error);
+      }
     }
     fetchData();
   }, [token]);
+
+  //   Update current week on plan change
+  useEffect(() => {
+    if (!plan) return;
+
+    // Find current week in the plan
+    const updatedCurrentWeek = plan.find((week) => week.id === currentWeek.id);
+
+    // Update current week
+    setCurrentWeek(updatedCurrentWeek);
+  }, [plan, currentWeek?.id]);
 
   const value = {
     plan,

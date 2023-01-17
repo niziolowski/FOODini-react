@@ -1,7 +1,8 @@
-import { createWeek } from "../../apis/plan";
+import { createWeek, updateWeek } from "../../apis/plan";
 import { formatDate } from "../../utils/dates";
 
-export const addWeek = async (dateString) => {
+// Create new Week
+export const addWeek = async (dateString = new Date()) => {
   //! Dev only
   console.log("adding week...");
 
@@ -47,4 +48,73 @@ export const addWeek = async (dateString) => {
   } catch (error) {
     throw error;
   }
+};
+
+// Update existing week
+export const editWeek = async (week) => {
+  //! Dev only
+  console.log("updating week...");
+
+  // Get user ID
+  const { id } = JSON.parse(localStorage.getItem("user"));
+  // Add user ID to week obj
+  const updatedWeek = { ...week, users_id: id };
+  try {
+    return await updateWeek(updatedWeek);
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Toggle week sync parameter
+export const toggleWeekSync = async (week) => {
+  //! Dev only
+  console.log("updating week...");
+
+  const { id } = JSON.parse(localStorage.getItem("user"));
+  const updatedWeek = { ...week, users_id: id, sync: !week.sync };
+
+  try {
+    const res = await updateWeek(updatedWeek);
+
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getPreviousWeek = (activeWeek, plan) => {
+  // Get active week start date
+  const startDate = activeWeek.start_date;
+
+  // Subtract one day to get endDate of the previous week
+  const newDate = new Date(startDate).getTime() - 7 * 1000 * 60 * 60 * 24;
+
+  // Format the date
+  const previousWeekDate = formatDate(new Date(newDate));
+
+  // Check if next week exist
+  let previousWeek = plan.find((week) =>
+    previousWeekDate >= week.start_date && previousWeekDate <= week.end_date
+      ? week
+      : null
+  );
+
+  return previousWeek;
+};
+
+export const getCurrentWeek = (plan) => {
+  // Get current time, convert to date string and then to date obj. That way we get the beginning of day timestamp
+  const now = new Date(formatDate(new Date()));
+
+  // Find currentWeek
+  let currentWeek = plan.find((week) => {
+    const startDate = new Date(week.start_date);
+    const endDate = new Date(week.end_date);
+
+    if (now >= startDate && now <= endDate) return week;
+    return null;
+  });
+
+  return currentWeek;
 };
