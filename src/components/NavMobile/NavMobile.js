@@ -13,7 +13,7 @@ import ReactDOM from "react-dom";
 import NavMobileBar from "./NavMobileBar";
 import Button from "../UI/Button/Button";
 import LayoutContext from "../../contexts/layout";
-import PlanContext from "../../contexts/plan";
+import PlanContext from "../../contexts/PlanContext/index";
 import { animate } from "../../utils/animate";
 
 function NavMobile() {

@@ -8,7 +8,7 @@ import {
   FiShoppingBag,
 } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout.js";
-import PlanContext from "../../contexts/plan.js";
+import PlanContext from "../../contexts/PlanContext/index.js";
 import { animate } from "../../utils/animate.js";
 import Profile from "../Profile/Profile.js";
 import Button from "./../UI/Button/Button.js";

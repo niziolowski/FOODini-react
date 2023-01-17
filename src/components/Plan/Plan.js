@@ -2,7 +2,7 @@ import { useContext, useMemo, useState } from "react";
 import LayoutContext from "../../contexts/layout";
 import Day from "./Day/Day";
 import styles from "./Plan.module.css";
-import PlanContext from "../../contexts/plan";
+import PlanContext from "../../contexts/PlanContext/index";
 import { v4 as uuid } from "uuid";
 
 //* § Library for swipe slider effect - https://swiperjs.com/react

@@ -15,7 +15,7 @@ import AuthContext from "./contexts/auth";
 import { IngredientsContextProvider } from "./contexts/ingredients";
 import { RecipesContextProvider } from "./contexts/recipes";
 import Profile from "./components/Profile/Profile";
-import { PlanContextProvider } from "./contexts/plan";
+import { PlanContextProvider } from "./contexts/PlanContext/index";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
