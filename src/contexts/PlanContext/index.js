@@ -30,6 +30,7 @@ export const PlanContextProvider = ({ children }) => {
       if (res.status === 200) {
         // Update State
         setPlan((current) => [...current, res.data]);
+        setActiveWeek(res.data);
         return res.data;
       }
     } catch (error) {
@@ -57,6 +58,7 @@ export const PlanContextProvider = ({ children }) => {
 
           return [...updated];
         });
+        setActiveWeek(res.data);
       }
       return res;
     } catch (error) {
@@ -86,6 +88,7 @@ export const PlanContextProvider = ({ children }) => {
 
           return [...updated];
         });
+        setActiveWeek(res.data);
       }
       return res;
     } catch (error) {
@@ -113,8 +116,6 @@ export const PlanContextProvider = ({ children }) => {
       if (!nextWeek) nextWeek = await addWeek(nextWeekDate);
 
       // Set new week as active
-      console.log(nextWeek);
-
       setActiveWeek(nextWeek);
 
       return nextWeek;
@@ -180,28 +181,20 @@ export const PlanContextProvider = ({ children }) => {
       const response = await fetchPlan(token);
 
       setPlan(response.data);
-      return response.data;
-    }
-    fetchData();
-  }, [token]);
 
-  // Update activeWeek and currentWeek
-  useEffect(() => {
-    if (!plan) return;
-
-    const handler = async () => {
       // Get current week
-      const currentWeek = await getCurrentWeek(plan);
+      const currentWeek = await getCurrentWeek(response.data);
 
       // Set current week
       setCurrentWeek(currentWeek);
 
       // Set current week as active
       setActiveWeek(currentWeek);
-    };
 
-    handler();
-  }, [plan, getCurrentWeek]);
+      return response.data;
+    }
+    fetchData();
+  }, [token]);
 
   const value = {
     plan,
