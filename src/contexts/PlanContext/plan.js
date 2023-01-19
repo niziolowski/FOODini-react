@@ -175,6 +175,7 @@ export const recalculatePlan = (plan, storage) => {
 };
 
 // USED IN 'recalculatePlan' FUNCTION.
+//!NOT FINISHED, JUST FOR TESTING. THIS WILL BE REWRITTEN
 export const calculateMealIngredients = (meal, storage) => {
   // Define initial state
   const usedIngredients = [];
