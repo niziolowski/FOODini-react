@@ -1,4 +1,4 @@
-import { createWeek, updateWeek } from "../../apis/plan";
+import { createWeek, updateWeek, updateMultipleWeeks } from "../../apis/plan";
 import { formatDate } from "../../utils/dates";
 
 // Create new Week
@@ -66,6 +66,29 @@ export const editWeek = async (week) => {
   }
 };
 
+// Update multiple weeks
+export const editMultipleWeeks = async (payload, token) => {
+  // ! Dev only
+  console.log("updating multiple weeks...");
+
+  const { id } = JSON.parse(localStorage.getItem("user"));
+
+  const updatedPayload = payload.map((week) => {
+    return { ...week, users_id: id };
+  });
+
+  try {
+    const res = await updateMultipleWeeks({ payload: updatedPayload }, token);
+    if (res.status === 200) {
+      // Return updated plan
+      return res.data;
+    }
+  } catch (error) {
+    console.log(error);
+    alert(error);
+  }
+};
+
 // Toggle week sync parameter
 export const toggleWeekSync = async (week) => {
   //! Dev only
@@ -117,4 +140,129 @@ export const getCurrentWeek = (plan) => {
   });
 
   return currentWeek;
+};
+
+export const recalculatePlan = (plan, storage) => {
+  // 1. Filter out present day and future days (don't change past days)
+  //TODO: Add Code...
+
+  // 2. Restore ingredients
+  //TODO: Add Code...
+
+  // 3. Calculate ingredients
+  const updatedPlan = plan.map((week) => {
+    const days = Object.entries(week.days);
+
+    const updatedDays = {};
+
+    // Extract meals from each day and assign ingredients
+    days.forEach((day) => {
+      const [name, data] = day;
+      const meals = data.meals;
+
+      const updatedMeals = meals.map((meal) =>
+        calculateMealIngredients(meal, storage)
+      );
+
+      // Update day
+      updatedDays[name] = { meals: updatedMeals };
+    });
+
+    // Update week object
+    return { ...week, days: updatedDays };
+  });
+  // console.log(updatedPlan);
+};
+
+// USED IN 'recalculatePlan' FUNCTION.
+export const calculateMealIngredients = (meal, storage) => {
+  // Define initial state
+  const usedIngredients = [];
+  const missingIngredients = [];
+
+  // Define payload object for ingredients API to update the DB with a single request
+  const storageChanges = {
+    add: [],
+    edit: [],
+    delete: [],
+  };
+
+  // If meal is a recipe
+  if (meal.type === "recipe") {
+    // Calculate
+    meal.ingredients.forEach((ing) => {
+      //* Get ingredients of the same type
+      const inStorage = storage.filter((item) => item.name === ing.name);
+
+      //* Sort ingredients by purchase date (from the oldest)
+      const inStorageSorted = inStorage.sort(
+        (a, b) => new Date(a.purchase_date) - new Date(b.purchase_date)
+      );
+
+      // SUBTRACT INGREDIENTS FROM STORAGE
+
+      // Define variables
+      let amount = ing.amount;
+      let i = 0;
+
+      // Iterate while the full amount of ingredient is not assigned
+      // while (amount > 0) {
+      //   let ingStorage = inStorageSorted;
+      //   //   If ingredient doesn't exist
+      //   if (!ingStorage[i]) {
+      //     // Create a missing ingredient object
+      //     const missingIng = {
+      //       ...ing,
+      //     };
+
+      //     missingIng.amount = amount;
+
+      //     // Add object to missing ingredients
+      //     missingIngredients.push(missingIng);
+      //     break;
+      //   }
+
+      // console.log(missingIngredients);
+      //   // If ingredient exist
+      //   if (ingStorage[i].amount > 0) {
+      //     // subtract from storage
+      //     ingStorage[i].amount -= 1;
+      //     // subtract required amount
+      //     amount -= 1;
+
+      //     // Find id of current ingredient in this.used array
+      //     let usedIng = usedIngredients.find(
+      //       (item) => item.id === ingStorage[i].id
+      //     );
+
+      //     // If ingredient is not on the used list yet, create one with amount = 1;
+      //     if (!usedIng) {
+      //       usedIng = {
+      //         ...ingStorage[i],
+      //       };
+      //       usedIng.amount = 0;
+      //       usedIngredients.push(usedIng);
+      //     }
+      //     // Add one unit to used ingredient
+      //     usedIng.amount += 1;
+
+      //     // Check if storage amount = 0
+      //     if (ingStorage[i].amount === 0) {
+      //       // Remove item from storage
+      //       const emptyIngredient = model.getIngredient(usedIng.id);
+      //       model.deleteIngredient(emptyIngredient);
+
+      //       // find another ingredient of the same type
+      //       i++;
+      //     }
+      //   }
+      // }
+    });
+  }
+
+  // If meal is a single ingredient (template from catalog)
+  if (meal.type === "template") {
+  }
+
+  return { ...meal, usedIngredients, missingIngredients };
 };
