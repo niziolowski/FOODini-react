@@ -1,7 +1,8 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { fetchPlan } from "../../apis/plan";
 import { formatDate } from "../../utils/dates";
 import AuthContext from "../auth";
+import IngredientsContext from "../ingredients";
 
 import * as model from "./plan";
 
@@ -10,6 +11,15 @@ const PlanContext = createContext();
 export const PlanContextProvider = ({ children }) => {
   // Get authToken
   const { token } = useContext(AuthContext);
+
+  // Get ingredients for plan calculations
+  const { ingredients } = useContext(IngredientsContext);
+  // Filter storage ingredients
+  const storage = useMemo(
+    () => ingredients.filter((item) => item.type === "storage"),
+    [ingredients]
+  );
+
   // Define plan state
   const [plan, setPlan] = useState(null);
   const [currentWeek, setCurrentWeek] = useState(null);
@@ -61,6 +71,28 @@ export const PlanContextProvider = ({ children }) => {
     }
   };
 
+  // Update multiple weeks
+  const editMultipleWeeks = async (payload, token) => {
+    try {
+      // Update weeks
+      const res = await model.editMultipleWeeks(payload, token);
+
+      if (res.status === 200) {
+        // Update State
+        setPlan([...res.data]);
+
+        // Update active week
+        setActiveWeek((current) =>
+          res.data.find((week) => week.id === current.id)
+        );
+      }
+
+      return res;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  window.editMultipleWeeks = editMultipleWeeks;
   // Toggle week sync parameter
   const toggleWeekSync = async (week) => {
     try {
@@ -158,6 +190,13 @@ export const PlanContextProvider = ({ children }) => {
     }
     fetchData();
   }, [token]);
+
+  // Recalculate plan on storage or plan change
+  useEffect(() => {
+    if (!plan || !storage) return;
+    // Reassign storage to meals
+    model.recalculatePlan(plan, storage);
+  }, [plan, storage]);
 
   //   Update current week on plan change
   useEffect(() => {
