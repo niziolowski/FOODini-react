@@ -61,6 +61,7 @@ export const PlanContextProvider = ({ children }) => {
 
         // Update active week
         setActiveWeek(res.data);
+
         return updated;
       }
     } catch (error) {
@@ -183,6 +184,7 @@ export const PlanContextProvider = ({ children }) => {
       try {
         console.log("fetching plan..."); //*: dev only line
         const response = await fetchPlan(token);
+
         // Update plan state
         setPlan(response.data);
 

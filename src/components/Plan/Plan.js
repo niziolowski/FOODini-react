@@ -40,6 +40,7 @@ function Plan() {
     // Destructure meals data
     return days;
   }, [activeWeek]);
+  console.log(days);
 
   const dayNames = [
     "Poniedziałek",
