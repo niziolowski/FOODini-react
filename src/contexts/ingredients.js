@@ -26,10 +26,11 @@ export const IngredientsContextProvider = ({ children }) => {
       const res = await createIngredient(updatedIng);
 
       if (res.status === 200) {
+        const updated = [...ingredients, res.data];
         // Update State
-        setIngredients((current) => [...current, res.data]);
+        setIngredients(updated);
+        return updated;
       }
-      return res;
     } catch (error) {
       throw error;
     }

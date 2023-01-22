@@ -56,29 +56,29 @@ function App() {
         <div className={classes}>
           <IngredientsContextProvider>
             <RecipesContextProvider>
-              <div
-                className={`${styles.wrapper} ${
-                  isVisible.sidebar ? styles.shift : ""
-                }`}
-              >
-                {isMobile && isVisible.profile && <Profile />}
-                <PlanContextProvider>
+              <PlanContextProvider>
+                <div
+                  className={`${styles.wrapper} ${
+                    isVisible.sidebar ? styles.shift : ""
+                  }`}
+                >
+                  {isMobile && isVisible.profile && <Profile />}
                   {/* Navigation needs PlanContext for changing the current week and displaying a subtitle */}
                   {!isMobile ? <Nav /> : <NavMobile />}
 
                   {/* Plan needs IngredientsContext and RecipesContext for adding meals */}
                   <Plan />
-                </PlanContextProvider>
-                <ShoppingList />
-                <Catalog />
-              </div>
-              <Settings />
+                  <ShoppingList />
+                  <Catalog />
+                </div>
+                <Settings />
 
-              {isVisible.storage && <StorageList />}
+                {isVisible.storage && <StorageList />}
 
-              {/* Sidebar doesn't really need context but inside there is a StoragaList and RecipeList. Think through in the future */}
-              <Sidebar />
-              {isVisible.recipes && <RecipeList />}
+                {/* Sidebar doesn't really need context but inside there is a StoragaList and RecipeList. Think through in the future */}
+                <Sidebar />
+                {isVisible.recipes && <RecipeList />}
+              </PlanContextProvider>
             </RecipesContextProvider>
           </IngredientsContextProvider>
         </div>

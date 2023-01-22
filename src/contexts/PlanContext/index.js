@@ -139,11 +139,15 @@ export const PlanContextProvider = ({ children }) => {
   };
 
   // Recalculates available ingredients based on storage and meal plan.
-  // Takes plan object and updates object (storage: add/delete)
-  const recalculatePlan = async (plan, updates) => {
+  // Takes plan object and deletedMeal object
+  const recalculatePlan = async (updatedPlan, updatedStorage, deletedMeal) => {
     try {
       // Recalculate Plan
-      const payload = model.recalculatePlan(plan, storage, updates);
+      const payload = model.recalculatePlan(
+        updatedPlan || plan,
+        updatedStorage || storage,
+        deletedMeal
+      );
 
       const response = await model.updatePlan(payload, token);
 

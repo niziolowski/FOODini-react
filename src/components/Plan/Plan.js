@@ -105,7 +105,7 @@ function Plan() {
       animate(btn, "empty");
 
       // Recalculate plan
-      recalculatePlan(updatedPlan, meal);
+      recalculatePlan(updatedPlan, null, meal);
     } catch (error) {
       console.error(error);
       // Clear button animation
@@ -170,7 +170,7 @@ function Plan() {
         </div>
         {isSpotlight && (
           <Spotlight
-            data={[...filteredIngredients, ...recipes]}
+            data={[...recipes]}
             onClose={toggleSpotlight}
             onSuggestionClick={handleSuggestionClick}
           />

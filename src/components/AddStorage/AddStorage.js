@@ -11,11 +11,13 @@ import Select from "../UI/Select/Select";
 import styles from "./AddStorage.module.css";
 import { formatDate } from "../../utils/dates";
 import Spinner from "../UI/Spinner/Spinner";
+import PlanContext from "../../contexts/PlanContext";
 
 function AddStorage({ onClose, data: { isEditing, data } }) {
   const { isMobile } = useContext(LayoutContext);
   const { tags, addIngredient, editIngredient } =
     useContext(IngredientsContext);
+  const { recalculatePlan } = useContext(PlanContext);
   const {
     register,
     handleSubmit,
@@ -65,7 +67,13 @@ function AddStorage({ onClose, data: { isEditing, data } }) {
       };
 
       if (isEditing) await editIngredient(newIngredient);
-      if (!isEditing) await addIngredient(newIngredient);
+      if (!isEditing) {
+        const updatedIngredients = await addIngredient(newIngredient);
+        const updatedStorage = updatedIngredients.filter(
+          (ing) => ing.type === "storage"
+        );
+        recalculatePlan(null, updatedStorage);
+      }
 
       setLoading(false);
       onClose();

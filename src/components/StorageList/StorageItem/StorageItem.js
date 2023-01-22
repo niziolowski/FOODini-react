@@ -2,6 +2,7 @@ import { useContext, useMemo } from "react";
 import { FiStar, FiTrash } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
 import IngredientsContext from "../../../contexts/ingredients";
+import PlanContext from "../../../contexts/PlanContext";
 import { animate } from "../../../utils/animate";
 import { calcDaysToExpiry } from "../../../utils/dates";
 import { mapRange } from "../../../utils/helpers";
