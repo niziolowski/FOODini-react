@@ -32,16 +32,32 @@ function Plan() {
 
   // Create meals array from active week
   const days = useMemo(() => {
+    // week days for keeping the order
+    const names = [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+    ];
+
     // If undefined, return
     if (!activeWeek?.days) return [];
-    const days = Object.entries(activeWeek.days).map((day) => {
-      return { name: day[0], meals: day[1].meals };
+
+    // Destructure meals data in order
+    const days = names.map((day) => {
+      return {
+        name: day,
+        meals: activeWeek.days[day].meals,
+      };
     });
-    // Destructure meals data
+
     return days;
   }, [activeWeek]);
-  console.log(days);
 
+  // Define Polish day names
   const dayNames = [
     "Poniedziałek",
     "Wtorek",
