@@ -301,6 +301,8 @@ const calculateMealIngredients = (meal, clonedStorage, modifiedIngredients) => {
         };
 
         // Use available ingredient
+        // *Ignore warning about unsafe references to variables
+        // eslint-disable-next-line
         const takeIngredient = (ing) => {
           if (amount <= ing.amount) {
             // Add ingredient to usedIngredients for reference when restoring

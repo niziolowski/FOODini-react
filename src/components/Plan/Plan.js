@@ -17,18 +17,18 @@ import { animate } from "../../utils/animate";
 
 function Plan() {
   const { isMobile } = useContext(LayoutContext);
-  const { plan, activeWeek, editWeek, recalculatePlan } =
-    useContext(PlanContext);
+  const { activeWeek, editWeek, recalculatePlan } = useContext(PlanContext);
   const { ingredients } = useContext(IngredientsContext);
   const { recipes } = useContext(RecipesContext);
   const [isSpotlight, setIsSpotlight] = useState(false);
   const [targetDay, setTargetDay] = useState(null);
 
-  // Filter out template ingredients for spotlight
-  const filteredIngredients = useMemo(
-    () => ingredients.filter((ing) => ing.type === "template"),
-    [ingredients]
-  );
+  // TODO: Add Ingredients as meals functionality
+  // // Filter out template ingredients for spotlight
+  // const filteredIngredients = useMemo(
+  //   () => ingredients.filter((ing) => ing.type === "template"),
+  //   [ingredients]
+  // );
 
   // Create meals array from active week
   const days = useMemo(() => {
