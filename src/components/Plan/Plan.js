@@ -199,7 +199,7 @@ function Plan() {
         </div>
         {isSpotlight && (
           <Spotlight
-            data={[...filteredIngredients, ...recipes]}
+            data={[...recipes]}
             onClose={toggleSpotlight}
             onSuggestionClick={handleSuggestionClick}
           />
