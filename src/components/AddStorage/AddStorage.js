@@ -52,7 +52,7 @@ function AddStorage({ onClose, data: { isEditing, data } }) {
 
       const tag = tags.indexOf(form.tag);
       const newIngredient = {
-        id: isEditing ? data.id : null,
+        id: isEditing ? data.id : 0,
         app_id: isEditing ? data.app_id : null,
         name: form.name,
         amount: form.amount,

@@ -17,7 +17,8 @@ import { animate } from "../../utils/animate";
 
 function Plan() {
   const { isMobile } = useContext(LayoutContext);
-  const { activeWeek, editWeek } = useContext(PlanContext);
+  const { plan, activeWeek, editWeek, recalculatePlan } =
+    useContext(PlanContext);
   const { ingredients } = useContext(IngredientsContext);
   const { recipes } = useContext(RecipesContext);
   const [isSpotlight, setIsSpotlight] = useState(false);
@@ -81,10 +82,13 @@ function Plan() {
       animate(btn, "pulsate");
 
       // Update week with updated meals
-      await editWeek(updatedWeek);
+      const updatedPlan = await editWeek(updatedWeek);
 
       // Clear button animation
       animate(btn, "empty");
+
+      // Recalculate plan
+      recalculatePlan(updatedPlan, meal);
     } catch (error) {
       console.error(error);
       // Clear button animation
@@ -92,7 +96,7 @@ function Plan() {
     }
   };
 
-  const handleSuggestionClick = (id, type) => {
+  const handleSuggestionClick = async (id, type) => {
     // Get suggested object (check if recipe or ingredient)
     let meal;
     if (type === "recipe") meal = recipes.find((item) => item.id === id);
@@ -110,11 +114,16 @@ function Plan() {
       days: { ...activeWeek.days, [targetDay]: { meals } },
     };
 
-    // Upload updated Week
-    editWeek(updatedWeek);
+    try {
+      // Upload updated Week
+      const updatedPlan = await editWeek(updatedWeek);
 
-    // Toggle spotlight modal
-    toggleSpotlight();
+      // Toggle spotlight modal
+      toggleSpotlight();
+
+      // Recalculate plan
+      recalculatePlan(updatedPlan);
+    } catch (error) {}
   };
 
   if (isMobile) {

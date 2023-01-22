@@ -1,4 +1,4 @@
-import { createWeek, updateWeek, updateMultipleWeeks } from "../../apis/plan";
+import { createWeek, updateWeek, uploadPlanChanges } from "../../apis/plan";
 import { formatDate } from "../../utils/dates";
 
 // Create new Week
@@ -58,7 +58,9 @@ export const editWeek = async (week) => {
   // Get user ID
   const { id } = JSON.parse(localStorage.getItem("user"));
   // Add user ID to week obj
+
   const updatedWeek = { ...week, users_id: id };
+
   try {
     return await updateWeek(updatedWeek);
   } catch (error) {
@@ -66,22 +68,17 @@ export const editWeek = async (week) => {
   }
 };
 
-// Update multiple weeks
-export const editMultipleWeeks = async (payload, token) => {
+// Update Plan in batch
+export const updatePlan = async (payload, token) => {
   // ! Dev only
-  console.log("updating multiple weeks...");
-
-  const { id } = JSON.parse(localStorage.getItem("user"));
-
-  const updatedPayload = payload.map((week) => {
-    return { ...week, users_id: id };
-  });
+  console.log("uploading recalculated plan...");
 
   try {
-    const res = await updateMultipleWeeks({ payload: updatedPayload }, token);
+    const res = await uploadPlanChanges({ payload }, token);
+
     if (res.status === 200) {
       // Return updated plan
-      return res.data;
+      return res;
     }
   } catch (error) {
     console.log(error);
@@ -142,26 +139,58 @@ export const getCurrentWeek = (plan) => {
   return currentWeek;
 };
 
-export const recalculatePlan = (plan, storage) => {
+export const recalculatePlan = (plan, storage, deletedMeal) => {
   // 1. Filter out present day and future days (don't change past days)
   //TODO: Add Code...
 
+  // This variable is a list of storage items that will be updated after the calculation is finished
+  const modifiedIngredients = [];
+
+  // Clone the storage list (the algorithm will mutate it)
+  const clonedStorage = structuredClone(storage);
+
   // 2. Restore ingredients
-  //TODO: Add Code...
+  // If function is triggered by meal deletion, restore the meal ingredients
+  if (deletedMeal)
+    restoreMealIngredients(
+      deletedMeal.usedIngredients,
+      clonedStorage,
+      modifiedIngredients
+    );
+
+  plan.forEach((week) => {
+    const days = Object.entries(week.days);
+
+    // Extract meals from each day and assign ingredients
+    days.forEach((day) => {
+      const [, data] = day;
+      const meals = data.meals;
+
+      meals.forEach((meal) => {
+        if (!meal.usedIngredients || meal.usedIngredients.length === 0) return;
+
+        restoreMealIngredients(
+          meal.usedIngredients,
+          clonedStorage,
+          modifiedIngredients
+        );
+      });
+    });
+  });
 
   // 3. Calculate ingredients
+
   const updatedPlan = plan.map((week) => {
     const days = Object.entries(week.days);
 
     const updatedDays = {};
-
     // Extract meals from each day and assign ingredients
     days.forEach((day) => {
       const [name, data] = day;
       const meals = data.meals;
 
       const updatedMeals = meals.map((meal) =>
-        calculateMealIngredients(meal, storage)
+        calculateMealIngredients(meal, clonedStorage, modifiedIngredients)
       );
 
       // Update day
@@ -171,97 +200,175 @@ export const recalculatePlan = (plan, storage) => {
     // Update week object
     return { ...week, days: updatedDays };
   });
-  // console.log(updatedPlan);
+
+  const ingredientsAdd = modifiedIngredients.filter((ing) => ing.amount > 0);
+  const ingredientsDelete = modifiedIngredients.filter(
+    (ing) => ing.amount === 0 && ing.id !== 0
+  );
+
+  const payload = {
+    plan: [...updatedPlan],
+    storage: {
+      add: [...ingredientsAdd],
+      delete: [...ingredientsDelete],
+    },
+  };
+
+  // Payload object
+  return payload;
 };
 
-// USED IN 'recalculatePlan' FUNCTION.
-//!NOT FINISHED, JUST FOR TESTING. THIS WILL BE REWRITTEN
-export const calculateMealIngredients = (meal, storage) => {
+const restoreMealIngredients = (
+  usedIngredients,
+  clonedStorage,
+  modifiedIngredients
+) => {
+  // Loop over every used ingredient
+  usedIngredients.forEach((ing) => {
+    // Get ing from modifiedIngredients list if exists
+    let ingModified = modifiedIngredients.find(
+      (item) => item.app_id === ing.app_id
+    );
+
+    // Get ing from clonedStorage list if exists
+    let ingStorage = clonedStorage.find((item) => item.app_id === ing.app_id);
+
+    // If ingredient exists in clonedStorage, update the amount
+    if (ingStorage) ingStorage.amount += ing.amount;
+
+    // If it doesn't exist
+    if (!ingStorage) {
+      // Create a new object, change id to "0" (that way the API will create a new instance)
+      ingStorage = { ...ing, id: 0 };
+      // Add to clonedStorage
+      clonedStorage.push(ingStorage);
+    }
+    if (ingModified) ingModified = { ...ingStorage };
+    if (!ingModified) modifiedIngredients.push(ingStorage);
+  });
+};
+
+// Look for available ingredients and create a list of missing and used ingredients
+const calculateMealIngredients = (meal, clonedStorage, modifiedIngredients) => {
   // Define initial state
   const usedIngredients = [];
   const missingIngredients = [];
 
-  // Define payload object for ingredients API to update the DB with a single request
-  const storageChanges = {
-    add: [],
-    edit: [],
-    delete: [],
-  };
-
   // If meal is a recipe
   if (meal.type === "recipe") {
-    // Calculate
+    // Calculate each ingredient
     meal.ingredients.forEach((ing) => {
-      //* Get ingredients of the same type
-      const inStorage = storage.filter((item) => item.name === ing.name);
+      // Get ingredients of the same type from 'modifiedIngredients' and sort them by purchase date (from the oldest)
+      const inModified = modifiedIngredients
+        .filter((item) => item.name === ing.name)
+        .sort((a, b) => new Date(a.purchase_date) - new Date(b.purchase_date));
 
-      //* Sort ingredients by purchase date (from the oldest)
-      const inStorageSorted = inStorage.sort(
-        (a, b) => new Date(a.purchase_date) - new Date(b.purchase_date)
-      );
+      // Get ingredients of the same type from 'clonedStorage' and sort them by purchase date (from the oldest)
+      const inStorage = clonedStorage
+        .filter((item) => item.name === ing.name)
+        .sort((a, b) => new Date(a.purchase_date) - new Date(b.purchase_date));
 
       // SUBTRACT INGREDIENTS FROM STORAGE
 
       // Define variables
-      let amount = ing.amount;
-      let i = 0;
+      let amount = +ing.amount;
 
       // Iterate while the full amount of ingredient is not assigned
-      // while (amount > 0) {
-      //   let ingStorage = inStorageSorted;
-      //   //   If ingredient doesn't exist
-      //   if (!ingStorage[i]) {
-      //     // Create a missing ingredient object
-      //     const missingIng = {
-      //       ...ing,
-      //     };
+      while (amount > 0) {
+        // Check available ingredients in storage
+        const availableIngredients = inStorage.filter((ing) => ing.amount > 0);
+        // Check available ingredients in modified list (when restored from plan);
+        const availableModified = inModified.filter((ing) => ing.amount > 0);
 
-      //     missingIng.amount = amount;
+        // Add ingredient to used ingredients
+        const addUsedIngredient = (ing, amount) => {
+          // Find id of current ingredient in 'usedIngredients' array
+          let usedIng = usedIngredients.find(
+            (item) => item.app_id === ing.app_id
+          );
 
-      //     // Add object to missing ingredients
-      //     missingIngredients.push(missingIng);
-      //     break;
-      //   }
+          // If ingredient is not on the usedIngredients list yet, create one with amount = 0;
+          if (!usedIng) {
+            usedIng = {
+              ...ing,
+            };
+            usedIng.amount = 0;
+            usedIngredients.push(usedIng);
+          }
 
-      // console.log(missingIngredients);
-      //   // If ingredient exist
-      //   if (ingStorage[i].amount > 0) {
-      //     // subtract from storage
-      //     ingStorage[i].amount -= 1;
-      //     // subtract required amount
-      //     amount -= 1;
+          // Increase used amount
+          usedIng.amount += amount;
+        };
 
-      //     // Find id of current ingredient in this.used array
-      //     let usedIng = usedIngredients.find(
-      //       (item) => item.id === ingStorage[i].id
-      //     );
+        // Use available ingredient
+        const takeIngredient = (ing) => {
+          if (amount <= ing.amount) {
+            // Add ingredient to usedIngredients for reference when restoring
+            addUsedIngredient(ing, amount);
 
-      //     // If ingredient is not on the used list yet, create one with amount = 1;
-      //     if (!usedIng) {
-      //       usedIng = {
-      //         ...ingStorage[i],
-      //       };
-      //       usedIng.amount = 0;
-      //       usedIngredients.push(usedIng);
-      //     }
-      //     // Add one unit to used ingredient
-      //     usedIng.amount += 1;
+            // Subtract used amount from available ingredient
+            ing.amount -= amount;
+            amount = 0;
+          }
 
-      //     // Check if storage amount = 0
-      //     if (ingStorage[i].amount === 0) {
-      //       // Remove item from storage
-      //       const emptyIngredient = model.getIngredient(usedIng.id);
-      //       model.deleteIngredient(emptyIngredient);
+          if (amount > ing.amount) {
+            // Add ingredient to usedIngredients for reference when restoring
+            addUsedIngredient(ing, ing.amount);
 
-      //       // find another ingredient of the same type
-      //       i++;
-      //     }
-      //   }
-      // }
+            // Subtract required amount
+            amount -= ing.amount;
+
+            // Subtract all available amount from the ingredient
+            ing.amount = 0;
+          }
+
+          // Update 'modifiedIngredients'
+
+          // Check if ingredient already on the list
+          let ingToUpdate = modifiedIngredients.find(
+            (item) => item.app_id === ing.app_id
+          );
+
+          // If not, create one and add to the list
+          if (!ingToUpdate) {
+            ingToUpdate = { ...ing };
+            modifiedIngredients.push(ingToUpdate);
+          }
+
+          // Assign updated amount
+          ingToUpdate.amount = ing.amount;
+        };
+
+        // If available ingredient, use it
+        if (availableModified.length > 0) {
+          takeIngredient(availableModified[0]);
+          continue;
+        }
+
+        // If available ingredient, use it
+        if (availableIngredients.length > 0) {
+          takeIngredient(availableIngredients[0]);
+          continue;
+        }
+
+        // If no available ingredient, add missing ingredient to the list
+
+        // Create missing ingredient object
+        const missingIng = {
+          ...ing,
+        };
+
+        // Set missing amount
+        missingIng.amount = amount;
+
+        // Add object to missing ingredients
+        missingIngredients.push(missingIng);
+        break;
+      }
     });
   }
 
-  // If meal is a single ingredient (template from catalog)
+  //TODO: Add later If meal is a single ingredient (template from catalog)
   if (meal.type === "template") {
   }
 

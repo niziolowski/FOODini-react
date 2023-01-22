@@ -114,6 +114,7 @@ export const IngredientsContextProvider = ({ children }) => {
   const value = {
     tags,
     ingredients,
+    setIngredients,
     fetchIngredients,
     addIngredient,
     editIngredient,

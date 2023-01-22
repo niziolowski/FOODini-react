@@ -13,10 +13,10 @@ export const PlanContextProvider = ({ children }) => {
   const { token } = useContext(AuthContext);
 
   // Get ingredients for plan calculations
-  const { ingredients } = useContext(IngredientsContext);
+  const { ingredients, setIngredients } = useContext(IngredientsContext);
   // Filter storage ingredients
   const storage = useMemo(
-    () => ingredients.filter((item) => item.type === "storage"),
+    () => ingredients?.filter((item) => item.type === "storage"),
     [ingredients]
   );
 
@@ -51,48 +51,23 @@ export const PlanContextProvider = ({ children }) => {
       const res = await model.editWeek(week);
 
       if (res.status === 200) {
-        // Update State
-        setPlan((current) => {
-          const el = current.find((item) => item.id === week.id);
-          const index = current.indexOf(el);
-          const updated = [...current];
-          updated.splice(index, 1, res.data);
+        const el = plan.find((item) => item.id === week.id);
+        const index = plan.indexOf(el);
+        const updated = [...plan];
+        updated.splice(index, 1, res.data);
 
-          return [...updated];
-        });
+        // Update State
+        setPlan([...updated]);
 
         // Update active week
         setActiveWeek(res.data);
+        return updated;
       }
-
-      return res;
     } catch (error) {
       console.error(error);
     }
   };
 
-  // Update multiple weeks
-  const editMultipleWeeks = async (payload, token) => {
-    try {
-      // Update weeks
-      const res = await model.editMultipleWeeks(payload, token);
-
-      if (res.status === 200) {
-        // Update State
-        setPlan([...res.data]);
-
-        // Update active week
-        setActiveWeek((current) =>
-          res.data.find((week) => week.id === current.id)
-        );
-      }
-
-      return res;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  window.editMultipleWeeks = editMultipleWeeks;
   // Toggle week sync parameter
   const toggleWeekSync = async (week) => {
     try {
@@ -162,18 +137,58 @@ export const PlanContextProvider = ({ children }) => {
     return previousWeek;
   };
 
+  // Recalculates available ingredients based on storage and meal plan.
+  // Takes plan object and updates object (storage: add/delete)
+  const recalculatePlan = async (plan, updates) => {
+    try {
+      // Recalculate Plan
+      const payload = model.recalculatePlan(plan, storage, updates);
+
+      const response = await model.updatePlan(payload, token);
+
+      if (response.status === 200) {
+        // PLAN
+        // Update plan state
+        setPlan((current) => response.data.plan);
+
+        // INGREDIENTS
+        // Update ingredients state
+        setIngredients((current) => response.data.ingredients);
+
+        // CURRENT WEEK
+        // Get current week from updated plan
+        let currentWeek = model.getCurrentWeek(response.data.plan);
+
+        // Set current week
+        setCurrentWeek((current) => currentWeek);
+
+        // ACTIVE WEEK
+        // Get active week from updated plan
+        const updatedActiveWeek = response.data.plan.find(
+          (week) => week.id === activeWeek.id
+        );
+
+        // Set active week
+        setActiveWeek((current) => updatedActiveWeek);
+      }
+      return response.data.plan;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // Fetch the plan
   useEffect(() => {
     async function fetchData() {
-      console.log("fetching plan..."); //*: dev only line
-      const response = await fetchPlan(token);
-      // Update plan state
-      setPlan(response.data);
-
-      // Get current week from updated plan
-      let currentWeek = model.getCurrentWeek(response.data);
-
       try {
+        console.log("fetching plan..."); //*: dev only line
+        const response = await fetchPlan(token);
+        // Update plan state
+        setPlan(response.data);
+
+        // Get current week from updated plan
+        let currentWeek = model.getCurrentWeek(response.data);
+
         // If no currentWeek then create new
         if (!currentWeek) currentWeek = await addWeek();
 
@@ -190,13 +205,6 @@ export const PlanContextProvider = ({ children }) => {
     }
     fetchData();
   }, [token]);
-
-  // Recalculate plan on storage or plan change
-  useEffect(() => {
-    if (!plan || !storage) return;
-    // Reassign storage to meals
-    model.recalculatePlan(plan, storage);
-  }, [plan, storage]);
 
   //   Update current week on plan change
   useEffect(() => {
@@ -219,6 +227,7 @@ export const PlanContextProvider = ({ children }) => {
     nextWeek,
     setActiveWeek,
     toggleWeekSync,
+    recalculatePlan,
   };
   return <PlanContext.Provider value={value}>{children}</PlanContext.Provider>;
 };
