@@ -53,7 +53,7 @@
 }
 
 .btn-add {
-  padding: 0 15px;
+  padding: 0 5px;
   margin: 0;
   display: flex;
   justify-content: flex-start;
@@ -78,6 +78,48 @@
   left: 50%;
   translate: -50%;
   width: 90%;
+}
+
+/* FORM */
+.form {
+  padding: 0 15px;
+}
+
+.form ul {
+  margin-bottom: 30px;
+}
+
+/* FORM ITEM */
+.item {
+  display: flex;
+  align-items: center;
+  border-bottom: var(--border);
+}
+
+.item input,
+.item select {
+  background-color: transparent;
+  border: none;
+  font-size: 0.8rem;
+  min-width: 0;
+  height: 45px;
+}
+
+.item-checkbox {
+  flex: 0 0 auto;
+  margin-right: 5px;
+}
+
+.item-name {
+  flex: 1 1 auto;
+}
+
+.item-amount {
+  flex: 1 0 60px;
+}
+
+.item-unit {
+  flex: 1 0 50px;
 }
 
 /* § MOBILE */
