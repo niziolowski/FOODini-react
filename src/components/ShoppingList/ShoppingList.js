@@ -1,11 +1,35 @@
 import styles from "./ShoppingList.module.css";
 import Button from "../UI/Button/Button";
 import { FiPlus, FiX } from "react-icons/fi";
-import { useRef, useContext } from "react";
+import { useRef, useContext, useMemo } from "react";
 import LayoutContext from "../../contexts/layout";
+import PlanContext from "../../contexts/PlanContext";
+import { combineIngredientsByName } from "../../utils/shoppingList";
 
 function ShoppingList() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
+  const { plan } = useContext(PlanContext);
+  console.log(plan);
+
+  const missingIngredients = useMemo(() => {
+    if (!plan) return [];
+    const missing = plan.reduce((acc, cur) => {
+      if (!cur.sync) return [...acc];
+
+      // Get a list of week's meals
+      const meals = Object.values(cur.days).flatMap((value) => value.meals);
+
+      // Get a list of missing ingredients
+      const missing = meals.flatMap((meal) =>
+        meal.missingIngredients ? meal.missingIngredients : []
+      );
+
+      return [...acc, ...missing];
+    }, []);
+
+    return combineIngredientsByName(missing);
+  }, [plan]);
+  console.log(...missingIngredients);
 
   const isActive = isVisible.shoppingList;
 
@@ -59,7 +83,8 @@ function ShoppingList() {
         {isMobile && <h1>Lista zakupów</h1>}
       </header>
       <form id="shopping-list-form">
-        <ul id="list-sync" className="shopping-list-content sync"></ul>
+        <h2>Plan</h2>
+        <ul id="list-sync" className={styles["list-sync"]}></ul>
 
         <ul id="list-user" className="shopping-list-content">
           <button className={styles["btn-add"]}>

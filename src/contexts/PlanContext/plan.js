@@ -230,6 +230,8 @@ const restoreMealIngredients = (
       (item) => item.app_id === ing.app_id
     );
 
+    console.log(ing.amount);
+
     // Get ing from clonedStorage list if exists
     let ingStorage = clonedStorage.find((item) => item.app_id === ing.app_id);
 
