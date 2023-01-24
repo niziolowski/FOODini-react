@@ -1,18 +1,27 @@
 import styles from "./ShoppingList.module.css";
 import Button from "../UI/Button/Button";
 import { FiPlus, FiTrash, FiX } from "react-icons/fi";
-import { useRef, useContext, useMemo, useEffect } from "react";
+import { useRef, useContext, useMemo, useState, useEffect } from "react";
 import LayoutContext from "../../contexts/layout";
 import PlanContext from "../../contexts/PlanContext";
 import { combineIngredientsByName } from "../../utils/shoppingList";
 import { useFieldArray, useForm } from "react-hook-form";
 import Input from "../UI/Input/Input";
 import Select from "../UI/Select/Select";
+import IngredientsContext from "../../contexts/ingredients";
+import InputWithSuggestions from "../UI/InputWithSuggestions/InputWithSuggestions";
+import AddCatalog from "../AddCatalog/AddCatalog";
 
 function ShoppingList() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
+  const { ingredients, getIngredientById } = useContext(IngredientsContext);
   const { plan } = useContext(PlanContext);
   const isActive = isVisible.shoppingList;
+
+  // Add Template state
+  const [isCatalogForm, setIsCatalogForm] = useState(false);
+  const [catalogFormData, setCatalogFormData] = useState(null);
+  const [ingredientIndex, setIngredientIndex] = useState(0); // reference for filling the form on suggestion click
 
   const parentEl = useRef(null);
   const btnToggle = useRef(null);
@@ -37,13 +46,56 @@ function ShoppingList() {
     return combineIngredientsByName(missing);
   }, [plan]);
 
-  const { register, handleSubmit, control, setValue } = useForm();
+  const suggestions = useMemo(
+    () => ingredients.filter((item) => item.type === "template"),
+    [ingredients]
+  );
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm();
 
   const {
     fields: userItemsFields,
     append: userItemsAppend,
     remove: userItemsRemove,
   } = useFieldArray({ name: "userItems", control });
+
+  // On form submit, automatically add new ingredient to storage
+  const handleCreateTemplateSubmit = (ingredient) => {
+    if (ingredient) {
+      // fill the row with ingredient values
+      setValue(`userItems.${ingredientIndex}.name`, ingredient.name);
+      setValue(`userItems.${ingredientIndex}.amount`, ingredient.amount);
+      setValue(`userItems.${ingredientIndex}.unit`, ingredient.unit);
+    }
+    setIsCatalogForm(false);
+  };
+
+  // Show form to add new template to catalog
+  const handleCreateTemplate = (query, index) => {
+    // Set current ingredient index for later reference
+    setIngredientIndex(index);
+
+    const data = { name: query };
+    setIsCatalogForm(true);
+    setCatalogFormData(data);
+  };
+
+  // Fill the form with suggestion data
+  const handleSuggestionClick = (id, index) => {
+    const ingredient = getIngredientById(id);
+
+    // fill the row with ingredient values
+    setValue(`userItems.${index}.name`, ingredient.name);
+    setValue(`userItems.${index}.amount`, ingredient.amount);
+    setValue(`userItems.${index}.unit`, ingredient.unit);
+  };
 
   function toggleActive() {
     dispatchIsVisible({ type: "shopping-list", mode: "toggle" });
@@ -87,117 +139,138 @@ function ShoppingList() {
   }, [missingIngredients]);
 
   return (
-    <aside
-      ref={parentEl}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={`${styles["shopping-list"]} ${isActive ? styles.active : ""} ${
-        isMobile ? styles.mobile : ""
-      }`}
-    >
-      <header className={styles.header}>
-        {!isMobile && btnToggleEl}
-
-        {!isMobile && (
-          <Button onClick={toggleActive} round>
-            <FiX />
-          </Button>
-        )}
-        {isMobile && <h1>Lista zakupów</h1>}
-      </header>
-      <form
-        id="shopping-list-form"
-        className={styles.form}
-        onSubmit={handleSubmit(onSubmit)}
+    <>
+      <aside
+        ref={parentEl}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className={`${styles["shopping-list"]} ${
+          isActive ? styles.active : ""
+        } ${isMobile ? styles.mobile : ""}`}
       >
-        <h2>Plan</h2>
-        <ul id="list-sync">
-          {missingIngredients.map((ing, index) => (
-            <div key={ing.name} className={styles.item}>
-              <Input
-                {...register(`syncItems.${index}.checkbox`)}
-                className={styles["item-checkbox"]}
-                type="checkbox"
-              />
-              <Input
-                {...register(`syncItems.${index}.name`)}
-                className={styles["item-name"]}
-                type="text"
-                disabled={true}
-                value={ing.name}
-                isValid={true}
-              />
-              <Input
-                {...register(`syncItems.${index}.amount`)}
-                className={styles["item-amount"]}
-                type="number"
-                disabled={true}
-                value={ing.amount}
-                isValid={true}
-              />
-              <Select
-                {...register(`syncItems.${index}.unit`)}
-                className={styles["item-unit"]}
-                disabled={true}
-                value={ing.unit}
-                options={["szt.", "kg", "g", "ml"]}
-              />
-            </div>
-          ))}
-        </ul>
+        <header className={styles.header}>
+          {!isMobile && btnToggleEl}
 
-        <h2>Użytkownik</h2>
-        <ul id="list-user">
-          {userItemsFields.map((field, index) => (
-            <div key={field.id} className={styles.item}>
-              <Input
-                {...register(`userItems.${index}.checkbox`)}
-                className={styles["item-checkbox"]}
-                type="checkbox"
-              />
-              <Input
-                {...register(`userItems.${index}.name`)}
-                className={styles["item-name"]}
-                type="text"
-                isValid={true}
-              />
-              <Input
-                {...register(`userItems.${index}.amount`)}
-                className={styles["item-amount"]}
-                type="number"
-                isValid={true}
-              />
-              <Select
-                {...register(`userItems.${index}.unit`)}
-                className={styles["item-unit"]}
-                options={["szt.", "kg", "g", "ml"]}
-              />
-              <Button
-                onClick={() => userItemsRemove(index)}
-                type="button"
-                doubleAction
-                round
-                mini
-              >
-                <FiTrash />
-              </Button>
-            </div>
-          ))}
-          <button
-            onClick={() =>
-              userItemsAppend({ name: "", amount: 1, unit: "szt." })
-            }
-            type="button"
-            className={styles["btn-add"]}
-          >
-            <FiPlus /> Dodaj
-          </button>
-        </ul>
-        <Button className={styles["btn-submit"]} primary>
-          Przenieś zakupy do spiżarni
-        </Button>
-      </form>
-    </aside>
+          {!isMobile && (
+            <Button onClick={toggleActive} round>
+              <FiX />
+            </Button>
+          )}
+          {isMobile && <h1>Lista zakupów</h1>}
+        </header>
+        <form
+          id="shopping-list-form"
+          className={styles.form}
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <h2>Plan</h2>
+          <ul id="list-sync">
+            {missingIngredients.map((ing, index) => (
+              <div key={ing.name} className={styles.item}>
+                <Input
+                  {...register(`syncItems.${index}.checkbox`)}
+                  className={styles["item-checkbox"]}
+                  type="checkbox"
+                />
+                <Input
+                  {...register(`syncItems.${index}.name`)}
+                  className={styles["item-name"]}
+                  type="text"
+                  disabled={true}
+                  value={ing.name}
+                  isValid={true}
+                />
+                <Input
+                  {...register(`syncItems.${index}.amount`)}
+                  className={styles["item-amount"]}
+                  type="number"
+                  disabled={true}
+                  value={ing.amount}
+                  isValid={true}
+                />
+                <Select
+                  {...register(`syncItems.${index}.unit`)}
+                  className={styles["item-unit"]}
+                  disabled={true}
+                  value={ing.unit}
+                  options={["szt.", "kg", "g", "ml"]}
+                />
+              </div>
+            ))}
+          </ul>
+
+          <h2>Użytkownik</h2>
+          <ul id="list-user">
+            {userItemsFields.map((field, index) => (
+              <div key={field.id} className={styles.item}>
+                <Input
+                  {...register(`userItems.${index}.checkbox`)}
+                  className={styles["item-checkbox"]}
+                  type="checkbox"
+                />
+
+                <InputWithSuggestions
+                  {...register(`userItems.${index}.name`, {
+                    required: "Wybierz składnik",
+                  })}
+                  query={watch(`userItems.${index}.name`)}
+                  onAddNew={(query) => {
+                    handleCreateTemplate(query, index);
+                  }}
+                  onSuggestionClick={(id) => handleSuggestionClick(id, index)}
+                  type="text"
+                  data={suggestions}
+                  placeholder="Nazwa"
+                  isValid={!errors?.userItems?.at(index)?.name}
+                  suggestionsWide
+                />
+
+                <Input
+                  {...register(`userItems.${index}.amount`)}
+                  className={styles["item-amount"]}
+                  type="number"
+                  isValid={true}
+                />
+                <Select
+                  {...register(`userItems.${index}.unit`)}
+                  className={styles["item-unit"]}
+                  options={["szt.", "kg", "g", "ml"]}
+                />
+                <Button
+                  onClick={() => userItemsRemove(index)}
+                  type="button"
+                  doubleAction
+                  round
+                  mini
+                >
+                  <FiTrash />
+                </Button>
+              </div>
+            ))}
+            <button
+              onClick={() =>
+                userItemsAppend({ name: "", amount: 1, unit: "szt." })
+              }
+              type="button"
+              className={styles["btn-add"]}
+            >
+              <FiPlus /> Dodaj
+            </button>
+          </ul>
+          <Button className={styles["btn-submit"]} primary>
+            Przenieś zakupy do spiżarni
+          </Button>
+        </form>
+      </aside>
+      {isCatalogForm && (
+        <AddCatalog
+          data={catalogFormData}
+          isActive={isCatalogForm}
+          isEditing={false}
+          onClose={handleCreateTemplateSubmit}
+        />
+      )}
+    </>
   );
 }
 

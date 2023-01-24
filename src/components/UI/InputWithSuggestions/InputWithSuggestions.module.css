@@ -20,6 +20,13 @@
   overflow: hidden;
   overflow-y: scroll;
   z-index: 1;
+  font-size: 0.8rem;
+}
+
+.suggestion-list.wide {
+  top: 5px;
+  left: -30px;
+  width: 330px;
 }
 
 .suggestion-list li {

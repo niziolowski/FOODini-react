@@ -4,7 +4,10 @@ import styles from "./InputWithSuggestions.module.css";
 import { FiEdit } from "react-icons/fi";
 
 const InputWithSuggestions = React.forwardRef(
-  ({ query, data, onAddNew, onSuggestionClick, ...rest }, ref) => {
+  (
+    { query, data, onAddNew, onSuggestionClick, suggestionsWide, ...rest },
+    ref
+  ) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     // Reference for keyboard navigation
     const suggestionsEl = useRef();
@@ -102,7 +105,12 @@ const InputWithSuggestions = React.forwardRef(
     }, [selectedIndex, filteredData, isFocused]);
 
     const suggestions = (
-      <ul ref={suggestionsEl} className={styles["suggestion-list"]}>
+      <ul
+        ref={suggestionsEl}
+        className={`${styles["suggestion-list"]} ${
+          suggestionsWide && styles.wide
+        }`}
+      >
         {filteredData.map((item) => (
           <li onClick={handleSuggestionClick} key={item.id} data-id={item.id}>
             {item.name}

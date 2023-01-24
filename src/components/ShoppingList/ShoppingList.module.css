@@ -85,12 +85,18 @@
   padding: 0 15px;
 }
 
-.form ul {
+.form h2 {
+  text-transform: capitalize;
+  color: var(--accent-color);
+}
+
+.form > ul {
   margin-bottom: 30px;
 }
 
 /* FORM ITEM */
 .item {
+  position: relative;
   display: flex;
   align-items: center;
   border-bottom: var(--border);
@@ -103,6 +109,10 @@
   font-size: 0.8rem;
   min-width: 0;
   height: 45px;
+}
+
+.item input:focus {
+  outline: transparent;
 }
 
 .item-checkbox {
