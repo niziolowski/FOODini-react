@@ -132,11 +132,11 @@ function Plan() {
     };
 
     try {
-      // Upload updated Week
-      const updatedPlan = await editWeek(updatedWeek);
-
       // Toggle spotlight modal
       toggleSpotlight();
+
+      // Upload updated Week
+      const updatedPlan = await editWeek(updatedWeek);
 
       // Recalculate plan
       recalculatePlan(updatedPlan);
@@ -145,8 +145,8 @@ function Plan() {
 
   if (isMobile) {
     return (
-      <>
-        <div className={styles.mobile}>
+      <div className={`${styles.wrapper} ${styles.mobile}`}>
+        <div className={styles["plan-mobile"]}>
           <Swiper
             className={styles.swiper}
             spaceBetween={15}
@@ -175,13 +175,13 @@ function Plan() {
             onSuggestionClick={handleSuggestionClick}
           />
         )}
-      </>
+      </div>
     );
   }
 
   if (!isMobile) {
     return (
-      <>
+      <div className={styles.wrapper}>
         <div className={styles.plan}>
           {days.map((day, i) => {
             return (
@@ -204,7 +204,7 @@ function Plan() {
             onSuggestionClick={handleSuggestionClick}
           />
         )}
-      </>
+      </div>
     );
   }
 }

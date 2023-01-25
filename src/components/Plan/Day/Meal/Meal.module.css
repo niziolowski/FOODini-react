@@ -6,11 +6,12 @@
   width: 100%;
   padding: 5px 5px 5px 10px;
   border: 1px solid var(--grey-color);
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   font-size: 0.8rem;
   box-shadow: var(--shadow);
   overflow: hidden;
 }
+
 .tag {
   position: absolute;
   right: 0;
@@ -18,3 +19,5 @@
   height: 100%;
   background-color: var(--tag-3-color);
 }
+
+/* § MOBILE */
