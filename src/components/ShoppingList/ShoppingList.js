@@ -136,7 +136,7 @@ function ShoppingList() {
       setValue(`syncItems.${i}.amount`, ing.amount);
       setValue(`syncItems.${i}.unit`, ing.unit);
     });
-  }, [missingIngredients]);
+  }, [missingIngredients, setValue]);
 
   return (
     <>
