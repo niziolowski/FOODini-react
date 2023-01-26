@@ -226,7 +226,6 @@ function ShoppingList() {
                   {...register(`syncItems.${index}.amount`)}
                   className={styles["item-amount"]}
                   type="number"
-                  disabled={true}
                   value={ing.amount}
                   isValid={true}
                 />
