@@ -11,11 +11,13 @@ import Select from "../UI/Select/Select";
 import IngredientsContext from "../../contexts/ingredients";
 import InputWithSuggestions from "../UI/InputWithSuggestions/InputWithSuggestions";
 import AddCatalog from "../AddCatalog/AddCatalog";
+import { v4 as uuid } from "uuid";
 
 function ShoppingList() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
-  const { ingredients, getIngredientById } = useContext(IngredientsContext);
-  const { plan } = useContext(PlanContext);
+  const { ingredients, getIngredientById, addOrEditIngredients } =
+    useContext(IngredientsContext);
+  const { plan, recalculatePlan } = useContext(PlanContext);
   const isActive = isVisible.shoppingList;
 
   // Add Template state
@@ -125,8 +127,50 @@ function ShoppingList() {
     </button>
   );
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    // Get only checked items from both lists
+    const userItems = data.userItems.filter((item) => item.checkbox === true);
+    const syncItems = data.syncItems.filter((item) => item.checkbox === true);
+
+    // Group items to a signle array
+    const groupedItems = [...syncItems, ...userItems];
+
+    // Combine the same items into a single item
+    const combinedItems = combineIngredientsByName(groupedItems);
+
+    const templates = ingredients.filter((ing) => ing.type === "template");
+    const payload = combinedItems.map((item) => {
+      console.log(item);
+
+      const template = templates.find(
+        (template) => template.name === item.name
+      );
+
+      return {
+        ...template,
+        id: 0,
+        app_id: uuid(),
+        purchase_date: new Date(),
+        created_at: new Date(),
+        type: "storage",
+        amount: item.amount,
+        unit: item.unit,
+      };
+    });
+    // Upload ingredients
+    try {
+      // !Create API call for adding/editing/deleting ingredients (best solution). use it to crreate payload that updates userItems and storage at the same time
+      const updatedIngredients = await addOrEditIngredients(payload);
+      console.log(updatedIngredients);
+
+      const updatedStorage = updatedIngredients.filter(
+        (ing) => ing.type === "storage"
+      );
+      recalculatePlan(null, updatedStorage);
+      // Remove added ingredients from userItems list
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // Update sync values on missingIngredients change

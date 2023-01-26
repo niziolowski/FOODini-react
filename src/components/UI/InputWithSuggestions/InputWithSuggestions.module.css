@@ -24,7 +24,7 @@
 }
 
 .suggestion-list.wide {
-  top: 5px;
+  translate: 0 -2px;
   left: -30px;
   width: 330px;
 }

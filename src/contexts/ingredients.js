@@ -91,6 +91,8 @@ export const IngredientsContextProvider = ({ children }) => {
       if (res.status === 200) {
         // Update State
         setIngredients((current) => [...current, ...res.data]);
+
+        return res.data;
       }
     } catch (error) {
       console.log(error);
