@@ -140,8 +140,6 @@ function ShoppingList() {
 
     const templates = ingredients.filter((ing) => ing.type === "template");
     const payload = combinedItems.map((item) => {
-      console.log(item);
-
       const template = templates.find(
         (template) => template.name === item.name
       );
@@ -161,7 +159,6 @@ function ShoppingList() {
     try {
       // !Create API call for adding/editing/deleting ingredients (best solution). use it to crreate payload that updates userItems and storage at the same time
       const updatedIngredients = await addOrEditIngredients(payload);
-      console.log(updatedIngredients);
 
       const updatedStorage = updatedIngredients.filter(
         (ing) => ing.type === "storage"
@@ -176,6 +173,7 @@ function ShoppingList() {
   // Update sync values on missingIngredients change
   useEffect(() => {
     missingIngredients.forEach((ing, i) => {
+      setValue(`syncItems.${i}.checkbox`, false);
       setValue(`syncItems.${i}.name`, ing.name);
       setValue(`syncItems.${i}.amount`, ing.amount);
       setValue(`syncItems.${i}.unit`, ing.unit);
