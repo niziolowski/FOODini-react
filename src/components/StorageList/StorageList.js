@@ -7,11 +7,13 @@ import Spotlight from "../Spotlight/Spotlight";
 import AddCatalog from "../AddCatalog/AddCatalog";
 import IngredientsContext from "../../contexts/ingredients";
 import AddStorage from "../AddStorage/AddStorage";
+import PlanContext from "../../contexts/PlanContext";
 
 function StorageList() {
   const { isMobile } = useContext(LayoutContext);
   const { ingredients, addIngredient, getIngredientById } =
     useContext(IngredientsContext);
+  const { recalculatePlan } = useContext(PlanContext);
   const [isSpotlight, setIsSpotlight] = useState(false);
   // Templates catalog form state
   const [isCatalogForm, setIsCatalogForm] = useState(false);
@@ -43,20 +45,31 @@ function StorageList() {
 
   // On form submit, automatically add new ingredient to storage
   //? Maybe first pass data to storage form for purchase_date edit?
-  const handleCreateTemplateSubmit = (template) => {
-    if (template) {
-      const newIngredient = {
-        ...template,
-        id: null,
-        app_id: null,
-        type: "storage",
-        created_at: null,
-        recipes_id: null,
-      };
-      // Add to storage
-      addIngredient(newIngredient);
+  const handleCreateTemplateSubmit = async (template) => {
+    try {
+      if (template) {
+        const newIngredient = {
+          ...template,
+          id: null,
+          app_id: null,
+          type: "storage",
+          created_at: null,
+          recipes_id: null,
+        };
+        // Add to storage
+        const updatedIngredients = await addIngredient(newIngredient);
+        const updatedStorage = updatedIngredients.filter(
+          (ing) => ing.type === "storage"
+        );
+
+        recalculatePlan(null, updatedStorage);
+
+        // Hide the form
+        setIsCatalogForm(false);
+      }
+    } catch (error) {
+      console.error(error);
     }
-    setIsCatalogForm(false);
   };
 
   // Fill storage form with suggestion data

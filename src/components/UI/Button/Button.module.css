@@ -31,6 +31,10 @@
   color: var(--accent-color);
 }
 
+.round.outline {
+  border: 2px solid var(--accent-color);
+}
+
 .round:hover {
   filter: brightness(97%);
   box-shadow: var(--shadow);

@@ -15,7 +15,7 @@ import AuthContext from "./contexts/auth";
 import { IngredientsContextProvider } from "./contexts/ingredients";
 import { RecipesContextProvider } from "./contexts/recipes";
 import Profile from "./components/Profile/Profile";
-import { PlanContextProvider } from "./contexts/plan";
+import { PlanContextProvider } from "./contexts/PlanContext/index";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
@@ -54,30 +54,31 @@ function App() {
     return (
       <div className="wrapper">
         <div className={classes}>
-          <div
-            className={`${styles.wrapper} ${
-              isVisible.sidebar ? styles.shift : ""
-            }`}
-          >
-            {isMobile && isVisible.profile && <Profile />}
-            {!isMobile ? <Nav /> : <NavMobile />}
-
-            <PlanContextProvider>
-              <Plan />
-            </PlanContextProvider>
-            <ShoppingList />
-            <IngredientsContextProvider>
-              <Catalog />
-            </IngredientsContextProvider>
-          </div>
-          <Settings />
           <IngredientsContextProvider>
-            {isVisible.storage && <StorageList />}
-
             <RecipesContextProvider>
-              {/* Sidebar doesn't really need context but inside there is a StoragaList and RecipeList. Think through in the future */}
-              <Sidebar />
-              {isVisible.recipes && <RecipeList />}
+              <PlanContextProvider>
+                <div
+                  className={`${styles.wrapper} ${
+                    isVisible.sidebar ? styles.shift : ""
+                  }`}
+                >
+                  {isMobile && isVisible.profile && <Profile />}
+                  {/* Navigation needs PlanContext for changing the current week and displaying a subtitle */}
+                  {!isMobile ? <Nav /> : <NavMobile />}
+
+                  {/* Plan needs IngredientsContext and RecipesContext for adding meals */}
+                  <Plan />
+                  <ShoppingList />
+                  <Catalog />
+                </div>
+                <Settings />
+
+                {isVisible.storage && <StorageList />}
+
+                {/* Sidebar doesn't really need context but inside there is a StoragaList and RecipeList. Think through in the future */}
+                <Sidebar />
+                {isVisible.recipes && <RecipeList />}
+              </PlanContextProvider>
             </RecipesContextProvider>
           </IngredientsContextProvider>
         </div>

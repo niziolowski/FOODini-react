@@ -5,11 +5,13 @@
   top: 0;
   left: 0;
   width: 400px;
-  height: 100vh;
+  height: 100%;
   translate: -100%;
   border-right: var(--border);
   transition: var(--transition);
   overflow: hidden;
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  box-shadow: var(--shadow);
 }
 
 .sidebar.active {
