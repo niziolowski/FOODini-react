@@ -76,10 +76,8 @@
 .btn-submit {
   position: relative;
   margin-top: auto;
-  /* position: fixed; */
   left: 50%;
   translate: -50%;
-  /* bottom: 15px; */
   margin: 5% 0;
   width: 90%;
 }
