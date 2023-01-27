@@ -298,10 +298,14 @@ function ShoppingList() {
               <FiPlus /> Dodaj
             </button>
           </ul>
-          <Button className={styles["btn-submit"]} primary>
-            Przenieś zakupy do spiżarni
-          </Button>
         </form>
+        <Button
+          form="shopping-list-form"
+          className={styles["btn-submit"]}
+          primary
+        >
+          Przenieś zakupy do spiżarni
+        </Button>
       </aside>
       {isCatalogForm && (
         <AddCatalog

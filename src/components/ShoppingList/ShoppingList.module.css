@@ -74,16 +74,23 @@
 }
 
 .btn-submit {
-  position: fixed;
-  bottom: 15px;
+  position: relative;
+  margin-top: auto;
+  /* position: fixed; */
   left: 50%;
   translate: -50%;
+  /* bottom: 15px; */
+  margin: 5% 0;
   width: 90%;
 }
 
 /* FORM */
 .form {
   padding: 0 15px;
+  /* margin-bottom: 60px; */
+  overflow: hidden;
+  overflow-y: scroll;
+  flex: 1;
 }
 
 .form h2 {
@@ -92,6 +99,7 @@
 }
 
 .form > ul {
+  /* height: fit-content; */
   margin-bottom: 30px;
 }
 
