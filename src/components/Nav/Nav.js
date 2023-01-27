@@ -82,7 +82,7 @@ function Nav() {
   // Format the subtitle when user changes active week
   const subtitleText = useMemo(() => {
     // If no data, display an error message
-    if (!activeWeek) return "Nie można załadować danych";
+    if (!activeWeek) return "";
     const startDate = new Date(activeWeek.start_date).toLocaleDateString(
       "pl-PL",
       {

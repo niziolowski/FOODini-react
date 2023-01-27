@@ -7,7 +7,13 @@ import Button from "../UI/Button/Button";
 
 import styles from "./Spotlight.module.css";
 
-function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
+function Spotlight({
+  data,
+  onClose,
+  onAddNew,
+  onSuggestionClick,
+  readOnly = false,
+}) {
   const { isMobile } = useContext(LayoutContext);
   const root = document.getElementById("modal");
   // Suggestions
@@ -16,6 +22,7 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [query, setQuery] = useState("");
   const suggestionsEl = useRef();
+
   // Handle input change
   const handleChange = (e) => {
     // Get value
@@ -105,9 +112,11 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
         );
       })}
 
-      <li onClick={handleAddClick} className={styles["btn-add"]}>
-        Stwórz nowy produkt <FiEdit />
-      </li>
+      {!readOnly && (
+        <li onClick={handleAddClick} className={styles["btn-add"]}>
+          Stwórz nowy produkt <FiEdit />
+        </li>
+      )}
     </ul>
   );
 
