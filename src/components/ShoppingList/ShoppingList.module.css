@@ -85,7 +85,6 @@
 /* FORM */
 .form {
   padding: 0 15px;
-  /* margin-bottom: 60px; */
   overflow: hidden;
   overflow-y: scroll;
   flex: 1;
@@ -97,7 +96,6 @@
 }
 
 .form > ul {
-  /* height: fit-content; */
   margin-bottom: 30px;
 }
 
