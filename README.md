@@ -29,7 +29,7 @@
   <h3 align="center">FOODini</h3>
 
   <p align="center">
-    Meal planning app that automates your diet
+    Meal planning app that automates your diet (work in progress)
     <br />
     <a href="https://foodini-react.netlify.app"><strong>DEMO</strong></a>
   </p>
