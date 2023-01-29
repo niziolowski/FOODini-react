@@ -20,7 +20,7 @@ function ShoppingList() {
   const { plan, recalculatePlan } = useContext(PlanContext);
   const isActive = isVisible.shoppingList;
 
-  // Add Template state
+  // Template state
   const [isCatalogForm, setIsCatalogForm] = useState(false);
   const [catalogFormData, setCatalogFormData] = useState(null);
   const [ingredientIndex, setIngredientIndex] = useState(0); // reference for filling the form on suggestion click
@@ -59,6 +59,7 @@ function ShoppingList() {
     control,
     setValue,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -127,6 +128,18 @@ function ShoppingList() {
     </button>
   );
 
+  //TODO: Optimize in the future. It shouldn't run every time ingredients change.
+  // Filter userItems from ingredients
+  const userItems = useMemo(() => {
+    console.log("test");
+    return ingredients.filter((item) => item.type === "shopping-list");
+  }, [ingredients]);
+
+  // When userItems change, update form values
+  useEffect(() => {
+    reset({ userItems: userItems });
+  }, [userItems, reset]);
+
   const onSubmit = async (data) => {
     // Get only checked items from both lists
     const userItems = data.userItems.filter((item) => item.checkbox === true);
@@ -134,6 +147,7 @@ function ShoppingList() {
 
     // Group items to a signle array
     const groupedItems = [...syncItems, ...userItems];
+    if (groupedItems.length === 0) return;
 
     // Combine the same items into a single item
     const combinedItems = combineIngredientsByName(groupedItems);
@@ -151,13 +165,12 @@ function ShoppingList() {
         purchase_date: new Date(),
         created_at: new Date(),
         type: "storage",
-        amount: item.amount,
+        amount: +item.amount,
         unit: item.unit,
       };
     });
     // Upload ingredients
     try {
-      // !Create API call for adding/editing/deleting ingredients (best solution). use it to crreate payload that updates userItems and storage at the same time
       const updatedIngredients = await addOrEditIngredients(payload);
 
       const updatedStorage = updatedIngredients.filter(
@@ -219,21 +232,18 @@ function ShoppingList() {
                   className={styles["item-name"]}
                   type="text"
                   disabled={true}
-                  value={ing.name}
                   isValid={true}
                 />
                 <Input
                   {...register(`syncItems.${index}.amount`)}
                   className={styles["item-amount"]}
                   type="number"
-                  value={ing.amount}
                   isValid={true}
                 />
                 <Select
                   {...register(`syncItems.${index}.unit`)}
                   className={styles["item-unit"]}
                   disabled={true}
-                  value={ing.unit}
                   options={["szt.", "kg", "g", "ml"]}
                 />
               </div>
