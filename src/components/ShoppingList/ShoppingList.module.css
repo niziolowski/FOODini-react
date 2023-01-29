@@ -35,6 +35,7 @@
   left: 0;
   translate: -100%;
   transition: var(--transition);
+  box-shadow: var(--shadow);
 }
 
 .shopping-list.active {
