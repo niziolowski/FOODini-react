@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { FiEdit, FiSearch, FiX } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout";
 import RecipeItem from "../RecipeList/RecipeItem/RecipeItem";
+import StorageItem from "../StorageList/StorageItem/StorageItem";
 import Button from "../UI/Button/Button";
 
 import styles from "./Spotlight.module.css";
@@ -74,9 +75,23 @@ function Spotlight({
     if (e.key === "Escape") onClose();
   };
 
-  const handleSuggestionClick = (item) => {
-    // Pass id UP using prop
-    onSuggestionClick(item.id, item.type || "recipe");
+  const handleSuggestionClick = (e, item) => {
+    // If recipe
+    if (!e) {
+      onSuggestionClick(item.id, "recipe");
+    }
+
+    // If storage
+    if (e) {
+      // Get item id
+      const id = +e.target.closest("li").dataset.id;
+
+      // Get type
+      const type = e.target.closest("li").dataset.type;
+
+      // Pass id UP using prop
+      onSuggestionClick(id, type);
+    }
   };
 
   const handleAddClick = () => {
@@ -95,13 +110,28 @@ function Spotlight({
   const suggestions = (
     <ul ref={suggestionsEl} className={styles["suggestion-list"]}>
       {filteredData.map((item) => {
-        return (
-          <RecipeItem
-            onPreview={handleSuggestionClick}
-            key={item.id}
-            item={item}
-          />
-        );
+        // if storage
+        if (item.type) {
+          return (
+            <StorageItem
+              onClick={handleSuggestionClick}
+              key={item.id}
+              item={item}
+              data-id={item.id}
+              data-type={item.type}
+            />
+          );
+        }
+        if (!item.type) {
+          return (
+            <RecipeItem
+              onPreview={(item) => handleSuggestionClick(null, item)}
+              key={item.id}
+              item={item}
+            />
+          );
+        }
+        return null;
       })}
 
       {!readOnly && (
@@ -122,7 +152,7 @@ function Spotlight({
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             autoFocus
-            placeholder="Szukaj"
+            placeholder="Wpisz nazwę składnika"
           ></input>
           {isMobile && (
             <Button onClick={onClose} round mini>
