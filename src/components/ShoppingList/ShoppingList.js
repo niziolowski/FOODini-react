@@ -34,6 +34,9 @@ function ShoppingList() {
   // userItemsValue state (when updated, changes are uploaded to API)
   const [userItemsValues, setUserItemsValues] = useState(null);
 
+  // timeOut function for scheduling userItems update
+  const [timer, setTimer] = useState(null);
+
   // Calculate a combined list of missing ingredients
   const missingIngredients = useMemo(() => {
     if (!plan) return [];
@@ -56,6 +59,13 @@ function ShoppingList() {
 
   const suggestions = useMemo(
     () => ingredients.filter((item) => item.type === "template"),
+    [ingredients]
+  );
+
+  //TODO: Optimize in the future. It shouldn't run every time ingredients change.
+  // Filter userItems from ingredients
+  const userItems = useMemo(
+    () => ingredients.filter((item) => item.type === "shopping-list"),
     [ingredients]
   );
 
@@ -86,52 +96,6 @@ function ShoppingList() {
     // Update state
     setUserItemsValues((current) => [...updated]);
   };
-
-  // Handle userItems list upload when userItemsValues changes
-  useEffect(() => {
-    // Skip the first render
-    if (!userItemsValues) return;
-    // Start the timer
-    const timer = setTimeout(async () => {
-      // If no further changes were made, upload to API
-
-      // Get ingredient templates
-      const templates = ingredients.filter((ing) => ing.type === "template");
-
-      // Create payload object
-      const payload = userItemsValues.map((item) => {
-        // Find template for current item
-        const template = templates.find(
-          (template) => template.name === item.name
-        );
-        if (!template) return null;
-        // Create ingredient object
-        return {
-          ...template,
-          id: 0,
-          app_id: uuid(),
-          purchase_date: formatDate(new Date()),
-          created_at: new Date().getTime(),
-          type: "shopping-list",
-          amount: +item.amount,
-          unit: item.unit,
-        };
-      });
-
-      // Fitler out null items
-      const filteredPayload = payload.filter((item) => item !== null);
-
-      // Update Shopping-List items
-      try {
-        await editShoppingList(filteredPayload, token);
-      } catch (error) {
-        console.error(error);
-      }
-    }, 3000);
-
-    // Reset the timer if change occured
-    return () => clearTimeout(timer);
-  }, [userItemsValues]);
 
   // On form submit, automatically add new ingredient to storage
   const handleCreateTemplateSubmit = (ingredient) => {
@@ -192,18 +156,10 @@ function ShoppingList() {
     </button>
   );
 
-  //TODO: Optimize in the future. It shouldn't run every time ingredients change.
-  // Filter userItems from ingredients
-  const userItems = useMemo(() => {
-    return ingredients.filter((item) => item.type === "shopping-list");
-  }, [ingredients]);
-
-  // When userItems change, update form values
-  useEffect(() => {
-    reset({ userItems: userItems });
-  }, [userItems, reset]);
-
   const onSubmit = async (data) => {
+    // If there was a shoppingList update scheduled, cancel it to avoid bugs.
+    clearTimeout(timer);
+
     // Get only checked items from both lists
     const userItems =
       data?.userItems?.filter((item) => item.checkbox === true) || [];
@@ -271,6 +227,59 @@ function ShoppingList() {
       console.error(error);
     }
   };
+
+  // Handle userItems list upload when userItemsValues changes
+  useEffect(() => {
+    // Skip the first render
+    if (!userItemsValues) return;
+    // Start the timer
+    const timer = setTimeout(async () => {
+      // If no further changes were made, upload to API
+
+      // Get ingredient templates
+      const templates = ingredients.filter((ing) => ing.type === "template");
+
+      // Create payload object
+      const payload = userItemsValues.map((item) => {
+        // Find template for current item
+        const template = templates.find(
+          (template) => template.name === item.name
+        );
+        if (!template) return null;
+        // Create ingredient object
+        return {
+          ...template,
+          id: 0,
+          app_id: uuid(),
+          purchase_date: formatDate(new Date()),
+          created_at: new Date().getTime(),
+          type: "shopping-list",
+          amount: +item.amount,
+          unit: item.unit,
+        };
+      });
+
+      // Fitler out null items
+      const filteredPayload = payload.filter((item) => item !== null);
+
+      // Update Shopping-List items
+      try {
+        await editShoppingList(filteredPayload, token);
+      } catch (error) {
+        console.error(error);
+      }
+    }, 3000);
+
+    // Save timer variable for reference in onSubmit function
+    setTimer(timer);
+    // Reset the timer if change occured
+    return () => clearTimeout(timer);
+  }, [userItemsValues]);
+
+  // When userItems change, update form values
+  useEffect(() => {
+    reset({ userItems: userItems });
+  }, [userItems, reset]);
 
   // Update sync values on missingIngredients change
   useEffect(() => {
