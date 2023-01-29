@@ -15,10 +15,10 @@ import { v4 as uuid } from "uuid";
 
 function ShoppingList() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
+  const isActive = isVisible.shoppingList;
   const { ingredients, getIngredientById, addOrEditIngredients } =
     useContext(IngredientsContext);
   const { plan, recalculatePlan } = useContext(PlanContext);
-  const isActive = isVisible.shoppingList;
 
   // Template state
   const [isCatalogForm, setIsCatalogForm] = useState(false);
@@ -27,6 +27,9 @@ function ShoppingList() {
 
   const parentEl = useRef(null);
   const btnToggle = useRef(null);
+
+  // userItemsValue state (when updated, changes are uploaded to API)
+  const [userItemsValues, setUserItemsValues] = useState(null);
 
   // Calculate a combined list of missing ingredients
   const missingIngredients = useMemo(() => {
@@ -53,21 +56,48 @@ function ShoppingList() {
     [ingredients]
   );
 
+  // React-hook-form form setup
   const {
     register,
     handleSubmit,
     control,
     setValue,
+    getValues,
     watch,
     reset,
     formState: { errors },
   } = useForm();
 
+  // React-hook-form fieldArray setup
   const {
     fields: userItemsFields,
     append: userItemsAppend,
     remove: userItemsRemove,
   } = useFieldArray({ name: "userItems", control });
+
+  // Handle userItems array values change
+  const handleUserItemsChange = () => {
+    // Get userItems values
+    const updated = getValues("userItems");
+
+    // Update state
+    setUserItemsValues((current) => [...updated]);
+  };
+
+  // Handle userItems list upload when userItemsValues changes
+  useEffect(() => {
+    // Skip the first render
+    if (!userItemsValues) return;
+
+    // Start the timer
+    const timer = setTimeout(() => {
+      // If no further changes were made, upload to API
+      console.log("upload");
+    }, 1000);
+
+    // Reset the timer if change occured
+    return () => clearTimeout(timer);
+  }, [userItemsValues]);
 
   // On form submit, automatically add new ingredient to storage
   const handleCreateTemplateSubmit = (ingredient) => {
@@ -131,7 +161,6 @@ function ShoppingList() {
   //TODO: Optimize in the future. It shouldn't run every time ingredients change.
   // Filter userItems from ingredients
   const userItems = useMemo(() => {
-    console.log("test");
     return ingredients.filter((item) => item.type === "shopping-list");
   }, [ingredients]);
 
@@ -142,8 +171,10 @@ function ShoppingList() {
 
   const onSubmit = async (data) => {
     // Get only checked items from both lists
-    const userItems = data.userItems.filter((item) => item.checkbox === true);
-    const syncItems = data.syncItems.filter((item) => item.checkbox === true);
+    const userItems =
+      data?.userItems?.filter((item) => item.checkbox === true) || [];
+    const syncItems =
+      data?.syncItems?.filter((item) => item.checkbox === true) || [];
 
     // Group items to a signle array
     const groupedItems = [...syncItems, ...userItems];
@@ -268,10 +299,14 @@ function ShoppingList() {
                   onAddNew={(query) => {
                     handleCreateTemplate(query, index);
                   }}
-                  onSuggestionClick={(id) => handleSuggestionClick(id, index)}
+                  onSuggestionClick={(id) => {
+                    handleSuggestionClick(id, index);
+                    handleUserItemsChange();
+                  }}
                   type="text"
                   data={suggestions}
                   placeholder="Nazwa"
+                  onChange={handleUserItemsChange}
                   isValid={!errors?.userItems?.at(index)?.name}
                   suggestionsWide
                 />
@@ -280,12 +315,14 @@ function ShoppingList() {
                   {...register(`userItems.${index}.amount`)}
                   className={styles["item-amount"]}
                   type="number"
+                  onChange={handleUserItemsChange}
                   isValid={true}
                 />
                 <Select
                   {...register(`userItems.${index}.unit`)}
                   className={styles["item-unit"]}
                   options={["szt.", "kg", "g", "ml"]}
+                  onChange={handleUserItemsChange}
                 />
                 <Button
                   onClick={() => userItemsRemove(index)}
