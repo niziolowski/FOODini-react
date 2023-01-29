@@ -5,6 +5,9 @@ const baseURL = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/ingredients";
 const addMultipleURL =
   "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/add_or_edit_ingredients";
 
+const updateShoppingListURL =
+  "https://x8ki-letl-twmt.n7.xano.io/api:as7xy9qf/Update-shopping-list";
+
 // Create axios instance with authorization header
 const authorize = (token) => {
   return {
@@ -29,3 +32,7 @@ export const deleteIngredient = (id) => axios.delete(`${baseURL}/${id}`);
 // Add/edit multiple ingredients
 export const createOrEditIngredients = (payload) =>
   axios.post(addMultipleURL, payload);
+
+// Update shopping-list (clear and write)
+export const updateShoppingList = (payload, token) =>
+  axios.post(updateShoppingListURL, payload, authorize(token));

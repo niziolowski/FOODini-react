@@ -12,12 +12,20 @@ import IngredientsContext from "../../contexts/ingredients";
 import InputWithSuggestions from "../UI/InputWithSuggestions/InputWithSuggestions";
 import AddCatalog from "../AddCatalog/AddCatalog";
 import { v4 as uuid } from "uuid";
+import { formatDate } from "../../utils/dates";
+import AuthContext from "../../contexts/auth";
+import { getValue } from "@testing-library/user-event/dist/utils";
 
 function ShoppingList() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
+  const { token } = useContext(AuthContext);
   const isActive = isVisible.shoppingList;
-  const { ingredients, getIngredientById, addOrEditIngredients } =
-    useContext(IngredientsContext);
+  const {
+    ingredients,
+    getIngredientById,
+    addOrEditIngredients,
+    editShoppingList,
+  } = useContext(IngredientsContext);
   const { plan, recalculatePlan } = useContext(PlanContext);
 
   // Template state
@@ -78,7 +86,7 @@ function ShoppingList() {
   // Handle userItems array values change
   const handleUserItemsChange = () => {
     // Get userItems values
-    const updated = getValues("userItems");
+    const updated = watch("userItems");
 
     // Update state
     setUserItemsValues((current) => [...updated]);
@@ -88,12 +96,44 @@ function ShoppingList() {
   useEffect(() => {
     // Skip the first render
     if (!userItemsValues) return;
-
     // Start the timer
-    const timer = setTimeout(() => {
+    const timer = setTimeout(async () => {
       // If no further changes were made, upload to API
-      console.log("upload");
-    }, 1000);
+
+      // Get ingredient templates
+      const templates = ingredients.filter((ing) => ing.type === "template");
+
+      // Create payload object
+      const payload = userItemsValues.map((item) => {
+        // Find template for current item
+        const template = templates.find(
+          (template) => template.name === item.name
+        );
+        if (!template) return null;
+        // Create ingredient object
+        return {
+          ...template,
+          id: 0,
+          app_id: uuid(),
+          purchase_date: formatDate(new Date()),
+          created_at: new Date().getTime(),
+          type: "shopping-list",
+          amount: +item.amount,
+          unit: item.unit,
+        };
+      });
+
+      // Fitler out null items
+      const filteredPayload = payload.filter((item) => item !== null);
+      console.log(...filteredPayload);
+
+      // Update Shopping-List items
+      try {
+        await editShoppingList(filteredPayload, token);
+      } catch (error) {
+        console.error(error);
+      }
+    }, 3000);
 
     // Reset the timer if change occured
     return () => clearTimeout(timer);
@@ -193,8 +233,8 @@ function ShoppingList() {
         ...template,
         id: 0,
         app_id: uuid(),
-        purchase_date: new Date(),
-        created_at: new Date(),
+        purchase_date: formatDate(new Date()),
+        created_at: new Date().getTime(),
         type: "storage",
         amount: +item.amount,
         unit: item.unit,
@@ -306,7 +346,10 @@ function ShoppingList() {
                   type="text"
                   data={suggestions}
                   placeholder="Nazwa"
-                  onChange={handleUserItemsChange}
+                  onChange={(e) => {
+                    setValue(`userItems.${index}.name`, e.target.value);
+                    handleUserItemsChange();
+                  }}
                   isValid={!errors?.userItems?.at(index)?.name}
                   suggestionsWide
                 />
@@ -315,17 +358,26 @@ function ShoppingList() {
                   {...register(`userItems.${index}.amount`)}
                   className={styles["item-amount"]}
                   type="number"
-                  onChange={handleUserItemsChange}
+                  onChange={(e) => {
+                    setValue(`userItems.${index}.amount`, e.target.value);
+                    handleUserItemsChange();
+                  }}
                   isValid={true}
                 />
                 <Select
                   {...register(`userItems.${index}.unit`)}
                   className={styles["item-unit"]}
                   options={["szt.", "kg", "g", "ml"]}
-                  onChange={handleUserItemsChange}
+                  onChange={(e) => {
+                    setValue(`userItems.${index}.unit`, e.target.value);
+                    handleUserItemsChange();
+                  }}
                 />
                 <Button
-                  onClick={() => userItemsRemove(index)}
+                  onClick={() => {
+                    userItemsRemove(index);
+                    handleUserItemsChange();
+                  }}
                   type="button"
                   doubleAction
                   round
