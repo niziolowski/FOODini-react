@@ -14,18 +14,13 @@ import AddCatalog from "../AddCatalog/AddCatalog";
 import { v4 as uuid } from "uuid";
 import { formatDate } from "../../utils/dates";
 import AuthContext from "../../contexts/auth";
-import { getValue } from "@testing-library/user-event/dist/utils";
 
 function ShoppingList() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
   const { token } = useContext(AuthContext);
   const isActive = isVisible.shoppingList;
-  const {
-    ingredients,
-    getIngredientById,
-    addOrEditIngredients,
-    editShoppingList,
-  } = useContext(IngredientsContext);
+  const { ingredients, getIngredientById, moveToStorage, editShoppingList } =
+    useContext(IngredientsContext);
   const { plan, recalculatePlan } = useContext(PlanContext);
 
   // Template state
@@ -125,7 +120,6 @@ function ShoppingList() {
 
       // Fitler out null items
       const filteredPayload = payload.filter((item) => item !== null);
-      console.log(...filteredPayload);
 
       // Update Shopping-List items
       try {
@@ -240,15 +234,39 @@ function ShoppingList() {
         unit: item.unit,
       };
     });
+    // Filter remaining userItems
+    const updatedShoppingList =
+      data?.userItems?.filter((item) => item.checkbox === false) || [];
+
+    // Add to payload
+    payload.push(
+      ...updatedShoppingList.map((item) => {
+        const template = templates.find(
+          (template) => template.name === item.name
+        );
+
+        return {
+          ...template,
+          id: 0,
+          app_id: uuid(),
+          purchase_date: formatDate(new Date()),
+          created_at: new Date().getTime(),
+          type: "shopping-list",
+          amount: +item.amount,
+          unit: item.unit,
+        };
+      })
+    );
+
     // Upload ingredients
     try {
-      const updatedIngredients = await addOrEditIngredients(payload);
+      const updatedIngredients = await moveToStorage(payload, token);
 
       const updatedStorage = updatedIngredients.filter(
         (ing) => ing.type === "storage"
       );
+
       recalculatePlan(null, updatedStorage);
-      // Remove added ingredients from userItems list
     } catch (error) {
       console.error(error);
     }
