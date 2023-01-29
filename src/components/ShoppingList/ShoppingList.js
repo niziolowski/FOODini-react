@@ -362,6 +362,7 @@ function ShoppingList() {
                   {...register(`userItems.${index}.name`, {
                     required: "Wybierz składnik",
                   })}
+                  className={styles["item-name"]}
                   query={watch(`userItems.${index}.name`)}
                   onAddNew={(query) => {
                     handleCreateTemplate(query, index);

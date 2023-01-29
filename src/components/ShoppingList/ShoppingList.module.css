@@ -5,7 +5,7 @@
   top: 0;
   right: 0;
   translate: 102%;
-  width: 350px;
+  width: 400px;
   height: 100%;
   border-left: 1px solid var(--grey-color);
   backdrop-filter: blur(10px);
@@ -103,6 +103,7 @@
 .item {
   position: relative;
   display: flex;
+  justify-content: stretch;
   align-items: center;
   border-bottom: var(--border);
 }
@@ -126,15 +127,15 @@
 }
 
 .item-name {
-  flex: 1 1 auto;
+  flex: 1 0 auto;
 }
 
 .item-amount {
-  flex: 1 0 60px;
+  flex: 0 0 60px;
 }
 
 .item-unit {
-  flex: 1 0 50px;
+  flex: 0 0 50px;
 }
 
 /* § MOBILE */
