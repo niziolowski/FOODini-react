@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FiEdit, FiSearch, FiX } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout";
-import StorageItem from "../StorageList/StorageItem/StorageItem";
+import RecipeItem from "../RecipeList/RecipeItem/RecipeItem";
 import Button from "../UI/Button/Button";
 
 import styles from "./Spotlight.module.css";
@@ -74,15 +74,9 @@ function Spotlight({
     if (e.key === "Escape") onClose();
   };
 
-  const handleSuggestionClick = (e) => {
-    // Get item id
-    const id = +e.target.closest("li").dataset.id;
-
-    // Get type (if undefined, then return 'recipe')
-    const type = e.target.closest("li").dataset.type || "recipe";
-
+  const handleSuggestionClick = (item) => {
     // Pass id UP using prop
-    onSuggestionClick(id, type);
+    onSuggestionClick(item.id, item.type || "recipe");
   };
 
   const handleAddClick = () => {
@@ -101,15 +95,16 @@ function Spotlight({
   const suggestions = (
     <ul ref={suggestionsEl} className={styles["suggestion-list"]}>
       {filteredData.map((item) => {
-        return (
-          <StorageItem
-            onClick={handleSuggestionClick}
-            key={item.id}
-            item={item}
-            data-id={item.id}
-            data-type={item.type}
-          />
-        );
+        // If recipe
+        if (item.ingredients) {
+          return (
+            <RecipeItem
+              onPreview={handleSuggestionClick}
+              key={item.id}
+              item={item}
+            />
+          );
+        }
       })}
 
       {!readOnly && (
