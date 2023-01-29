@@ -75,7 +75,6 @@ function ShoppingList() {
     handleSubmit,
     control,
     setValue,
-    getValues,
     watch,
     reset,
     formState: { errors },
@@ -274,7 +273,9 @@ function ShoppingList() {
     setTimer(timer);
     // Reset the timer if change occured
     return () => clearTimeout(timer);
-  }, [userItemsValues]);
+    //TODO: refactor later. Move the templates out of the useEffect function. I can't add ingredients to dependency list because it will cause unnecessary execution.
+    // eslint-disable-next-line
+  }, [userItemsValues, editShoppingList, token]);
 
   // When userItems change, update form values
   useEffect(() => {

@@ -95,16 +95,13 @@ function Spotlight({
   const suggestions = (
     <ul ref={suggestionsEl} className={styles["suggestion-list"]}>
       {filteredData.map((item) => {
-        // If recipe
-        if (item.ingredients) {
-          return (
-            <RecipeItem
-              onPreview={handleSuggestionClick}
-              key={item.id}
-              item={item}
-            />
-          );
-        }
+        return (
+          <RecipeItem
+            onPreview={handleSuggestionClick}
+            key={item.id}
+            item={item}
+          />
+        );
       })}
 
       {!readOnly && (
