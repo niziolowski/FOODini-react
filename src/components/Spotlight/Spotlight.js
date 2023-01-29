@@ -2,12 +2,18 @@ import { useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FiEdit, FiSearch, FiX } from "react-icons/fi";
 import LayoutContext from "../../contexts/layout";
-import StorageItem from "../StorageList/StorageItem/StorageItem";
+import RecipeItem from "../RecipeList/RecipeItem/RecipeItem";
 import Button from "../UI/Button/Button";
 
 import styles from "./Spotlight.module.css";
 
-function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
+function Spotlight({
+  data,
+  onClose,
+  onAddNew,
+  onSuggestionClick,
+  readOnly = false,
+}) {
   const { isMobile } = useContext(LayoutContext);
   const root = document.getElementById("modal");
   // Suggestions
@@ -16,6 +22,7 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [query, setQuery] = useState("");
   const suggestionsEl = useRef();
+
   // Handle input change
   const handleChange = (e) => {
     // Get value
@@ -67,15 +74,9 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
     if (e.key === "Escape") onClose();
   };
 
-  const handleSuggestionClick = (e) => {
-    // Get item id
-    const id = +e.target.closest("li").dataset.id;
-
-    // Get type (if undefined, then return 'recipe')
-    const type = e.target.closest("li").dataset.type || "recipe";
-
+  const handleSuggestionClick = (item) => {
     // Pass id UP using prop
-    onSuggestionClick(id, type);
+    onSuggestionClick(item.id, item.type || "recipe");
   };
 
   const handleAddClick = () => {
@@ -95,19 +96,19 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
     <ul ref={suggestionsEl} className={styles["suggestion-list"]}>
       {filteredData.map((item) => {
         return (
-          <StorageItem
-            onClick={handleSuggestionClick}
+          <RecipeItem
+            onPreview={handleSuggestionClick}
             key={item.id}
             item={item}
-            data-id={item.id}
-            data-type={item.type}
           />
         );
       })}
 
-      <li onClick={handleAddClick} className={styles["btn-add"]}>
-        Stwórz nowy produkt <FiEdit />
-      </li>
+      {!readOnly && (
+        <li onClick={handleAddClick} className={styles["btn-add"]}>
+          Stwórz nowy produkt <FiEdit />
+        </li>
+      )}
     </ul>
   );
 
@@ -121,7 +122,7 @@ function Spotlight({ data, onClose, onAddNew, onSuggestionClick }) {
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             autoFocus
-            placeholder="Wpisz nazwę składnika"
+            placeholder="Szukaj"
           ></input>
           {isMobile && (
             <Button onClick={onClose} round mini>

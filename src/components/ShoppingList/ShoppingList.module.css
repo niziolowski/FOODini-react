@@ -5,7 +5,7 @@
   top: 0;
   right: 0;
   translate: 102%;
-  width: 350px;
+  width: 400px;
   height: 100%;
   border-left: 1px solid var(--grey-color);
   backdrop-filter: blur(10px);
@@ -35,6 +35,7 @@
   left: 0;
   translate: -100%;
   transition: var(--transition);
+  box-shadow: var(--shadow);
 }
 
 .shopping-list.active {
@@ -74,16 +75,20 @@
 }
 
 .btn-submit {
-  position: fixed;
-  bottom: 15px;
+  position: relative;
+  margin-top: auto;
   left: 50%;
   translate: -50%;
+  margin: 5% 0;
   width: 90%;
 }
 
 /* FORM */
 .form {
   padding: 0 15px;
+  overflow: hidden;
+  overflow-y: scroll;
+  flex: 1;
 }
 
 .form h2 {
@@ -99,6 +104,7 @@
 .item {
   position: relative;
   display: flex;
+  justify-content: stretch;
   align-items: center;
   border-bottom: var(--border);
 }
@@ -122,15 +128,15 @@
 }
 
 .item-name {
-  flex: 1 1 auto;
+  flex: 1 0 auto;
 }
 
 .item-amount {
-  flex: 1 0 60px;
+  flex: 0 0 60px;
 }
 
 .item-unit {
-  flex: 1 0 50px;
+  flex: 0 0 50px;
 }
 
 /* § MOBILE */

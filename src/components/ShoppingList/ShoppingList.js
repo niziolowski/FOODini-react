@@ -12,21 +12,30 @@ import IngredientsContext from "../../contexts/ingredients";
 import InputWithSuggestions from "../UI/InputWithSuggestions/InputWithSuggestions";
 import AddCatalog from "../AddCatalog/AddCatalog";
 import { v4 as uuid } from "uuid";
+import { formatDate } from "../../utils/dates";
+import AuthContext from "../../contexts/auth";
 
 function ShoppingList() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
-  const { ingredients, getIngredientById, addOrEditIngredients } =
+  const { token } = useContext(AuthContext);
+  const isActive = isVisible.shoppingList;
+  const { ingredients, getIngredientById, moveToStorage, editShoppingList } =
     useContext(IngredientsContext);
   const { plan, recalculatePlan } = useContext(PlanContext);
-  const isActive = isVisible.shoppingList;
 
-  // Add Template state
+  // Template state
   const [isCatalogForm, setIsCatalogForm] = useState(false);
   const [catalogFormData, setCatalogFormData] = useState(null);
   const [ingredientIndex, setIngredientIndex] = useState(0); // reference for filling the form on suggestion click
 
   const parentEl = useRef(null);
   const btnToggle = useRef(null);
+
+  // userItemsValue state (when updated, changes are uploaded to API)
+  const [userItemsValues, setUserItemsValues] = useState(null);
+
+  // timeOut function for scheduling userItems update
+  const [timer, setTimer] = useState(null);
 
   // Calculate a combined list of missing ingredients
   const missingIngredients = useMemo(() => {
@@ -53,20 +62,39 @@ function ShoppingList() {
     [ingredients]
   );
 
+  //TODO: Optimize in the future. It shouldn't run every time ingredients change.
+  // Filter userItems from ingredients
+  const userItems = useMemo(
+    () => ingredients.filter((item) => item.type === "shopping-list"),
+    [ingredients]
+  );
+
+  // React-hook-form form setup
   const {
     register,
     handleSubmit,
     control,
     setValue,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
+  // React-hook-form fieldArray setup
   const {
     fields: userItemsFields,
     append: userItemsAppend,
     remove: userItemsRemove,
   } = useFieldArray({ name: "userItems", control });
+
+  // Handle userItems array values change
+  const handleUserItemsChange = () => {
+    // Get userItems values
+    const updated = watch("userItems");
+
+    // Update state
+    setUserItemsValues((current) => [...updated]);
+  };
 
   // On form submit, automatically add new ingredient to storage
   const handleCreateTemplateSubmit = (ingredient) => {
@@ -128,12 +156,18 @@ function ShoppingList() {
   );
 
   const onSubmit = async (data) => {
+    // If there was a shoppingList update scheduled, cancel it to avoid bugs.
+    clearTimeout(timer);
+
     // Get only checked items from both lists
-    const userItems = data.userItems.filter((item) => item.checkbox === true);
-    const syncItems = data.syncItems.filter((item) => item.checkbox === true);
+    const userItems =
+      data?.userItems?.filter((item) => item.checkbox === true) || [];
+    const syncItems =
+      data?.syncItems?.filter((item) => item.checkbox === true) || [];
 
     // Group items to a signle array
     const groupedItems = [...syncItems, ...userItems];
+    if (groupedItems.length === 0) return;
 
     // Combine the same items into a single item
     const combinedItems = combineIngredientsByName(groupedItems);
@@ -148,27 +182,105 @@ function ShoppingList() {
         ...template,
         id: 0,
         app_id: uuid(),
-        purchase_date: new Date(),
-        created_at: new Date(),
+        purchase_date: formatDate(new Date()),
+        created_at: new Date().getTime(),
         type: "storage",
-        amount: item.amount,
+        amount: +item.amount,
         unit: item.unit,
       };
     });
+    // Filter remaining userItems
+    const updatedShoppingList =
+      data?.userItems?.filter((item) => item.checkbox === false) || [];
+
+    // Add to payload
+    payload.push(
+      ...updatedShoppingList.map((item) => {
+        const template = templates.find(
+          (template) => template.name === item.name
+        );
+
+        return {
+          ...template,
+          id: 0,
+          app_id: uuid(),
+          purchase_date: formatDate(new Date()),
+          created_at: new Date().getTime(),
+          type: "shopping-list",
+          amount: +item.amount,
+          unit: item.unit,
+        };
+      })
+    );
+
     // Upload ingredients
     try {
-      // !Create API call for adding/editing/deleting ingredients (best solution). use it to crreate payload that updates userItems and storage at the same time
-      const updatedIngredients = await addOrEditIngredients(payload);
+      const updatedIngredients = await moveToStorage(payload, token);
 
       const updatedStorage = updatedIngredients.filter(
         (ing) => ing.type === "storage"
       );
+
       recalculatePlan(null, updatedStorage);
-      // Remove added ingredients from userItems list
     } catch (error) {
       console.error(error);
     }
   };
+
+  // Handle userItems list upload when userItemsValues changes
+  useEffect(() => {
+    // Skip the first render
+    if (!userItemsValues) return;
+    // Start the timer
+    const timer = setTimeout(async () => {
+      // If no further changes were made, upload to API
+
+      // Get ingredient templates
+      const templates = ingredients.filter((ing) => ing.type === "template");
+
+      // Create payload object
+      const payload = userItemsValues.map((item) => {
+        // Find template for current item
+        const template = templates.find(
+          (template) => template.name === item.name
+        );
+        if (!template) return null;
+        // Create ingredient object
+        return {
+          ...template,
+          id: 0,
+          app_id: uuid(),
+          purchase_date: formatDate(new Date()),
+          created_at: new Date().getTime(),
+          type: "shopping-list",
+          amount: +item.amount,
+          unit: item.unit,
+        };
+      });
+
+      // Fitler out null items
+      const filteredPayload = payload.filter((item) => item !== null);
+
+      // Update Shopping-List items
+      try {
+        await editShoppingList(filteredPayload, token);
+      } catch (error) {
+        console.error(error);
+      }
+    }, 3000);
+
+    // Save timer variable for reference in onSubmit function
+    setTimer(timer);
+    // Reset the timer if change occured
+    return () => clearTimeout(timer);
+    //TODO: refactor later. Move the templates out of the useEffect function. I can't add ingredients to dependency list because it will cause unnecessary execution.
+    // eslint-disable-next-line
+  }, [userItemsValues, editShoppingList, token]);
+
+  // When userItems change, update form values
+  useEffect(() => {
+    reset({ userItems: userItems });
+  }, [userItems, reset]);
 
   // Update sync values on missingIngredients change
   useEffect(() => {
@@ -219,21 +331,18 @@ function ShoppingList() {
                   className={styles["item-name"]}
                   type="text"
                   disabled={true}
-                  value={ing.name}
                   isValid={true}
                 />
                 <Input
                   {...register(`syncItems.${index}.amount`)}
                   className={styles["item-amount"]}
                   type="number"
-                  value={ing.amount}
                   isValid={true}
                 />
                 <Select
                   {...register(`syncItems.${index}.unit`)}
                   className={styles["item-unit"]}
                   disabled={true}
-                  value={ing.unit}
                   options={["szt.", "kg", "g", "ml"]}
                 />
               </div>
@@ -254,14 +363,22 @@ function ShoppingList() {
                   {...register(`userItems.${index}.name`, {
                     required: "Wybierz składnik",
                   })}
+                  className={styles["item-name"]}
                   query={watch(`userItems.${index}.name`)}
                   onAddNew={(query) => {
                     handleCreateTemplate(query, index);
                   }}
-                  onSuggestionClick={(id) => handleSuggestionClick(id, index)}
+                  onSuggestionClick={(id) => {
+                    handleSuggestionClick(id, index);
+                    handleUserItemsChange();
+                  }}
                   type="text"
                   data={suggestions}
                   placeholder="Nazwa"
+                  onChange={(e) => {
+                    setValue(`userItems.${index}.name`, e.target.value);
+                    handleUserItemsChange();
+                  }}
                   isValid={!errors?.userItems?.at(index)?.name}
                   suggestionsWide
                 />
@@ -270,15 +387,26 @@ function ShoppingList() {
                   {...register(`userItems.${index}.amount`)}
                   className={styles["item-amount"]}
                   type="number"
+                  onChange={(e) => {
+                    setValue(`userItems.${index}.amount`, e.target.value);
+                    handleUserItemsChange();
+                  }}
                   isValid={true}
                 />
                 <Select
                   {...register(`userItems.${index}.unit`)}
                   className={styles["item-unit"]}
                   options={["szt.", "kg", "g", "ml"]}
+                  onChange={(e) => {
+                    setValue(`userItems.${index}.unit`, e.target.value);
+                    handleUserItemsChange();
+                  }}
                 />
                 <Button
-                  onClick={() => userItemsRemove(index)}
+                  onClick={() => {
+                    userItemsRemove(index);
+                    handleUserItemsChange();
+                  }}
                   type="button"
                   doubleAction
                   round
@@ -298,10 +426,14 @@ function ShoppingList() {
               <FiPlus /> Dodaj
             </button>
           </ul>
-          <Button className={styles["btn-submit"]} primary>
-            Przenieś zakupy do spiżarni
-          </Button>
         </form>
+        <Button
+          form="shopping-list-form"
+          className={styles["btn-submit"]}
+          primary
+        >
+          Przenieś zakupy do spiżarni
+        </Button>
       </aside>
       {isCatalogForm && (
         <AddCatalog

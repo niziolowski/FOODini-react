@@ -5,7 +5,15 @@ import { FiEdit } from "react-icons/fi";
 
 const InputWithSuggestions = React.forwardRef(
   (
-    { query, data, onAddNew, onSuggestionClick, suggestionsWide, ...rest },
+    {
+      query,
+      data,
+      onAddNew,
+      onSuggestionClick,
+      suggestionsWide,
+      className,
+      ...rest
+    },
     ref
   ) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -124,7 +132,7 @@ const InputWithSuggestions = React.forwardRef(
     );
 
     return (
-      <div className={styles.content} ref={parentEl}>
+      <div className={`${styles.content} ${className}`} ref={parentEl}>
         <Input
           className={styles.input}
           onKeyDown={handleKeyDown}

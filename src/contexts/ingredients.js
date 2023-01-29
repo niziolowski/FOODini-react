@@ -5,6 +5,8 @@ import {
   updateIngredient,
   deleteIngredient,
   createOrEditIngredients,
+  updateShoppingList,
+  refillStorage,
 } from "../apis/ingredients";
 import { v4 as uuid } from "uuid";
 import AuthContext from "./auth";
@@ -78,7 +80,7 @@ export const IngredientsContextProvider = ({ children }) => {
    * If item has id, update, if not, create new record
    * @param {Array} payload Array of ingredients
    */
-  const addOrEditIngredients = async (payload) => {
+  const addOrEditIngredients = async (payload, token) => {
     const { id } = JSON.parse(localStorage.getItem("user"));
 
     const updatedPayload = payload.map((ing) => {
@@ -87,10 +89,62 @@ export const IngredientsContextProvider = ({ children }) => {
     });
 
     try {
-      const res = await createOrEditIngredients({ payload: updatedPayload });
+      const res = await createOrEditIngredients(
+        { payload: updatedPayload },
+        token
+      );
       if (res.status === 200) {
         // Update State
-        setIngredients((current) => [...current, ...res.data]);
+        setIngredients((current) => [...res.data]);
+
+        return res.data;
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
+
+  const moveToStorage = async (payload, token) => {
+    const { id } = JSON.parse(localStorage.getItem("user"));
+
+    const updatedPayload = payload.map((ing) => {
+      const appId = uuid();
+      return { ...ing, users_id: id, app_id: ing.app_id || appId };
+    });
+
+    try {
+      const res = await refillStorage({ payload: updatedPayload }, token);
+
+      if (res.status === 200) {
+        // Update State
+        setIngredients((current) => [...res.data]);
+
+        return res.data;
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error);
+    }
+  };
+
+  /**
+   * Delete all user's items of type "shopping-list" then add new records from payload
+   * @param {Array} payload Array of ingredients
+   */
+  const editShoppingList = async (payload, token) => {
+    const { id } = JSON.parse(localStorage.getItem("user"));
+
+    const updatedPayload = payload.map((ing) => {
+      const appId = uuid();
+      return { ...ing, users_id: id, app_id: ing.app_id || appId };
+    });
+
+    try {
+      const res = await updateShoppingList({ payload: updatedPayload }, token);
+      if (res.status === 200) {
+        // Update State
+        setIngredients((current) => [...res.data]);
 
         return res.data;
       }
@@ -124,6 +178,8 @@ export const IngredientsContextProvider = ({ children }) => {
     removeIngredient,
     getIngredientById,
     addOrEditIngredients,
+    editShoppingList,
+    moveToStorage,
   };
 
   return (
