@@ -173,6 +173,7 @@ function Plan() {
             data={[...recipes]}
             onClose={toggleSpotlight}
             onSuggestionClick={handleSuggestionClick}
+            readOnly
           />
         )}
       </div>
