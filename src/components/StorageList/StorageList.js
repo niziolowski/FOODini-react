@@ -46,6 +46,10 @@ function StorageList() {
   // On form submit, automatically add new ingredient to storage
   //? Maybe first pass data to storage form for purchase_date edit?
   const handleCreateTemplateSubmit = async (template) => {
+    // Cancel window
+    if (!template) return setIsCatalogForm(false);
+
+    // Add template
     try {
       if (template) {
         const newIngredient = {
