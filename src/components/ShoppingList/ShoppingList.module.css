@@ -145,6 +145,8 @@
   width: 100%;
   height: calc(100vh - var(--mobile-nav-bar-size));
   transition: 0s;
+  backdrop-filter: none;
+  background-color: var(--bg-color);
 }
 
 .shopping-list.mobile .header {

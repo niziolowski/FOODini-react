@@ -60,7 +60,6 @@
 }
 
 body {
-  /* This is for mobile devices, to disable scrolling effect that shifts the entire app */
   position: fixed;
   background-color: black;
   height: 100%;
