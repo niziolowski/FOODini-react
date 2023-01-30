@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import styles from "./Settings.module.css";
 import Button from "../UI/Button/Button";
 import { FiX } from "react-icons/fi";
+import ThemeEditor from "../ThemeEditor/ThemeEditor";
 
 function Settings() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
@@ -13,29 +14,20 @@ function Settings() {
     dispatchIsVisible({ type: "settings", mode: "toggle" });
   }
 
-  function handleCatalog() {
-    dispatchIsVisible({ type: "catalog", mode: "toggle" });
-    dispatchIsVisible({ type: "settings", mode: "toggle" });
-  }
-
   const root = document.getElementById("modal");
   const content = (
     <>
       {!isMobile && <div onClick={handleClose} id="backdrop"></div>}
       <div className={`${styles.settings} ${isMobile ? styles.mobile : " "}`}>
+        <ThemeEditor />
         <header className={styles.header}>
-          <h1>USTAWIENIA</h1>
-          {!isMobile && (
-            <Button onClick={handleClose} round>
-              <FiX />
-            </Button>
-          )}
-        </header>
-        <div className={styles.content}>
-          <Button onClick={handleCatalog} primary disabled={isMobile}>
-            Katalog produktów
+          <h1>Wygląd</h1>
+
+          <Button onClick={handleClose} round>
+            <FiX />
           </Button>
-        </div>
+        </header>
+        <div className={styles.content}></div>
       </div>
     </>
   );

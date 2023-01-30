@@ -18,6 +18,10 @@ function Profile({ onClose }) {
     dispatchIsVisible({ type: "catalog", mode: "switch" });
   };
 
+  const handleSettings = () => {
+    dispatchIsVisible({ type: "settings", mode: "switch" });
+  };
+
   // Close panel on mouseleave
   useEffect(() => {
     const handleClose = (e) => {
@@ -47,7 +51,7 @@ function Profile({ onClose }) {
           <h1>{name}</h1>
           <p>{email}</p>
         </div>
-        <Button primary wide outline>
+        <Button onClick={handleSettings} primary wide outline>
           Wygląd
         </Button>
         <Button
