@@ -7,7 +7,7 @@
   height: 100%;
   grid-row: 1/5;
   grid-column: 1/2;
-  background-color: #fff;
+  background-color: #ffffff;
   box-shadow: var(--shadow);
   border-radius: 15px;
   transform-origin: top right;
@@ -19,10 +19,14 @@
 .content input[type="color"] {
   -webkit-appearance: none;
   border: none;
+  border-top: var(--border);
+  border-bottom: var(--border);
 }
+
 .content input[type="color"]::-webkit-color-swatch-wrapper {
   padding: 0;
 }
+
 .content input[type="color"]::-webkit-color-swatch {
   border: none;
 }

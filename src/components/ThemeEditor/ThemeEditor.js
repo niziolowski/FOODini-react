@@ -1,5 +1,35 @@
+import { useEffect, useState } from "react";
+import { defaultColorTheme } from "../../utils/colorTheme";
 import styles from "./ThemeEditor.module.css";
 function ThemeEditor() {
+  // Color Theme state
+  const [colorTheme, setColorTheme] = useState(
+    localStorage.getItem("colorTheme") || defaultColorTheme()
+  );
+
+  const handleInputChange = (e) => {
+    // Get property name
+    const property = e.target.dataset.color;
+    // Get value
+    const value = e.target.value;
+    // Get object to update
+    const target = colorTheme.find((item) => item.property === property);
+    // Get index of the object to update
+    const index = colorTheme.indexOf(target);
+    // Create updated object
+    const updatedObject = { ...target, value };
+
+    // Update state
+    setColorTheme((current) => [
+      ...current.slice(0, index),
+      updatedObject,
+      ...current.slice(index + 1),
+    ]);
+
+    // Update localStorage
+    // Update root
+  };
+
   return (
     <div className={styles.content}>
       <div className={styles.bolt}></div>
@@ -10,84 +40,22 @@ function ThemeEditor() {
         <br />
         RY
       </div>
-      <div className={styles.swatch}>
-        <input
-          id="swatch-bg"
-          data-color="--bg-color"
-          className={styles["swatch-preview"]}
-          type="color"
-          value="#eeeeee"
-        ></input>
-        <div className={styles["swatch-label"]}>
-          <div className={styles["label-target"]}>Tło</div>
-          <div className={styles["label-value"]}>#eeeeee</div>
+      {colorTheme.map((color) => (
+        <div key={color.label} className={styles.swatch}>
+          <input
+            id="swatch-bg"
+            data-color={color.property}
+            className={styles["swatch-preview"]}
+            type="color"
+            onChange={handleInputChange}
+            value={color.value}
+          ></input>
+          <div className={styles["swatch-label"]}>
+            <div className={styles["label-target"]}>{color.label}</div>
+            <div className={styles["label-value"]}>{color.value}</div>
+          </div>
         </div>
-      </div>
-      <div className={styles.swatch}>
-        <input
-          id="swatch-accent"
-          data-color="--accent-color"
-          className={styles["swatch-preview"]}
-          type="color"
-          value="#333333"
-        ></input>
-        <div className={styles["swatch-label"]}>
-          <div className={styles["label-target"]}>Akcent</div>
-          <div className={styles["label-value"]}>#333333</div>
-        </div>
-      </div>
-      <div className={styles.swatch}>
-        <input
-          id="swatch-font"
-          data-color="--font-color"
-          className={styles["swatch-preview"]}
-          type="color"
-          value="#333333"
-        ></input>
-        <div className={styles["swatch-label"]}>
-          <div className={styles["label-target"]}>Tekst</div>
-          <div className={styles["label-value"]}>#eeeeee</div>
-        </div>
-      </div>
-      <div className={styles.swatch}>
-        <input
-          id="swatch-tag-1"
-          data-color="--tag-0-color"
-          className={styles["swatch-preview"]}
-          type="color"
-          value="#eeeeee"
-        ></input>
-        <div className={styles["swatch-label"]}>
-          <div className={styles["label-target"]}>Tag1</div>
-          <div className={styles["label-value"]}>#eeeeee</div>
-        </div>
-      </div>
-      <div className={styles.swatch}>
-        <input
-          id="swatch-tag-2"
-          data-color="--tag-1-color"
-          className={styles["swatch-preview"]}
-          type="color"
-          value="#eeeeee"
-        ></input>
-        <div className={styles["swatch-label"]}>
-          <div className={styles["label-target"]}>Tag2</div>
-          <div className={styles["label-value"]}>#eeeeee</div>
-        </div>
-      </div>
-      <div className={styles.swatch}>
-        <input
-          id="swatch-tag-3"
-          data-color="--tag-2-color"
-          className={styles["swatch-preview"]}
-          type="color"
-          value="#eeeeee"
-        ></input>
-        <div className={styles["swatch-label"]}>
-          <div className={styles["label-target"]}>Tag3</div>
-          <div className={styles["label-value"]}>#eeeeee</div>
-        </div>
-      </div>
+      ))}
     </div>
   );
 }
