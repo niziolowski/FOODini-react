@@ -150,6 +150,7 @@ Project Link: https://github.com/niziolowski/FOODini-react
 - [React Icons](https://react-icons.github.io/react-icons/search) - easy to use icons
 - [Swiper.js](https://swiperjs.com/react) - library for swipe events
 - [UUID](https://www.uuidgenerator.net/) - id generator
+- [Axios](https://axios-http.com/docs/intro) - Promise based HTTP client
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
