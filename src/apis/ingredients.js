@@ -1,14 +1,12 @@
 import axios from "axios";
 
-//! Move to env
-const baseURL = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/ingredients";
-const addMultipleURL =
-  "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/add_or_edit_ingredients";
-
+// API URL's
+const baseURL = process.env.REACT_APP_API_INGREDIENTS_URL;
+const addOrEditIngredientsURL =
+  process.env.REACT_APP_API_ADD_OR_EDIT_INGREDIENTS;
 const updateShoppingListURL =
-  "https://x8ki-letl-twmt.n7.xano.io/api:as7xy9qf/Update-shopping-list";
-const refillStorageURL =
-  "https://x8ki-letl-twmt.n7.xano.io/api:as7xy9qf/refill-storage";
+  process.env.REACT_APP_API_UPDATE_SHOPPING_LIST_URL;
+const refillStorageURL = process.env.REACT_APP_API_REFILL_STORAGE_URL;
 // Create axios instance with authorization header
 const authorize = (token) => {
   return {
@@ -32,7 +30,7 @@ export const deleteIngredient = (id) => axios.delete(`${baseURL}/${id}`);
 
 // Add/edit multiple ingredients
 export const createOrEditIngredients = (payload, token) =>
-  axios.post(addMultipleURL, payload, authorize(token));
+  axios.post(addOrEditIngredientsURL, payload, authorize(token));
 
 // Update shopping-list (clear and write)
 export const updateShoppingList = (payload, token) =>

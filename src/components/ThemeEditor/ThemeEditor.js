@@ -6,6 +6,7 @@ import {
   saveColorTheme,
 } from "../../utils/colorTheme";
 import styles from "./ThemeEditor.module.css";
+
 function ThemeEditor() {
   // Color Theme state
   const [colorTheme, setColorTheme] = useState(
