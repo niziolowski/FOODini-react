@@ -24,6 +24,7 @@ export const PlanContextProvider = ({ children }) => {
   const [plan, setPlan] = useState(null);
   const [currentWeek, setCurrentWeek] = useState(null);
   const [activeWeek, setActiveWeek] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Create a new Week from a given date
   const addWeek = async (dateString) => {
@@ -186,6 +187,7 @@ export const PlanContextProvider = ({ children }) => {
   useEffect(() => {
     async function fetchData() {
       try {
+        setLoading(true);
         console.log("fetching plan..."); //*: dev only line
         const response = await fetchPlan(token);
 
@@ -204,8 +206,10 @@ export const PlanContextProvider = ({ children }) => {
         // Set current week as active
         setActiveWeek(currentWeek);
 
+        setLoading(false);
         return response.data;
       } catch (error) {
+        setLoading(false);
         console.error(error);
       }
     }
@@ -234,6 +238,7 @@ export const PlanContextProvider = ({ children }) => {
     setActiveWeek,
     toggleWeekSync,
     recalculatePlan,
+    loading,
   };
   return <PlanContext.Provider value={value}>{children}</PlanContext.Provider>;
 };
