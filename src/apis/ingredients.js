@@ -3,10 +3,11 @@ import axios from "axios";
 // API URL's
 const baseURL = process.env.REACT_APP_API_INGREDIENTS_URL;
 const addOrEditIngredientsURL =
-  process.env.REACT_APP_API_ADD_OR_EDIT_INGREDIENTS;
+  process.env.REACT_APP_API_ADD_OR_EDIT_INGREDIENTS_URL;
 const updateShoppingListURL =
   process.env.REACT_APP_API_UPDATE_SHOPPING_LIST_URL;
 const refillStorageURL = process.env.REACT_APP_API_REFILL_STORAGE_URL;
+
 // Create axios instance with authorization header
 const authorize = (token) => {
   return {
