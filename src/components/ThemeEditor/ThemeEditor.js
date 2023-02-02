@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react";
-import { defaultColorTheme } from "../../utils/colorTheme";
+import { useState } from "react";
+import {
+  applyColorTheme,
+  defaultColorTheme,
+  loadColorTheme,
+  saveColorTheme,
+} from "../../utils/colorTheme";
 import styles from "./ThemeEditor.module.css";
 function ThemeEditor() {
   // Color Theme state
   const [colorTheme, setColorTheme] = useState(
-    localStorage.getItem("colorTheme") || defaultColorTheme()
+    loadColorTheme() || defaultColorTheme()
   );
 
   const handleInputChange = (e) => {
@@ -16,18 +21,24 @@ function ThemeEditor() {
     const target = colorTheme.find((item) => item.property === property);
     // Get index of the object to update
     const index = colorTheme.indexOf(target);
-    // Create updated object
+    // Create updated Object
     const updatedObject = { ...target, value };
 
-    // Update state
-    setColorTheme((current) => [
-      ...current.slice(0, index),
+    // Create updated colorTheme
+    const updatedColorTheme = [
+      ...colorTheme.slice(0, index),
       updatedObject,
-      ...current.slice(index + 1),
-    ]);
+      ...colorTheme.slice(index + 1),
+    ];
+
+    // Update state
+    setColorTheme(updatedColorTheme);
 
     // Update localStorage
-    // Update root
+    saveColorTheme(updatedColorTheme);
+
+    // Apply colorTheme
+    applyColorTheme(updatedColorTheme);
   };
 
   return (

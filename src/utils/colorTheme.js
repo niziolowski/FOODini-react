@@ -7,3 +7,21 @@ export const defaultColorTheme = () => [
   { label: "Tag2", property: "--tag-1-color", value: "#7ab4ff" },
   { label: "Tag3", property: "--tag-2-color", value: "#dd6b6b" },
 ];
+
+// Load colorTheme from localStorage
+export const loadColorTheme = () =>
+  JSON.parse(localStorage.getItem("colorTheme"));
+
+// Save colorTheme in localStorage
+export const saveColorTheme = (colorTheme) =>
+  localStorage.setItem("colorTheme", JSON.stringify(colorTheme));
+
+// Apply colorTheme to the :root element
+export const applyColorTheme = (colorTheme) => {
+  // Get Root element
+  const root = document.querySelector(":root");
+  // Update values
+  colorTheme.forEach((color) => {
+    root.style.setProperty(color.property, color.value);
+  });
+};
