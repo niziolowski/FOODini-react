@@ -1,7 +1,7 @@
 import axios from "axios";
 
-//! Move to env
-const baseURL = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/recipes";
+// API URL
+const baseURL = process.env.REACT_APP_API_RECIPES_URL;
 
 // Create axios instance with authorization header
 const authorize = (token) => {
