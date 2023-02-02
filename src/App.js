@@ -16,6 +16,7 @@ import { IngredientsContextProvider } from "./contexts/ingredients";
 import { RecipesContextProvider } from "./contexts/recipes";
 import Profile from "./components/Profile/Profile";
 import { PlanContextProvider } from "./contexts/PlanContext/index";
+import { loadColorTheme, applyColorTheme } from "./utils/colorTheme";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
@@ -23,6 +24,13 @@ function App() {
   const { isLoggedIn } = useContext(AuthContext);
 
   const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;
+
+  // If there are settings saved in localStorage, load them
+  useEffect(() => {
+    // ColorTheme
+    const colorTheme = loadColorTheme();
+    if (colorTheme) applyColorTheme(colorTheme);
+  }, []);
 
   // Hide all windows when switching to mobile view
   useEffect(() => {
