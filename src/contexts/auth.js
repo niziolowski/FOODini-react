@@ -1,8 +1,8 @@
 import { createContext, useEffect, useState } from "react";
 import { resetAccount } from "../utils/demo/api";
 
-const URL_SIGNUP = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/auth/signup";
-const URL_LOGIN = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/auth/login";
+const SIGNUP_URL = process.env.REACT_APP_API_SIGNUP_URL;
+const LOGIN_URL = process.env.REACT_APP_API_LOGIN_URL;
 
 const AuthContext = createContext();
 
@@ -40,7 +40,7 @@ export const AuthContextProvider = ({ children }) => {
 
       const body = { name, email, password };
 
-      const res = await fetch(URL_SIGNUP, {
+      const res = await fetch(SIGNUP_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +87,7 @@ export const AuthContextProvider = ({ children }) => {
 
       const body = { email, password };
 
-      const res = await fetch(URL_LOGIN, {
+      const res = await fetch(LOGIN_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -131,7 +131,6 @@ export const AuthContextProvider = ({ children }) => {
     setIsLoggedIn(false);
 
     // If DEMO user, refill database with some fake data
-    // !!!!!! Enable when the demo database is build and stored in a file
     if (email === "demo@demo.com" && true) resetAccount(token);
 
     // Remove user data from localStorage

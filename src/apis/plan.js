@@ -1,7 +1,8 @@
 import axios from "axios";
 
-//! Move to env
-const BASE_URL = "https://x8ki-letl-twmt.n7.xano.io/api:P_BSkInF/plan";
+// API URL's
+const BASE_URL = process.env.REACT_APP_API_PLAN_URL;
+const RECALCULATE_PLAN_URL = process.env.REACT_APP_API_RECALCULATE_PLAN_URL;
 
 // Create axios instance with authorization header
 const authorize = (token) => {
@@ -29,8 +30,4 @@ export const deleteWeek = (id) => axios.delete(`${BASE_URL}/${id}`);
 // CUSTOM CALLS
 
 export const uploadPlanChanges = (payload, token) =>
-  axios.post(
-    "https://x8ki-letl-twmt.n7.xano.io/api:as7xy9qf/recalculate-plan",
-    payload,
-    authorize(token)
-  );
+  axios.post(RECALCULATE_PLAN_URL, payload, authorize(token));

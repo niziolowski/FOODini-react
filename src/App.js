@@ -23,30 +23,11 @@ function App() {
   const { isLoggedIn } = useContext(AuthContext);
 
   const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;
+
   // Hide all windows when switching to mobile view
   useEffect(() => {
     dispatchIsVisible({ type: "home", mode: "switch" });
   }, [isLoggedIn, dispatchIsVisible, isMobile]);
-
-  // This is to prevent weird scrolling animation on iOS. Not ideal, can flicker sometimes
-  useEffect(() => {
-    window.addEventListener("scroll", (e) => {
-      e.preventDefault();
-      window.scrollTo(0, 0);
-    });
-  }, []);
-
-  // Fix IOS safari viewport size when keyboard shows up. Child must be 'relative' positioned
-  useEffect(() => {
-    if (window.visualViewport) {
-      function resizeHandler() {
-        const target = document.getElementById("root");
-        target.style.height = window.visualViewport.height.toString() + "px";
-      }
-
-      window.visualViewport.addEventListener("resize", resizeHandler);
-    }
-  }, []);
 
   if (!isLoggedIn) {
     return <LoginPage></LoginPage>;
@@ -75,7 +56,7 @@ function App() {
 
                 {isVisible.storage && <StorageList />}
 
-                {/* Sidebar doesn't really need context but inside there is a StoragaList and RecipeList. Think through in the future */}
+                {/* Sidebar doesn't really need context but inside it, there is StoragaList and RecipeList components. Think through in the future */}
                 <Sidebar />
                 {isVisible.recipes && <RecipeList />}
               </PlanContextProvider>

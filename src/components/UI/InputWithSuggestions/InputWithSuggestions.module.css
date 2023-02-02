@@ -21,12 +21,8 @@
   overflow-y: scroll;
   z-index: 1;
   font-size: 0.8rem;
-}
-
-.suggestion-list.wide {
+  top: 100%;
   translate: 0 -2px;
-  left: -30px;
-  width: 380px;
 }
 
 .suggestion-list li {

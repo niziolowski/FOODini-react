@@ -267,7 +267,7 @@ function ShoppingList() {
       } catch (error) {
         console.error(error);
       }
-    }, 3000);
+    }, 5000);
 
     // Save timer variable for reference in onSubmit function
     setTimer(timer);
@@ -380,7 +380,6 @@ function ShoppingList() {
                     handleUserItemsChange();
                   }}
                   isValid={!errors?.userItems?.at(index)?.name}
-                  suggestionsWide
                 />
 
                 <Input

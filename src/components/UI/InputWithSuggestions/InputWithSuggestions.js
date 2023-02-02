@@ -4,18 +4,7 @@ import styles from "./InputWithSuggestions.module.css";
 import { FiEdit } from "react-icons/fi";
 
 const InputWithSuggestions = React.forwardRef(
-  (
-    {
-      query,
-      data,
-      onAddNew,
-      onSuggestionClick,
-      suggestionsWide,
-      className,
-      ...rest
-    },
-    ref
-  ) => {
+  ({ query, data, onAddNew, onSuggestionClick, className, ...rest }, ref) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     // Reference for keyboard navigation
     const suggestionsEl = useRef();
@@ -45,14 +34,12 @@ const InputWithSuggestions = React.forwardRef(
             );
         }
       }
-
       // On 'Enter' click on selected item
       if (e.key === "Enter") {
         const target = suggestionsEl.current.children[selectedIndex];
         if (!target) return;
         target.click();
       }
-
       // On 'Tab focus out
       if (e.key === "Tab") {
         setIsFocused(false);
@@ -62,6 +49,7 @@ const InputWithSuggestions = React.forwardRef(
     const handleSuggestionClick = (e) => {
       // Get item id
       const id = +e.target.closest("li").dataset.id;
+      console.log(id);
 
       // Pass id UP using prop
       onSuggestionClick(id);
@@ -77,12 +65,15 @@ const InputWithSuggestions = React.forwardRef(
     // Hide suggestions if user clicks outside of this component
     useEffect(() => {
       const handler = (e) => {
-        if (parentEl.current && !parentEl.current.contains(e.target))
+        if (
+          parentEl.current &&
+          !parentEl.current.contains(e.target) &&
+          suggestionsEl.current &&
+          !suggestionsEl.current.contains(e.target)
+        )
           setIsFocused(false);
       };
-
       document.addEventListener("mousedown", handler);
-
       return () => {
         document.removeEventListener("mousedown", handler);
       };
@@ -94,7 +85,6 @@ const InputWithSuggestions = React.forwardRef(
       const filtered = data.filter((item) =>
         item.name.toLowerCase().includes(query.toLowerCase())
       );
-
       // Reset selected index
       setSelectedIndex(0);
       // Set filtered data
@@ -113,12 +103,7 @@ const InputWithSuggestions = React.forwardRef(
     }, [selectedIndex, filteredData, isFocused]);
 
     const suggestions = (
-      <ul
-        ref={suggestionsEl}
-        className={`${styles["suggestion-list"]} ${
-          suggestionsWide && styles.wide
-        }`}
-      >
+      <ul ref={suggestionsEl} className={styles["suggestion-list"]}>
         {filteredData.map((item) => (
           <li onClick={handleSuggestionClick} key={item.id} data-id={item.id}>
             {item.name}
@@ -132,17 +117,19 @@ const InputWithSuggestions = React.forwardRef(
     );
 
     return (
-      <div className={`${styles.content} ${className}`} ref={parentEl}>
-        <Input
-          className={styles.input}
-          onKeyDown={handleKeyDown}
-          ref={ref}
-          onFocusIn={handleFocus}
-          autoComplete="off"
-          {...rest}
-        />
+      <>
+        <div className={`${styles.content} ${className}`} ref={parentEl}>
+          <Input
+            className={styles.input}
+            onKeyDown={handleKeyDown}
+            ref={ref}
+            onFocusIn={handleFocus}
+            autoComplete="off"
+            {...rest}
+          />
+        </div>
         {isFocused && suggestions}
-      </div>
+      </>
     );
   }
 );
