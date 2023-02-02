@@ -14,10 +14,12 @@ import Spotlight from "../Spotlight/Spotlight";
 import IngredientsContext from "../../contexts/ingredients";
 import RecipesContext from "../../contexts/recipes";
 import { animate } from "../../utils/animate";
+import Spinner from "../UI/Spinner/Spinner";
 
 function Plan() {
   const { isMobile } = useContext(LayoutContext);
-  const { activeWeek, editWeek, recalculatePlan } = useContext(PlanContext);
+  const { loading, activeWeek, editWeek, recalculatePlan } =
+    useContext(PlanContext);
   const { ingredients } = useContext(IngredientsContext);
   const { recipes } = useContext(RecipesContext);
   const [isSpotlight, setIsSpotlight] = useState(false);
@@ -143,51 +145,19 @@ function Plan() {
     } catch (error) {}
   };
 
-  if (isMobile) {
-    return (
-      <div className={`${styles.wrapper} ${styles.mobile}`}>
-        <div className={styles["plan-mobile"]}>
-          <Swiper
-            className={styles.swiper}
-            spaceBetween={15}
-            slidesPerView={1}
-            onSlideChange={() => console.log("slide change")}
-            onSwiper={(swiper) => console.log(swiper)}
-          >
-            {days.map((day, i) => (
-              <SwiperSlide key={day.name}>
-                <Day
-                  title={dayNames[i]}
-                  meals={day.meals}
-                  onNewMeal={() => handleNewMeal(day.name)}
-                  onDeleteMeal={(e, mealAppID) =>
-                    handleDeleteMeal(e, mealAppID, day.name)
-                  }
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-        {isSpotlight && (
-          <Spotlight
-            data={[...recipes]}
-            onClose={toggleSpotlight}
-            onSuggestionClick={handleSuggestionClick}
-            readOnly
-          />
-        )}
-      </div>
-    );
-  }
-
-  if (!isMobile) {
-    return (
-      <div className={styles.wrapper}>
-        <div className={styles.plan}>
-          {days.map((day, i) => {
-            return (
+  const contentMobile = (
+    <div className={`${styles.wrapper} ${styles.mobile}`}>
+      <div className={styles["plan-mobile"]}>
+        <Swiper
+          className={styles.swiper}
+          spaceBetween={15}
+          slidesPerView={1}
+          onSlideChange={() => console.log("slide change")}
+          onSwiper={(swiper) => console.log(swiper)}
+        >
+          {days.map((day, i) => (
+            <SwiperSlide key={day.name}>
               <Day
-                key={day.name}
                 title={dayNames[i]}
                 meals={day.meals}
                 onNewMeal={() => handleNewMeal(day.name)}
@@ -195,19 +165,55 @@ function Plan() {
                   handleDeleteMeal(e, mealAppID, day.name)
                 }
               />
-            );
-          })}
-        </div>
-        {isSpotlight && (
-          <Spotlight
-            data={[...recipes]}
-            onClose={toggleSpotlight}
-            onSuggestionClick={handleSuggestionClick}
-            readOnly
-          />
-        )}
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
-    );
+      {isSpotlight && (
+        <Spotlight
+          data={[...recipes]}
+          onClose={toggleSpotlight}
+          onSuggestionClick={handleSuggestionClick}
+          readOnly
+        />
+      )}
+    </div>
+  );
+
+  const contentDesktop = (
+    <div className={styles.wrapper}>
+      <div className={styles.plan}>
+        {days.map((day, i) => {
+          return (
+            <Day
+              key={day.name}
+              title={dayNames[i]}
+              meals={day.meals}
+              onNewMeal={() => handleNewMeal(day.name)}
+              onDeleteMeal={(e, mealAppID) =>
+                handleDeleteMeal(e, mealAppID, day.name)
+              }
+            />
+          );
+        })}
+      </div>
+      {isSpotlight && (
+        <Spotlight
+          data={[...recipes]}
+          onClose={toggleSpotlight}
+          onSuggestionClick={handleSuggestionClick}
+          readOnly
+        />
+      )}
+    </div>
+  );
+
+  if (isMobile) {
+    return loading ? <Spinner large /> : contentMobile;
+  }
+
+  if (!isMobile) {
+    return loading ? <Spinner large /> : contentDesktop;
   }
 }
 

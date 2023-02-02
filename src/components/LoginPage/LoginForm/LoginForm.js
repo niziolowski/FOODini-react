@@ -164,7 +164,7 @@ function LoginForm() {
       {isLogging && (
         <div className={styles.footer}>
           {btnDemo}
-          <span>Nie masz konta?</span>
+          <span className={styles["hide-on-narrow"]}>Nie masz konta?</span>
           <Button onClick={handleToggleForm} primary outline>
             Zarejestruj się
           </Button>

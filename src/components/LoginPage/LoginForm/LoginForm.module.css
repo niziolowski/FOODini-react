@@ -125,6 +125,7 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
   -ms-flex-direction: row;
@@ -214,4 +215,10 @@
   top: -110%;
   left: 50%;
   translate: -50%;
+}
+
+@media (max-width: 420px) {
+  .hide-on-narrow {
+    display: none;
+  }
 }
