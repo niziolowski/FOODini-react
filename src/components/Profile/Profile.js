@@ -51,7 +51,13 @@ function Profile({ onClose }) {
           <h1>{name}</h1>
           <p>{email}</p>
         </div>
-        <Button onClick={handleSettings} primary wide outline>
+        <Button
+          onClick={handleSettings}
+          disabled={isMobile}
+          primary
+          wide
+          outline
+        >
           Wygląd
         </Button>
         <Button
