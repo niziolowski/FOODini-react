@@ -34,7 +34,7 @@ function App() {
 
   // Hide all windows when switching to mobile view
   useEffect(() => {
-    dispatchIsVisible({ type: "home", mode: "switch" });
+    dispatchIsVisible({ payload: "home", type: "SWITCH" });
   }, [isLoggedIn, dispatchIsVisible, isMobile]);
 
   if (!isLoggedIn) {

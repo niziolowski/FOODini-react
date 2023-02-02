@@ -22,7 +22,7 @@ function Catalog() {
   const [ingredientsFiltered, setIngredientsFiltered] = useState(ingredients);
 
   function handleClose() {
-    dispatchIsVisible({ type: "catalog", mode: "toggle" });
+    dispatchIsVisible({ payload: "catalog", type: "TOGGLE" });
   }
 
   function handleChange(e) {

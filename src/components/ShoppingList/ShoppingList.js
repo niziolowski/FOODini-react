@@ -128,7 +128,7 @@ function ShoppingList() {
   };
 
   function toggleActive() {
-    dispatchIsVisible({ type: "shopping-list", mode: "toggle" });
+    dispatchIsVisible({ payload: "shopping-list", type: "TOGGLE" });
   }
 
   function handleMouseEnter(e) {

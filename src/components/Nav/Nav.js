@@ -33,7 +33,7 @@ function Nav() {
   const [titleSize, setTitleSize] = useState("m");
 
   const handleToggleProfile = () => {
-    dispatchIsVisible({ type: "profile", mode: "toggle" });
+    dispatchIsVisible({ payload: "profile", type: "TOGGLE" });
   };
 
   const handleClick = async (e) => {
@@ -41,7 +41,7 @@ function Nav() {
     try {
       // Sidebar
       if (btn.classList.contains("js-sidebar"))
-        dispatchIsVisible({ type: "sidebar", mode: "toggle" });
+        dispatchIsVisible({ payload: "sidebar", type: "TOGGLE" });
 
       // Previous week
       if (btn.classList.contains("js-previous-week")) previousWeek();

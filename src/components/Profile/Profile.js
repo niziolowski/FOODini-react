@@ -15,18 +15,18 @@ function Profile({ onClose }) {
 
   // * Catalog should really be called 'templates'
   const handleCatalog = () => {
-    dispatchIsVisible({ type: "catalog", mode: "switch" });
+    dispatchIsVisible({ payload: "catalog", type: "SWITCH" });
   };
 
   const handleSettings = () => {
-    dispatchIsVisible({ type: "settings", mode: "switch" });
+    dispatchIsVisible({ payload: "settings", type: "SWITCH" });
   };
 
   // Close panel on mouseleave
   useEffect(() => {
     const handleClose = (e) => {
       const parentEl = e.target.closest(`.${styles.content}`);
-      if (!parentEl) dispatchIsVisible({ type: "profile", mode: "toggle" });
+      if (!parentEl) dispatchIsVisible({ payload: "profile", type: "TOGGLE" });
     };
 
     window.addEventListener("touchstart", handleClose);

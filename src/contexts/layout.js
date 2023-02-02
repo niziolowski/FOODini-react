@@ -22,8 +22,8 @@ const visibilityInitialState = {
  */
 function visibilityReducer(state, action) {
   // For desktop modals and sidebars
-  if (action.mode === "toggle") {
-    switch (action.type) {
+  if (action.type === "TOGGLE") {
+    switch (action.payload) {
       case "shopping-list":
         return { ...state, shoppingList: !state.shoppingList };
       case "settings":
@@ -58,8 +58,8 @@ function visibilityReducer(state, action) {
   }
 
   // For mobile tabs
-  if (action.mode === "switch") {
-    switch (action.type) {
+  if (action.type === "SWITCH") {
+    switch (action.payload) {
       case "shopping-list":
         return { ...visibilityInitialState, shoppingList: true };
       case "settings":
