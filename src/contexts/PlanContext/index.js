@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { fetchPlan } from "../../apis/plan";
 import { formatDate } from "../../utils/dates";
 import AuthContext from "../auth";
+import ErrorContext from "../error";
 import IngredientsContext from "../ingredients";
 
 import * as model from "./plan";
@@ -9,6 +10,8 @@ import * as model from "./plan";
 const PlanContext = createContext();
 
 export const PlanContextProvider = ({ children }) => {
+  const { setError } = useContext(ErrorContext);
+
   // Get authToken
   const { token } = useContext(AuthContext);
 
@@ -42,6 +45,21 @@ export const PlanContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
+      // set error message for the user
+      switch (error.response.status) {
+        case 429:
+          setError(
+            "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+          );
+          break;
+        case 503:
+          setError("Nie można nawiązać połączenia z serwerem");
+          break;
+
+        default:
+          setError("Coś poszło nie tak :(");
+          break;
+      }
     }
   };
 
@@ -67,6 +85,22 @@ export const PlanContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
+
+      // set error message for the user
+      switch (error.response.status) {
+        case 429:
+          setError(
+            "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+          );
+          break;
+        case 503:
+          setError("Nie można nawiązać połączenia z serwerem");
+          break;
+
+        default:
+          setError("Coś poszło nie tak :(");
+          break;
+      }
     }
   };
 
@@ -94,6 +128,22 @@ export const PlanContextProvider = ({ children }) => {
       return res;
     } catch (error) {
       console.error(error);
+
+      // set error message for the user
+      switch (error.response.status) {
+        case 429:
+          setError(
+            "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+          );
+          break;
+        case 503:
+          setError("Nie można nawiązać połączenia z serwerem");
+          break;
+
+        default:
+          setError("Coś poszło nie tak :(");
+          break;
+      }
     }
   };
 
@@ -121,6 +171,22 @@ export const PlanContextProvider = ({ children }) => {
 
       return nextWeek;
     } catch (error) {
+      // set error message for the user
+      switch (error.response.status) {
+        case 429:
+          setError(
+            "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+          );
+          break;
+        case 503:
+          setError("Nie można nawiązać połączenia z serwerem");
+          break;
+
+        default:
+          setError("Coś poszło nie tak :(");
+          break;
+      }
+
       throw error;
     }
   };
@@ -180,6 +246,21 @@ export const PlanContextProvider = ({ children }) => {
       return response.data.plan;
     } catch (error) {
       console.error(error);
+      // set error message for the user
+      switch (error.response.status) {
+        case 429:
+          setError(
+            "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+          );
+          break;
+        case 503:
+          setError("Nie można nawiązać połączenia z serwerem");
+          break;
+
+        default:
+          setError("Coś poszło nie tak :(");
+          break;
+      }
     }
   };
 
@@ -211,10 +292,26 @@ export const PlanContextProvider = ({ children }) => {
       } catch (error) {
         setLoading(false);
         console.error(error);
+
+        // set error message for the user
+        switch (error.response.status) {
+          case 429:
+            setError(
+              "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+            );
+            break;
+          case 503:
+            setError("Nie można nawiązać połączenia z serwerem");
+            break;
+
+          default:
+            setError("Coś poszło nie tak :(");
+            break;
+        }
       }
     }
     fetchData();
-  }, [token]);
+  }, [token, setError]);
 
   //   Update current week on plan change
   useEffect(() => {
