@@ -1,0 +1,19 @@
+.modal {
+  position: absolute;
+  top: 20vh;
+  padding: 20px 40px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 20px;
+  border: var(--border);
+  box-shadow: var(--shadow);
+  border-radius: var(--border-radius);
+  background-color: var(--bg-color);
+}
+
+.message {
+  font-weight: 300;
+  color: var(--font-color);
+}
