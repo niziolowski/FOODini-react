@@ -3,12 +3,12 @@ import ErrorContext from "../../contexts/error";
 import styles from "./ErrorBoundary.module.css";
 import ReactDOM from "react-dom";
 import Button from "../UI/Button/Button";
-import { FiAlertTriangle, FiInfo, FiTriangle, FiTruck } from "react-icons/fi";
+import { FiAlertTriangle } from "react-icons/fi";
 
 function ErrorBoundary({ children }) {
   const { error, setError } = useContext(ErrorContext);
 
-  //   Dismiss error
+  //   Handle error dismiss button
   const handleDismiss = () => setError(null);
 
   //  Declare modal JSX
@@ -24,7 +24,9 @@ function ErrorBoundary({ children }) {
     </div>
   );
 
+  // Declare container for rendering using a portal
   const container = document.getElementById("modal");
+
   return (
     <>
       {error && ReactDOM.createPortal(modal, container)}
