@@ -11,9 +11,11 @@
   box-shadow: var(--shadow);
   border-radius: var(--border-radius);
   background-color: var(--bg-color);
+  max-width: 500px;
 }
 
 .message {
+  text-align: center;
   font-weight: 300;
   color: var(--font-color);
 }
