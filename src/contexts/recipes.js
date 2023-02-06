@@ -6,14 +6,17 @@ import {
   deleteRecipe,
 } from "../apis/recipes";
 import AuthContext from "./auth";
+import ErrorContext from "./error";
 
 const RecipesContext = createContext();
 
 export const RecipesContextProvider = ({ children }) => {
+  const { token } = useContext(AuthContext);
+  const { setError } = useContext(ErrorContext);
+
   const [recipes, setRecipes] = useState([]);
 
   const [tags] = useState(["śniadanie", "obiad", "przekąska"]);
-  const { token } = useContext(AuthContext);
 
   const addRecipe = async (rec) => {
     const { id } = JSON.parse(localStorage.getItem("user"));
@@ -28,6 +31,24 @@ export const RecipesContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
+
+      // set error message for the user
+      switch (error.response.status) {
+        case 429:
+          setError(
+            "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+          );
+          break;
+        case 503:
+          setError("Nie można nawiązać połączenia z serwerem");
+          break;
+
+        default:
+          setError("Coś poszło nie tak :(");
+          break;
+      }
+
+      // pass error
       throw error;
     }
   };
@@ -53,6 +74,24 @@ export const RecipesContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
+
+      // set error message for the user
+      switch (error.response.status) {
+        case 429:
+          setError(
+            "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+          );
+          break;
+        case 503:
+          setError("Nie można nawiązać połączenia z serwerem");
+          break;
+
+        default:
+          setError("Coś poszło nie tak :(");
+          break;
+      }
+
+      // pass error
       throw error;
     }
   };
@@ -79,11 +118,31 @@ export const RecipesContextProvider = ({ children }) => {
         setRecipes(response.data);
       } catch (error) {
         console.error(error);
+
+        // set error message for the user
+        switch (error.response.status) {
+          case 429:
+            setError(
+              "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+            );
+            break;
+          case 503:
+            setError("Nie można nawiązać połączenia z serwerem");
+            break;
+
+          default:
+            setError(
+              "Nie można było załadować przepisów. Spróbuj odświeżyć stronę"
+            );
+            break;
+        }
+
+        // pass error
         throw error;
       }
     }
     fetchData();
-  }, [token]);
+  }, [token, setError]);
 
   const value = {
     tags,
