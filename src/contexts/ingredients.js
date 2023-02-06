@@ -10,11 +10,13 @@ import {
 } from "../apis/ingredients";
 import { v4 as uuid } from "uuid";
 import AuthContext from "./auth";
+import ErrorContext from "./error";
 
 const IngredientsContext = createContext();
 
 export const IngredientsContextProvider = ({ children }) => {
   const { token } = useContext(AuthContext);
+  const { setError } = useContext(ErrorContext);
   const [ingredients, setIngredients] = useState([]);
 
   const [tags] = useState(["świeże", "suche", "mrożone"]);
@@ -34,6 +36,25 @@ export const IngredientsContextProvider = ({ children }) => {
         return updated;
       }
     } catch (error) {
+      console.error(error);
+
+      // set error message for the user
+      switch (error.response.status) {
+        case 429:
+          setError(
+            "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+          );
+          break;
+        case 503:
+          setError("Nie można nawiązać połączenia z serwerem");
+          break;
+
+        default:
+          setError("Coś poszło nie tak :(");
+          break;
+      }
+
+      // pass error
       throw error;
     }
   };
@@ -58,6 +79,23 @@ export const IngredientsContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
+      // set error message for the user
+      switch (error.response.status) {
+        case 429:
+          setError(
+            "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+          );
+          break;
+        case 503:
+          setError("Nie można nawiązać połączenia z serwerem");
+          break;
+
+        default:
+          setError("Coś poszło nie tak :(");
+          break;
+      }
+
+      // pass error
       throw error;
     }
   };
@@ -72,7 +110,25 @@ export const IngredientsContextProvider = ({ children }) => {
         ]);
       }
     } catch (error) {
-      alert(error);
+      console.error(error);
+      // set error message for the user
+      switch (error.response.status) {
+        case 429:
+          setError(
+            "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+          );
+          break;
+        case 503:
+          setError("Nie można nawiązać połączenia z serwerem");
+          break;
+
+        default:
+          setError("Coś poszło nie tak :(");
+          break;
+      }
+
+      // pass error
+      throw error;
     }
   };
 
@@ -100,8 +156,25 @@ export const IngredientsContextProvider = ({ children }) => {
         return res.data;
       }
     } catch (error) {
-      console.log(error);
-      alert(error);
+      console.error(error);
+      // set error message for the user
+      switch (error.response.status) {
+        case 429:
+          setError(
+            "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+          );
+          break;
+        case 503:
+          setError("Nie można nawiązać połączenia z serwerem");
+          break;
+
+        default:
+          setError("Coś poszło nie tak :(");
+          break;
+      }
+
+      // pass error
+      throw error;
     }
   };
 
@@ -124,7 +197,24 @@ export const IngredientsContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.error(error);
-      alert(error);
+      // set error message for the user
+      switch (error.response.status) {
+        case 429:
+          setError(
+            "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+          );
+          break;
+        case 503:
+          setError("Nie można nawiązać połączenia z serwerem");
+          break;
+
+        default:
+          setError("Coś poszło nie tak :(");
+          break;
+      }
+
+      // pass error
+      throw error;
     }
   };
 
@@ -149,8 +239,25 @@ export const IngredientsContextProvider = ({ children }) => {
         return res.data;
       }
     } catch (error) {
-      console.log(error);
-      alert(error);
+      console.error(error);
+      // set error message for the user
+      switch (error.response.status) {
+        case 429:
+          setError(
+            "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+          );
+          break;
+        case 503:
+          setError("Nie można nawiązać połączenia z serwerem");
+          break;
+
+        default:
+          setError("Coś poszło nie tak :(");
+          break;
+      }
+
+      // pass error
+      throw error;
     }
   };
 
@@ -161,12 +268,35 @@ export const IngredientsContextProvider = ({ children }) => {
   useEffect(() => {
     async function fetchData() {
       console.log("fetching ingredients..."); //*: dev only line
-      const response = await fetchIngredients(token);
 
-      setIngredients(response.data);
+      try {
+        const response = await fetchIngredients(token);
+
+        setIngredients(response.data);
+      } catch (error) {
+        console.error(error);
+        // set error message for the user
+        switch (error.response.status) {
+          case 429:
+            setError(
+              "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+            );
+            break;
+          case 503:
+            setError("Nie można nawiązać połączenia z serwerem");
+            break;
+
+          default:
+            setError("Coś poszło nie tak :(");
+            break;
+        }
+
+        // pass error
+        throw error;
+      }
     }
     fetchData();
-  }, [token]);
+  }, [token, setError]);
 
   const value = {
     tags,
