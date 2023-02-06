@@ -4,13 +4,6 @@
   height: 100%;
   overflow: hidden;
   overflow-y: scroll;
-
-  -ms-overflow-style: none; /* Hide scrollbar on IE and Edge */
-  scrollbar-width: none; /* Hide scrollbar on Firefox */
-}
-/* Hide scrollbar on Chrome, Safari and Opera */
-.wrapper::-webkit-scrollbar {
-  display: none;
 }
 
 .plan {
