@@ -49,7 +49,6 @@ const InputWithSuggestions = React.forwardRef(
     const handleSuggestionClick = (e) => {
       // Get item id
       const id = +e.target.closest("li").dataset.id;
-      console.log(id);
 
       // Pass id UP using prop
       onSuggestionClick(id);

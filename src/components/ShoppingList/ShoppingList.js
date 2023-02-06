@@ -280,7 +280,7 @@ function ShoppingList() {
   // When userItems change, update form values
   useEffect(() => {
     reset({ userItems: userItems });
-  }, [userItems, reset]);
+  }, [userItems.length, reset]);
 
   // Update sync values on missingIngredients change
   useEffect(() => {

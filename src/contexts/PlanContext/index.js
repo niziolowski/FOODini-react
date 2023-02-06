@@ -311,7 +311,8 @@ export const PlanContextProvider = ({ children }) => {
       }
     }
     fetchData();
-  }, [token, setError]);
+    // eslint-disable-next-line
+  }, [token]);
 
   //   Update current week on plan change
   useEffect(() => {
