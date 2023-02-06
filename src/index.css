@@ -42,6 +42,16 @@
   font-family: "Montserrat", sans-serif;
 }
 
+/* Hide all scrollbars */
+* {
+  -ms-overflow-style: none; /* Hide scrollbar on IE and Edge */
+  scrollbar-width: none; /* Hide scrollbar on Firefox */
+}
+/* Hide scrollbar on Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+  display: none;
+}
+
 /* STYLES */
 :root {
   font-size: 20px;
