@@ -1,7 +1,7 @@
 import styles from "./Day.module.css";
 import Button from "../../UI/Button/Button";
 import { FiPlus } from "react-icons/fi";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo } from "react";
 import LayoutContext from "../../../contexts/layout";
 import Meal from "./Meal/Meal";
 import { Droppable } from "react-beautiful-dnd";
@@ -9,13 +9,8 @@ import { Droppable } from "react-beautiful-dnd";
 function Day({ title, meals, onNewMeal, onDeleteMeal }) {
   const { isMobile } = useContext(LayoutContext);
 
-  // State for indicating dragging over
-  const [isDraggingOver, setIsDraggingOver] = useState(false);
-
   // Combine classes into one variable
-  const classes = `${styles.day} ${isMobile && styles.mobile} ${
-    isDraggingOver && styles.dragover
-  }`;
+  const classes = `${styles.day} ${isMobile && styles.mobile}`;
 
   const handleClick = (e) => {
     const btn = e.target.closest("button");
@@ -43,23 +38,24 @@ function Day({ title, meals, onNewMeal, onDeleteMeal }) {
   }, [meals, onDeleteMeal]);
 
   return (
-    <div className={classes}>
-      <div className={styles.title}>{title}</div>
-      <Droppable droppableId={title}>
-        {(provided, snapshot) => {
-          // Update isDraggingOver state for parent styling
-          setIsDraggingOver(snapshot.isDraggingOver);
-
-          return (
+    <Droppable droppableId={title}>
+      {(provided, snapshot) => {
+        return (
+          <div
+            className={`${classes} ${
+              snapshot.isDraggingOver && styles.dragover
+            }`}
+          >
+            <div className={styles.title}>{title}</div>
             <div ref={provided.innerRef} className={styles.droppable}>
               <ul className={styles.list}>{meals && mealsContent}</ul>
               {provided.placeholder}
             </div>
-          );
-        }}
-      </Droppable>
-      {btnAdd}
-    </div>
+            {btnAdd}
+          </div>
+        );
+      }}
+    </Droppable>
   );
 }
 
