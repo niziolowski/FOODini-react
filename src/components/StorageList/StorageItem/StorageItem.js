@@ -8,10 +8,12 @@ import { calcDaysToExpiry } from "../../../utils/dates";
 import { mapRange } from "../../../utils/helpers";
 import BarIndicator from "../../UI/BarIndicator/BarIndicator";
 import Button from "../../UI/Button/Button";
+import LayoutContext from "../../../contexts/layout";
 import styles from "./StorageItem.module.css";
 
 function StorageItem({ item, onEdit, index, ...rest }) {
   const { editIngredient, removeIngredient } = useContext(IngredientsContext);
+  const { isMobile } = useContext(LayoutContext);
 
   // Calculate days until the ingredient expires
   const daysToExpiry = useMemo(
@@ -57,7 +59,11 @@ function StorageItem({ item, onEdit, index, ...rest }) {
   };
 
   return (
-    <Draggable draggableId={String(item.id)} index={index}>
+    <Draggable
+      draggableId={String(item.id)}
+      isDragDisabled={isMobile}
+      index={index}
+    >
       {(provided, snapshot) => (
         <li
           ref={provided.innerRef}

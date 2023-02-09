@@ -9,11 +9,12 @@ import DifficultyIndicator from "../../UI/DifficultyIndicator/DifficultyIndicato
 import styles from "./RecipeItem.module.css";
 import { animate } from "../../../utils/animate";
 import { Draggable } from "react-beautiful-dnd";
+import LayoutContext from "../../../contexts/layout";
 
 function RecipeItem({ item, onPreview, index }) {
-  const { tags } = useContext(RecipesContext);
-  const { editRecipe, removeRecipe } = useContext(RecipesContext);
+  const { tags, editRecipe, removeRecipe } = useContext(RecipesContext);
   const { ingredients } = useContext(IngredientsContext);
+  const { isMobile } = useContext(LayoutContext);
 
   //? Think about refactoring in the future. This code is used in multiple places with slight variation
   // Calculate how much percentage of all ingredients are available in storaeg
@@ -71,7 +72,11 @@ function RecipeItem({ item, onPreview, index }) {
   };
 
   return (
-    <Draggable draggableId={String(item.id)} index={index}>
+    <Draggable
+      draggableId={String(item.id)}
+      isDragDisabled={isMobile}
+      index={index}
+    >
       {(provided, snapshot) => (
         <li
           ref={provided.innerRef}
