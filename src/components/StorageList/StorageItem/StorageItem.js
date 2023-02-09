@@ -1,5 +1,4 @@
 import { useContext, useMemo } from "react";
-import { Draggable } from "react-beautiful-dnd";
 import { FiStar, FiTrash } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
 import IngredientsContext from "../../../contexts/ingredients";
@@ -8,13 +7,13 @@ import { calcDaysToExpiry } from "../../../utils/dates";
 import { mapRange } from "../../../utils/helpers";
 import BarIndicator from "../../UI/BarIndicator/BarIndicator";
 import Button from "../../UI/Button/Button";
-import LayoutContext from "../../../contexts/layout";
 import styles from "./StorageItem.module.css";
+import { forwardRef } from "react";
 
-function StorageItem({ item, onEdit, index, ...rest }) {
+const StorageItem = forwardRef(({ item, onEdit, isDragging, ...rest }, ref) => {
   const { editIngredient, removeIngredient } = useContext(IngredientsContext);
-  const { isMobile } = useContext(LayoutContext);
 
+  const classes = `${styles["storage-item"]} ${isDragging && styles.dragging}`;
   // Calculate days until the ingredient expires
   const daysToExpiry = useMemo(
     () => calcDaysToExpiry(item.purchase_date, item.expiry),
@@ -59,52 +58,35 @@ function StorageItem({ item, onEdit, index, ...rest }) {
   };
 
   return (
-    <Draggable
-      draggableId={String(item.id)}
-      isDragDisabled={isMobile}
-      index={index}
-    >
-      {(provided, snapshot) => (
-        <li
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          onClick={handleClick}
-          {...rest}
-          className={`${styles["storage-item"]} ${
-            snapshot.isDragging && styles.dragging
-          }`}
-        >
-          <Button
-            onClick={handleBookmark}
-            round
-            mini
-            fillIcon
-            active={item.bookmark}
-          >
-            <FiStar />
-          </Button>
-          <div className={styles.title}>{item.name}</div>
-          <div className={styles.amount}>{item.amount}</div>
-          <div className={styles.unit}>{item.unit}</div>
-          <BarIndicator
-            label={item.expiry === 0 ? <TbInfinity /> : `${daysToExpiry} dni`}
-            value={item.expiry === 0 ? null : indicatorValue}
-            small
-          />
-          <Button onClick={handleDelete} doubleAction round mini>
-            <FiTrash />
-          </Button>
-          <div
-            className={styles.tag}
-            style={{
-              backgroundColor: `var(--tag-${item.tag}-color)`,
-            }}
-          ></div>
-        </li>
-      )}
-    </Draggable>
+    <li onClick={handleClick} {...rest} ref={ref} className={classes}>
+      <Button
+        onClick={handleBookmark}
+        round
+        mini
+        fillIcon
+        active={item.bookmark}
+      >
+        <FiStar />
+      </Button>
+      <div className={styles.title}>{item.name}</div>
+      <div className={styles.amount}>{item.amount}</div>
+      <div className={styles.unit}>{item.unit}</div>
+      <BarIndicator
+        label={item.expiry === 0 ? <TbInfinity /> : `${daysToExpiry} dni`}
+        value={item.expiry === 0 ? null : indicatorValue}
+        small
+      />
+      <Button onClick={handleDelete} doubleAction round mini>
+        <FiTrash />
+      </Button>
+      <div
+        className={styles.tag}
+        style={{
+          backgroundColor: `var(--tag-${item.tag}-color)`,
+        }}
+      ></div>
+    </li>
   );
-}
+});
 
 export default StorageItem;

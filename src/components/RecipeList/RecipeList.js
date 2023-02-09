@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Droppable } from "react-beautiful-dnd";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import LayoutContext from "../../contexts/layout";
 import RecipesContext from "../../contexts/recipes";
 import RecipeForm from "../RecipeForm/RecipeForm";
@@ -66,12 +66,23 @@ function RecipeList() {
           {(provided) => (
             <ul ref={provided.innerRef} className={styles.list}>
               {filteredRecipes.map((recipe, index) => (
-                <RecipeItem
-                  item={recipe}
-                  onPreview={handleShowRecipe}
+                <Draggable
                   key={recipe.id}
+                  draggableId={String(recipe.id)}
+                  isDragDisabled={isMobile}
                   index={index}
-                />
+                >
+                  {(provided, snapshot) => (
+                    <RecipeItem
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      item={recipe}
+                      onPreview={handleShowRecipe}
+                      isDragging={snapshot.isDragging}
+                    />
+                  )}
+                </Draggable>
               ))}
               {provided.placeholder}
             </ul>
