@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
+import { Droppable } from "react-beautiful-dnd";
 import LayoutContext from "../../contexts/layout";
 import RecipesContext from "../../contexts/recipes";
 import RecipeForm from "../RecipeForm/RecipeForm";
@@ -61,15 +62,21 @@ function RecipeList() {
           options={["nazwa", "trudność"]}
           data={recipes}
         />
-        <ul className={styles.list}>
-          {filteredRecipes.map((recipe) => (
-            <RecipeItem
-              key={recipe.id}
-              item={recipe}
-              onPreview={handleShowRecipe}
-            />
-          ))}
-        </ul>
+        <Droppable droppableId="recipe-list">
+          {(provided) => (
+            <ul ref={provided.innerRef} className={styles.list}>
+              {filteredRecipes.map((recipe, index) => (
+                <RecipeItem
+                  item={recipe}
+                  onPreview={handleShowRecipe}
+                  key={recipe.id}
+                  index={index}
+                />
+              ))}
+              {provided.placeholder}
+            </ul>
+          )}
+        </Droppable>
       </div>
       {isPreviewActive && (
         <RecipeView
