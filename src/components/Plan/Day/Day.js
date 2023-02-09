@@ -4,6 +4,7 @@ import { FiPlus } from "react-icons/fi";
 import { useContext, useMemo } from "react";
 import LayoutContext from "../../../contexts/layout";
 import Meal from "./Meal/Meal";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 
 function Day({ title, meals, onNewMeal, onDeleteMeal }) {
   const { isMobile } = useContext(LayoutContext);
@@ -25,10 +26,11 @@ function Day({ title, meals, onNewMeal, onDeleteMeal }) {
 
   const mealsContent = useMemo(() => {
     if (!meals) return null;
-    return meals.map((meal) => (
+    return meals.map((meal, index) => (
       <Meal
-        onDeleteMeal={(e) => onDeleteMeal(e, meal)}
         key={meal.app_id}
+        index={index}
+        onDeleteMeal={(e) => onDeleteMeal(e, meal)}
         meal={meal}
       />
     ));
@@ -37,7 +39,14 @@ function Day({ title, meals, onNewMeal, onDeleteMeal }) {
   return (
     <div className={classes}>
       <div className={styles.title}>{title}</div>
-      <ul className={styles.list}>{meals && mealsContent}</ul>
+      <Droppable droppableId={title}>
+        {(provided, snapshot) => (
+          <div ref={provided.innerRef} className={styles.droppable}>
+            <ul className={styles.list}>{meals && mealsContent}</ul>
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
       {btnAdd}
     </div>
   );
