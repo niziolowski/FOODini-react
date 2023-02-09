@@ -17,6 +17,7 @@ import { RecipesContextProvider } from "./contexts/recipes";
 import Profile from "./components/Profile/Profile";
 import { PlanContextProvider } from "./contexts/PlanContext/index";
 import { loadColorTheme, applyColorTheme } from "./utils/colorTheme";
+import { DragDropContext } from "react-beautiful-dnd";
 
 function App() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
@@ -46,27 +47,29 @@ function App() {
           <IngredientsContextProvider>
             <RecipesContextProvider>
               <PlanContextProvider>
-                <div
-                  className={`${styles.wrapper} ${
-                    isVisible.sidebar ? styles.shift : ""
-                  }`}
-                >
-                  {isMobile && isVisible.profile && <Profile />}
-                  {/* Navigation needs PlanContext for changing the current week and displaying a subtitle */}
-                  {!isMobile ? <Nav /> : <NavMobile />}
+                <DragDropContext>
+                  <div
+                    className={`${styles.wrapper} ${
+                      isVisible.sidebar ? styles.shift : ""
+                    }`}
+                  >
+                    {isMobile && isVisible.profile && <Profile />}
+                    {/* Navigation needs PlanContext for changing the current week and displaying a subtitle */}
+                    {!isMobile ? <Nav /> : <NavMobile />}
 
-                  {/* Plan needs IngredientsContext and RecipesContext for adding meals */}
-                  <Plan />
-                  <ShoppingList />
-                  <Catalog />
-                </div>
-                <Settings />
+                    {/* Plan needs IngredientsContext and RecipesContext for adding meals */}
+                    <Plan />
+                    <ShoppingList />
+                    <Catalog />
+                  </div>
+                  <Settings />
 
-                {isVisible.storage && <StorageList />}
+                  {isVisible.storage && <StorageList />}
 
-                {/* Sidebar doesn't really need context but inside it, there is StoragaList and RecipeList components. Think through in the future */}
-                <Sidebar />
-                {isVisible.recipes && <RecipeList />}
+                  {/* Sidebar doesn't really need context but inside it, there is StorageList and RecipeList components. Think through in the future */}
+                  <Sidebar />
+                  {isVisible.recipes && <RecipeList />}
+                </DragDropContext>
               </PlanContextProvider>
             </RecipesContextProvider>
           </IngredientsContextProvider>
