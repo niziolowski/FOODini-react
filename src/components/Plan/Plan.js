@@ -152,7 +152,6 @@ function Plan() {
           className={styles.swiper}
           spaceBetween={15}
           slidesPerView={1}
-          onSlideChange={() => console.log("slide change")}
           onSwiper={(swiper) => console.log(swiper)}
         >
           {days.map((day, i) => (
