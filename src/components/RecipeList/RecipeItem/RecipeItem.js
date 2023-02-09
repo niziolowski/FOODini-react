@@ -71,7 +71,7 @@ function RecipeItem({ item, onPreview, index }) {
   };
 
   return (
-    <Draggable draggableId={toString(item.id)} index={index}>
+    <Draggable draggableId={String(item.id)} index={index}>
       {(provided, snapshot) => (
         <li
           ref={provided.innerRef}
