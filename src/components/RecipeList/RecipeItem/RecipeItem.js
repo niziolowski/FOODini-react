@@ -8,8 +8,9 @@ import Button from "../../UI/Button/Button";
 import DifficultyIndicator from "../../UI/DifficultyIndicator/DifficultyIndicator";
 import styles from "./RecipeItem.module.css";
 import { animate } from "../../../utils/animate";
+import { Draggable } from "react-beautiful-dnd";
 
-function RecipeItem({ item, onPreview }) {
+function RecipeItem({ item, onPreview, index }) {
   const { tags } = useContext(RecipesContext);
   const { editRecipe, removeRecipe } = useContext(RecipesContext);
   const { ingredients } = useContext(IngredientsContext);
@@ -70,37 +71,49 @@ function RecipeItem({ item, onPreview }) {
   };
 
   return (
-    <li onClick={handleClick} className={styles["recipe-item"]}>
-      <div className={styles["image-wrapper"]}>
-        <img className={styles.image} src={item.image} alt="recipe" />
-        <Tag className={styles.tag} tag={item.tag} small>
-          {tags[item.tag]}
-        </Tag>
-        {/* <div className={styles.tag}>{tags[item.tag]}</div> */}
-      </div>
-
-      <div className={styles.col}>
-        <div className={styles.title}>{item.name}</div>
-        <div className={styles.info}>
-          <DifficultyIndicator value={item.difficulty} />
-          <BarIndicator label="Składniki" value={indicatorValue} />
-        </div>
-      </div>
-      <div className={styles.col}>
-        <Button
-          onClick={handleBookmark}
-          round
-          mini
-          fillIcon
-          active={item.bookmark}
+    <Draggable draggableId={toString(item.id)} index={index}>
+      {(provided, snapshot) => (
+        <li
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          onClick={handleClick}
+          className={`${styles["recipe-item"]} ${
+            snapshot.isDragging && styles.dragging
+          }`}
         >
-          <FiStar />
-        </Button>
-        <Button onClick={handleRemove} doubleAction round mini>
-          <FiTrash />
-        </Button>
-      </div>
-    </li>
+          <div className={styles["image-wrapper"]}>
+            <img className={styles.image} src={item.image} alt="recipe" />
+            <Tag className={styles.tag} tag={item.tag} small>
+              {tags[item.tag]}
+            </Tag>
+            {/* <div className={styles.tag}>{tags[item.tag]}</div> */}
+          </div>
+
+          <div className={styles.col}>
+            <div className={styles.title}>{item.name}</div>
+            <div className={styles.info}>
+              <DifficultyIndicator value={item.difficulty} />
+              <BarIndicator label="Składniki" value={indicatorValue} />
+            </div>
+          </div>
+          <div className={styles.col}>
+            <Button
+              onClick={handleBookmark}
+              round
+              mini
+              fillIcon
+              active={item.bookmark}
+            >
+              <FiStar />
+            </Button>
+            <Button onClick={handleRemove} doubleAction round mini>
+              <FiTrash />
+            </Button>
+          </div>
+        </li>
+      )}
+    </Draggable>
   );
 }
 
