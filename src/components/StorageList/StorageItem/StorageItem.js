@@ -1,4 +1,5 @@
 import { useContext, useMemo } from "react";
+import { Draggable } from "react-beautiful-dnd";
 import { FiStar, FiTrash } from "react-icons/fi";
 import { TbInfinity } from "react-icons/tb";
 import IngredientsContext from "../../../contexts/ingredients";
@@ -9,7 +10,7 @@ import BarIndicator from "../../UI/BarIndicator/BarIndicator";
 import Button from "../../UI/Button/Button";
 import styles from "./StorageItem.module.css";
 
-function StorageItem({ item, onEdit, ...rest }) {
+function StorageItem({ item, onEdit, index, ...rest }) {
   const { editIngredient, removeIngredient } = useContext(IngredientsContext);
 
   // Calculate days until the ingredient expires
@@ -56,34 +57,47 @@ function StorageItem({ item, onEdit, ...rest }) {
   };
 
   return (
-    <li onClick={handleClick} {...rest} className={styles["storage-item"]}>
-      <Button
-        onClick={handleBookmark}
-        round
-        mini
-        fillIcon
-        active={item.bookmark}
-      >
-        <FiStar />
-      </Button>
-      <div className={styles.title}>{item.name}</div>
-      <div className={styles.amount}>{item.amount}</div>
-      <div className={styles.unit}>{item.unit}</div>
-      <BarIndicator
-        label={item.expiry === 0 ? <TbInfinity /> : `${daysToExpiry} dni`}
-        value={item.expiry === 0 ? null : indicatorValue}
-        small
-      />
-      <Button onClick={handleDelete} doubleAction round mini>
-        <FiTrash />
-      </Button>
-      <div
-        className={styles.tag}
-        style={{
-          backgroundColor: `var(--tag-${item.tag}-color)`,
-        }}
-      ></div>
-    </li>
+    <Draggable draggableId={String(item.id)} index={index}>
+      {(provided, snapshot) => (
+        <li
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          onClick={handleClick}
+          {...rest}
+          className={`${styles["storage-item"]} ${
+            snapshot.isDragging && styles.dragging
+          }`}
+        >
+          <Button
+            onClick={handleBookmark}
+            round
+            mini
+            fillIcon
+            active={item.bookmark}
+          >
+            <FiStar />
+          </Button>
+          <div className={styles.title}>{item.name}</div>
+          <div className={styles.amount}>{item.amount}</div>
+          <div className={styles.unit}>{item.unit}</div>
+          <BarIndicator
+            label={item.expiry === 0 ? <TbInfinity /> : `${daysToExpiry} dni`}
+            value={item.expiry === 0 ? null : indicatorValue}
+            small
+          />
+          <Button onClick={handleDelete} doubleAction round mini>
+            <FiTrash />
+          </Button>
+          <div
+            className={styles.tag}
+            style={{
+              backgroundColor: `var(--tag-${item.tag}-color)`,
+            }}
+          ></div>
+        </li>
+      )}
+    </Draggable>
   );
 }
 

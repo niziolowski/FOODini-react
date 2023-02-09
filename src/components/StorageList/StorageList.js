@@ -8,6 +8,7 @@ import AddCatalog from "../AddCatalog/AddCatalog";
 import IngredientsContext from "../../contexts/ingredients";
 import AddStorage from "../AddStorage/AddStorage";
 import PlanContext from "../../contexts/PlanContext";
+import { Droppable } from "react-beautiful-dnd";
 
 function StorageList() {
   const { isMobile } = useContext(LayoutContext);
@@ -140,15 +141,21 @@ function StorageList() {
         options={["ważność", "nazwa"]}
         data={storage}
       />
-      <ul className={styles.list}>
-        {filteredStorage.map((item) => (
-          <StorageItem
-            key={item.id}
-            item={item}
-            onEdit={handleEditIngredient}
-          ></StorageItem>
-        ))}
-      </ul>
+      <Droppable droppableId="storage-list">
+        {(provided) => (
+          <ul ref={provided.innerRef} className={styles.list}>
+            {filteredStorage.map((item, index) => (
+              <StorageItem
+                key={item.id}
+                item={item}
+                onEdit={handleEditIngredient}
+                index={index}
+              />
+            ))}
+            {provided.placeholder}
+          </ul>
+        )}
+      </Droppable>
     </div>
   );
 }

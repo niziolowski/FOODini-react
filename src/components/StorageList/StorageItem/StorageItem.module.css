@@ -10,6 +10,13 @@
   border-bottom: 1px solid var(--grey-color);
   font-size: 0.7rem;
   background-color: var(--bg-color);
+  overflow: hidden;
+}
+
+.dragging {
+  box-shadow: var(--shadow);
+  border: var(--border);
+  border-radius: var(--border-radius);
 }
 
 .storage-item:hover {
