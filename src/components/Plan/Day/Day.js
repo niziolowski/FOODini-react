@@ -4,7 +4,7 @@ import { FiPlus } from "react-icons/fi";
 import { useContext, useMemo } from "react";
 import LayoutContext from "../../../contexts/layout";
 import Meal from "./Meal/Meal";
-import { Draggable, Droppable } from "react-beautiful-dnd";
+import { Droppable } from "react-beautiful-dnd";
 
 function Day({ title, meals, onNewMeal, onDeleteMeal }) {
   const { isMobile } = useContext(LayoutContext);
