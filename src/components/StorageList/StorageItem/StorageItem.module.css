@@ -4,6 +4,7 @@
   justify-content: space-between;
   align-items: center;
   height: 50px;
+  min-height: 50px;
   padding: 10px;
   column-gap: 10px;
   color: var(--font-color);
