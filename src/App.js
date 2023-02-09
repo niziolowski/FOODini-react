@@ -26,6 +26,8 @@ function App() {
 
   const classes = `${styles.app} ${isMobile ? styles.mobile : ""} `;
 
+  const onDragEnd = (result) => console.log("test");
+
   // If there are settings saved in localStorage, load them
   useEffect(() => {
     // ColorTheme
@@ -47,7 +49,7 @@ function App() {
           <IngredientsContextProvider>
             <RecipesContextProvider>
               <PlanContextProvider>
-                <DragDropContext>
+                <DragDropContext onDragEnd={onDragEnd}>
                   <div
                     className={`${styles.wrapper} ${
                       isVisible.sidebar ? styles.shift : ""
