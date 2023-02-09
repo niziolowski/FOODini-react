@@ -19,13 +19,18 @@
   margin-bottom: 10px;
 }
 
-.list {
+.droppable {
+  flex: 1;
   width: 100%;
+}
+
+.list {
   display: flex;
   flex-direction: column;
   list-style: none;
   row-gap: 5px;
 }
+
 .list li {
   flex: 0 0 auto;
 }

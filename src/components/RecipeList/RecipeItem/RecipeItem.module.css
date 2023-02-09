@@ -4,6 +4,14 @@
   border-bottom: 1px solid var(--grey-color);
   cursor: pointer;
   background-color: var(--bg-color);
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+.dragging {
+  box-shadow: var(--shadow);
+  border: var(--border);
+  border-radius: var(--border-radius);
 }
 
 .recipe-item:hover {
