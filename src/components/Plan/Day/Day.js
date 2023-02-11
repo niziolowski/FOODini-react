@@ -12,6 +12,18 @@ function Day({ title, meals, onNewMeal, onDeleteMeal }) {
   // Combine classes into one variable
   const classes = `${styles.day} ${isMobile && styles.mobile}`;
 
+  // TODO: Refactor this for multilanguage
+  // Define Polish day names
+  const dayNames = new Map([
+    ["monday", "Poniedziałek"],
+    ["tuesday", "Wtorek"],
+    ["wednesday", "Środa"],
+    ["thursday", "Czwartek"],
+    ["friday", "Piątek"],
+    ["saturday", "Sobota"],
+    ["sunday", "Niedziela"],
+  ]);
+
   const handleClick = (e) => {
     const btn = e.target.closest("button");
 
@@ -46,7 +58,7 @@ function Day({ title, meals, onNewMeal, onDeleteMeal }) {
               snapshot.isDraggingOver && styles.dragover
             }`}
           >
-            <div className={styles.title}>{title}</div>
+            <div className={styles.title}>{dayNames.get(title)}</div>
             <div ref={provided.innerRef} className={styles.droppable}>
               <ul className={styles.list}>{meals && mealsContent}</ul>
               {provided.placeholder}

@@ -59,17 +59,6 @@ function Plan() {
     return days;
   }, [activeWeek]);
 
-  // Define Polish day names
-  const dayNames = [
-    "Poniedziałek",
-    "Wtorek",
-    "Środa",
-    "Czwartek",
-    "Piątek",
-    "Sobota",
-    "Niedziela",
-  ];
-
   const toggleSpotlight = () => {
     setIsSpotlight((current) => !current);
   };
@@ -142,7 +131,10 @@ function Plan() {
 
       // Recalculate plan
       recalculatePlan(updatedPlan);
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 
   const contentMobile = (
@@ -154,10 +146,10 @@ function Plan() {
           slidesPerView={1}
           onSwiper={(swiper) => console.log(swiper)}
         >
-          {days.map((day, i) => (
+          {days.map((day) => (
             <SwiperSlide key={day.name}>
               <Day
-                title={dayNames[i]}
+                title={day.name}
                 meals={day.meals}
                 onNewMeal={() => handleNewMeal(day.name)}
                 onDeleteMeal={(e, mealAppID) =>
@@ -182,11 +174,11 @@ function Plan() {
   const contentDesktop = (
     <div className={styles.wrapper}>
       <div className={styles.plan}>
-        {days.map((day, i) => {
+        {days.map((day) => {
           return (
             <Day
               key={day.name}
-              title={dayNames[i]}
+              title={day.name}
               meals={day.meals}
               onNewMeal={() => handleNewMeal(day.name)}
               onDeleteMeal={(e, mealAppID) =>
