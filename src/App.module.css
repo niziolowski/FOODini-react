@@ -7,18 +7,6 @@
   background-color: var(--bg-color);
 }
 
-.wrapper {
-  position: relative;
-  height: 100%;
-  transition: var(--transition);
-  display: flex;
-  flex-direction: column;
-}
-
-.wrapper.shift {
-  margin-left: 400px;
-}
-
 /* § MOBILE */
 .app.mobile {
   padding-bottom: var(--mobile-nav-bar-size);
