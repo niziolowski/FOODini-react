@@ -27,6 +27,13 @@ function MainView() {
   const { isLoggedIn } = useContext(AuthContext);
 
   const onDragEnd = async (result) => {
+    // Return when user is dropping the item in the same place
+    if (
+      result.destination.index === result.source.index &&
+      result.destination.droppableId === result.source.droppableId
+    )
+      return;
+
     // UPDATE OPTIMISTICALLY - ATTEMPT 1
 
     // Clone original state for reverting on error
@@ -44,7 +51,6 @@ function MainView() {
         break;
       case "recipe-list":
         const meal = recipes.find((item) => item.id === +result.draggableId);
-        console.log(meal);
 
         // Create an updated Week object
         updatedDays[targetDay] = {
@@ -54,6 +60,7 @@ function MainView() {
             ...updatedDays[targetDay].meals.slice(targetIndex),
           ],
         };
+
         break;
 
       default:
@@ -78,21 +85,21 @@ function MainView() {
           ],
         };
 
-        updatedWeek = { ...activeWeek, days: updatedDays };
-
-        setPlan((current) => {
-          const activeWeek = current.find((week) => week.id === updatedWeek.id);
-
-          const index = current.indexOf(activeWeek);
-          const updatedPlan = structuredClone(current);
-          updatedPlan.splice(index, 1, updatedWeek);
-
-          return [...updatedPlan];
-        });
-
-        setActiveWeek(updatedWeek);
         break;
     }
+
+    updatedWeek = { ...activeWeek, days: updatedDays };
+    setPlan((current) => {
+      const activeWeek = current.find((week) => week.id === updatedWeek.id);
+
+      const index = current.indexOf(activeWeek);
+      const updatedPlan = structuredClone(current);
+      updatedPlan.splice(index, 1, updatedWeek);
+
+      return [...updatedPlan];
+    });
+
+    setActiveWeek(updatedWeek);
     try {
       // Upload updated Week
       const updatedPlan = await editWeek(updatedWeek);
