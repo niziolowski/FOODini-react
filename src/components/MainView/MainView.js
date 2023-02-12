@@ -14,42 +14,78 @@ import LayoutContext from "../../contexts/layout";
 import AuthContext from "../../contexts/auth";
 import styles from "./MainView.module.css";
 import PlanContext from "../../contexts/PlanContext";
-import IngredientsContext from "../../contexts/ingredients";
+// import IngredientsContext from "../../contexts/ingredients";
 import RecipesContext from "../../contexts/recipes";
+import { v4 as uuid } from "uuid";
 
 function MainView() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
-  const { activeWeek } = useContext(PlanContext);
-  const { ingredients } = useContext(IngredientsContext);
+  const { activeWeek, editWeek, recalculatePlan } = useContext(PlanContext);
+  // const { ingredients } = useContext(IngredientsContext);
   const { recipes } = useContext(RecipesContext);
   const { isLoggedIn } = useContext(AuthContext);
 
-  const onDragEnd = (result) => {
-    console.log(result);
+  const onDragEnd = async (result) => {
     const source = result.source.droppableId;
-    console.log(activeWeek);
+    let updatedDays = structuredClone(activeWeek.days);
 
-    let payload = {};
+    // Get target location
+    const targetIndex = result.destination.index;
+    const targetDay = result.destination.droppableId;
     switch (source) {
       case "storage-list":
         break;
       case "recipe-list":
+        const meal = recipes.find((item) => item.id === +result.draggableId);
+        console.log(meal);
+
+        // Create an updated Week object
+        updatedDays[targetDay] = {
+          meals: [
+            ...updatedDays[targetDay].meals.slice(0, targetIndex),
+            { ...meal, app_id: uuid(), type: "meal" },
+            ...updatedDays[targetDay].meals.slice(targetIndex),
+          ],
+        };
         break;
 
       default:
         // Get source location
-        const sourceIndex = result.source.index;
         const sourceDay = source;
 
-        // Get target location
-        const targetIndex = result.destination.index;
-        const targetDay = result.destination.droppableId;
+        updatedDays[sourceDay] = {
+          meals: [
+            ...updatedDays[sourceDay].meals.filter(
+              (meal) => meal.app_id !== result.draggableId
+            ),
+          ],
+        };
 
-        console.log(activeWeek.days);
+        updatedDays[targetDay] = {
+          meals: [
+            ...updatedDays[targetDay].meals.slice(0, targetIndex),
+            activeWeek.days[sourceDay].meals.find(
+              (meal) => meal.app_id === result.draggableId
+            ),
+            ...updatedDays[targetDay].meals.slice(targetIndex),
+          ],
+        };
 
-        // Create updatedWeek object
-        const updatedWeek = { ...activeWeek };
         break;
+    }
+    // Create updatedWeek object
+    const updatedWeek = {
+      ...activeWeek,
+      days: updatedDays,
+    };
+    try {
+      // Upload updated Week
+      const updatedPlan = await editWeek(updatedWeek);
+      // Recalculate plan
+      recalculatePlan(updatedPlan);
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   };
 

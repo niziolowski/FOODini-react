@@ -63,7 +63,6 @@ export const editWeek = async (week) => {
 
   try {
     const res = await updateWeek(updatedWeek);
-    console.log(res);
 
     return res;
   } catch (error) {
