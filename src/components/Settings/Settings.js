@@ -11,7 +11,7 @@ function Settings() {
   const isActive = isVisible.settings;
 
   function handleClose(e) {
-    dispatchIsVisible({ type: "settings", mode: "toggle" });
+    dispatchIsVisible({ payload: "settings", type: "TOGGLE" });
   }
 
   const root = document.getElementById("modal");

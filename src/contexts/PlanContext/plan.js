@@ -62,7 +62,9 @@ export const editWeek = async (week) => {
   const updatedWeek = { ...week, users_id: id };
 
   try {
-    return await updateWeek(updatedWeek);
+    const res = await updateWeek(updatedWeek);
+
+    return res;
   } catch (error) {
     throw error;
   }

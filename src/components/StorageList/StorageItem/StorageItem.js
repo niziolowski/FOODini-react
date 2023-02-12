@@ -8,10 +8,12 @@ import { mapRange } from "../../../utils/helpers";
 import BarIndicator from "../../UI/BarIndicator/BarIndicator";
 import Button from "../../UI/Button/Button";
 import styles from "./StorageItem.module.css";
+import { forwardRef } from "react";
 
-function StorageItem({ item, onEdit, ...rest }) {
+const StorageItem = forwardRef(({ item, onEdit, isDragging, ...rest }, ref) => {
   const { editIngredient, removeIngredient } = useContext(IngredientsContext);
 
+  const classes = `${styles["storage-item"]} ${isDragging && styles.dragging}`;
   // Calculate days until the ingredient expires
   const daysToExpiry = useMemo(
     () => calcDaysToExpiry(item.purchase_date, item.expiry),
@@ -56,7 +58,7 @@ function StorageItem({ item, onEdit, ...rest }) {
   };
 
   return (
-    <li onClick={handleClick} {...rest} className={styles["storage-item"]}>
+    <li onClick={handleClick} {...rest} ref={ref} className={classes}>
       <Button
         onClick={handleBookmark}
         round
@@ -85,6 +87,6 @@ function StorageItem({ item, onEdit, ...rest }) {
       ></div>
     </li>
   );
-}
+});
 
 export default StorageItem;

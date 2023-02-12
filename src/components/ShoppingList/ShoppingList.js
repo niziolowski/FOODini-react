@@ -128,7 +128,7 @@ function ShoppingList() {
   };
 
   function toggleActive() {
-    dispatchIsVisible({ type: "shopping-list", mode: "toggle" });
+    dispatchIsVisible({ payload: "shopping-list", type: "TOGGLE" });
   }
 
   function handleMouseEnter(e) {
@@ -277,10 +277,13 @@ function ShoppingList() {
     // eslint-disable-next-line
   }, [userItemsValues, editShoppingList, token]);
 
-  // When userItems change, update form values
+  // When userItems change, update form values.
+  // TODO: Refactor. This should trigger on userItems change with exception of checking the checkbox input.
   useEffect(() => {
     reset({ userItems: userItems });
-  }, [userItems, reset]);
+
+    // eslint-disable-next-line
+  }, [userItems.length, reset]);
 
   // Update sync values on missingIngredients change
   useEffect(() => {

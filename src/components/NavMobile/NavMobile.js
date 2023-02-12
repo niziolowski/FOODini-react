@@ -54,7 +54,7 @@ function NavMobile() {
     setActiveTab(tab);
 
     // Show clicked tab
-    dispatchIsVisible({ type: tab, mode: "switch" });
+    dispatchIsVisible({ payload: tab, type: "SWITCH" });
   }
 
   const handleControlsClick = async (e) => {
