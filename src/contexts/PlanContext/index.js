@@ -327,6 +327,7 @@ export const PlanContextProvider = ({ children }) => {
 
   const value = {
     plan,
+    setPlan,
     addWeek,
     editWeek,
     currentWeek,

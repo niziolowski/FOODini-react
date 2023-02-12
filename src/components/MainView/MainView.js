@@ -20,12 +20,19 @@ import { v4 as uuid } from "uuid";
 
 function MainView() {
   const { isMobile, isVisible, dispatchIsVisible } = useContext(LayoutContext);
-  const { activeWeek, editWeek, recalculatePlan } = useContext(PlanContext);
+  const { activeWeek, editWeek, recalculatePlan, setPlan, setActiveWeek } =
+    useContext(PlanContext);
   // const { ingredients } = useContext(IngredientsContext);
   const { recipes } = useContext(RecipesContext);
   const { isLoggedIn } = useContext(AuthContext);
 
   const onDragEnd = async (result) => {
+    // UPDATE OPTIMISTICALLY - ATTEMPT 1
+
+    // Clone original state for reverting on error
+    const originalWeek = structuredClone(activeWeek);
+    let updatedWeek;
+
     const source = result.source.droppableId;
     let updatedDays = structuredClone(activeWeek.days);
 
@@ -71,19 +78,37 @@ function MainView() {
           ],
         };
 
+        updatedWeek = { ...activeWeek, days: updatedDays };
+
+        setPlan((current) => {
+          const activeWeek = current.find((week) => week.id === updatedWeek.id);
+
+          const index = current.indexOf(activeWeek);
+          const updatedPlan = structuredClone(current);
+          updatedPlan.splice(index, 1, updatedWeek);
+
+          return [...updatedPlan];
+        });
+
+        setActiveWeek(updatedWeek);
         break;
     }
-    // Create updatedWeek object
-    const updatedWeek = {
-      ...activeWeek,
-      days: updatedDays,
-    };
     try {
       // Upload updated Week
       const updatedPlan = await editWeek(updatedWeek);
       // Recalculate plan
       recalculatePlan(updatedPlan);
     } catch (error) {
+      // Revert changes
+      setPlan((current) => {
+        const index = current.indexOf(activeWeek);
+        const updatedPlan = structuredClone(current);
+        updatedPlan.splice(index, 1, originalWeek);
+
+        return [...updatedPlan];
+      });
+
+      setActiveWeek(originalWeek);
       console.error(error);
       throw error;
     }
