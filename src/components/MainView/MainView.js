@@ -56,7 +56,7 @@ function MainView() {
         updatedDays[targetDay] = {
           meals: [
             ...updatedDays[targetDay].meals.slice(0, targetIndex),
-            { ...meal, app_id: uuid(), type: "meal" },
+            { ...meal, app_id: uuid(), type: "recipe" },
             ...updatedDays[targetDay].meals.slice(targetIndex),
           ],
         };
