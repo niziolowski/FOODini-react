@@ -287,6 +287,11 @@ export const PlanContextProvider = ({ children }) => {
         // Set current week as active
         setActiveWeek(currentWeek);
 
+        // Delete weeks older than 1
+        const oldWeeks = model.getOldWeeks(currentWeek, response.data);
+
+        // TODO: Add mutation after converting to graphQL
+
         setLoading(false);
         return response.data;
       } catch (error) {
@@ -319,7 +324,8 @@ export const PlanContextProvider = ({ children }) => {
     if (!plan) return;
 
     // Find current week in the plan
-    const updatedCurrentWeek = plan.find((week) => week.id === currentWeek.id);
+    const updatedCurrentWeek = plan.find((week) => week.id === currentWeek?.id);
+    console.log(updatedCurrentWeek);
 
     // Update current week
     setCurrentWeek(updatedCurrentWeek);

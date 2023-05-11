@@ -125,6 +125,17 @@ export const getPreviousWeek = (activeWeek, plan) => {
   return previousWeek;
 };
 
+// Get weeks older than 1
+export const getOldWeeks = (activeWeek, plan) => {
+  // Get a startDate of the previous week to filter older weeks from the plan
+  const date =
+    new Date(activeWeek.start_date).getTime() - 7 * 1000 * 60 * 60 * 24;
+  const threshold = formatDate(new Date(date));
+
+  // Filter the weeks
+  return plan.filter((week) => week.start_date < threshold);
+};
+
 export const getCurrentWeek = (plan) => {
   // Get current time, convert to date string and then to date obj. That way we get the beginning of day timestamp
   const now = new Date(formatDate(new Date()));
