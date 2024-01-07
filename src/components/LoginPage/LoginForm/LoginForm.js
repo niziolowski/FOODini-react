@@ -13,7 +13,8 @@ import { useForm } from "react-hook-form";
 
 function LoginForm() {
   const { isMobile } = useContext(LayoutContext);
-  const { signUp, login, loading, error } = useContext(AuthContext);
+  const { signUp, login, loading, error, setIsLoggedIn, saveUserData } =
+    useContext(AuthContext);
 
   // Switch between 'sign in' and 'sign up' form
   const [isLogging, setIsLogging] = useState(true);
@@ -37,8 +38,13 @@ function LoginForm() {
 
   // Login function for demo account, skipping validation
   const handleDemoLogin = async () => {
-    const res = await login("demo@demo.com", 123456);
-    if (!res) animate(panelEl.current, "shake");
+    // const res = await login("demo@demo.com", 123456);
+    // if (!res) animate(panelEl.current, "shake");
+
+    const demo = `{"id":49,"name":"Konto Demo","email":"demo@demo.com","token":"eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwiemlwIjoiREVGIn0.aWShKWpK667Ty8my9Xxl5TwwQtlJkbJ_ZTtEwNpR0LqNJnlMpbp2Mm2M322ykoo0IghIu5oS1YE4hFqP3ZBTLyzTu1DfWzRY.5CmT76v558b8za-myzWepQ.U7w4V3AsGTfNyF9OINkUiipEzY8-UPuJ6rD0Y0xkK_D8OS2RR_z5a4aDD18i7ewaT5vyDBd9UzwBAy5Ss8aUeSn4fhYssGjvltAVcrX2SugDdnOQ0xnYCs8et8zdTNMtXUeZD4_uEnlmcVcnHgvkmOLn6hegA2vNi8C9UeZxwmA.918-KUirvU3vnl_suHHeR69h8TpgcuTjd0wOLOhn1DU"}`;
+
+    saveUserData(JSON.parse(demo));
+    setIsLoggedIn(true);
   };
 
   // Function is called by useForm handleSubmit
@@ -80,7 +86,7 @@ function LoginForm() {
       {loading ? (
         <Spinner />
       ) : (
-        <Button onClick={handleInvalidSubmit} type="submit" primary>
+        <Button onClick={handleInvalidSubmit} type="submit" primary disabled>
           {isLogging ? "Zaloguj" : "Stwórz konto"}
         </Button>
       )}

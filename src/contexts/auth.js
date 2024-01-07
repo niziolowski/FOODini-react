@@ -141,9 +141,7 @@ export const AuthContextProvider = ({ children }) => {
 
   // Check if user already logged in
   useEffect(() => {
-    // const user = loadUserData();
-
-    const user = JSON.parse(demo);
+    const user = loadUserData();
 
     if (user) {
       saveUserData(user);
@@ -158,6 +156,8 @@ export const AuthContextProvider = ({ children }) => {
     loading,
     error,
     isLoggedIn,
+    setIsLoggedIn,
+    saveUserData,
     login: handleLogin,
     logout: handleLogout,
     signUp: handleSignUp,

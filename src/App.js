@@ -22,23 +22,23 @@ function App() {
     if (colorTheme) applyColorTheme(colorTheme);
   }, []);
 
-  // if (!isLoggedIn) {
-  //   return <LoginPage></LoginPage>;
-  // } else {
-  return (
-    <div className="wrapper">
-      <div className={classes}>
-        <IngredientsContextProvider>
-          <RecipesContextProvider>
-            <PlanContextProvider>
-              <MainView />
-            </PlanContextProvider>
-          </RecipesContextProvider>
-        </IngredientsContextProvider>
+  if (!isLoggedIn) {
+    return <LoginPage></LoginPage>;
+  } else {
+    return (
+      <div className="wrapper">
+        <div className={classes}>
+          <IngredientsContextProvider>
+            <RecipesContextProvider>
+              <PlanContextProvider>
+                <MainView />
+              </PlanContextProvider>
+            </RecipesContextProvider>
+          </IngredientsContextProvider>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
-// }
 
 export default App;
