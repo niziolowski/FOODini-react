@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { fetchPlan } from "../../apis/plan";
+// import { fetchPlan } from "../../apis/plan";
 import { formatDate } from "../../utils/dates";
 import AuthContext from "../auth";
 import ErrorContext from "../error";
@@ -199,7 +199,7 @@ export const PlanContextProvider = ({ children }) => {
   const [plan, setPlan] = useState(demo);
   const [currentWeek, setCurrentWeek] = useState(null);
   const [activeWeek, setActiveWeek] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   // Create a new Week from a given date
   const addWeek = async (dateString) => {
