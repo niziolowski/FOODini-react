@@ -6,6 +6,8 @@ const LOGIN_URL = process.env.REACT_APP_API_LOGIN_URL;
 
 const AuthContext = createContext();
 
+const demo = `{"id":49,"name":"Konto Demo","email":"demo@demo.com","token":"eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwiemlwIjoiREVGIn0.aWShKWpK667Ty8my9Xxl5TwwQtlJkbJ_ZTtEwNpR0LqNJnlMpbp2Mm2M322ykoo0IghIu5oS1YE4hFqP3ZBTLyzTu1DfWzRY.5CmT76v558b8za-myzWepQ.U7w4V3AsGTfNyF9OINkUiipEzY8-UPuJ6rD0Y0xkK_D8OS2RR_z5a4aDD18i7ewaT5vyDBd9UzwBAy5Ss8aUeSn4fhYssGjvltAVcrX2SugDdnOQ0xnYCs8et8zdTNMtXUeZD4_uEnlmcVcnHgvkmOLn6hegA2vNi8C9UeZxwmA.918-KUirvU3vnl_suHHeR69h8TpgcuTjd0wOLOhn1DU"}`;
+
 export const AuthContextProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [name, setName] = useState("");
@@ -139,7 +141,9 @@ export const AuthContextProvider = ({ children }) => {
 
   // Check if user already logged in
   useEffect(() => {
-    const user = loadUserData();
+    // const user = loadUserData();
+
+    const user = JSON.parse(demo);
 
     if (user) {
       saveUserData(user);
