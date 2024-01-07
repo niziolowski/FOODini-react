@@ -1,16 +1,16 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState } from "react";
 import {
   fetchIngredients,
-  createIngredient,
-  updateIngredient,
-  deleteIngredient,
-  createOrEditIngredients,
-  updateShoppingList,
-  refillStorage,
+  // createIngredient,
+  // updateIngredient,
+  // deleteIngredient,
+  // createOrEditIngredients,
+  // updateShoppingList,
+  // refillStorage,
 } from "../apis/ingredients";
-import { v4 as uuid } from "uuid";
-import AuthContext from "./auth";
-import ErrorContext from "./error";
+// import { v4 as uuid } from "uuid";
+// import AuthContext from "./auth";
+// import ErrorContext from "./error";
 
 const IngredientsContext = createContext();
 
@@ -19,8 +19,8 @@ const demo = JSON.parse(
 );
 
 export const IngredientsContextProvider = ({ children }) => {
-  const { token } = useContext(AuthContext);
-  const { setError } = useContext(ErrorContext);
+  // const { token } = useContext(AuthContext);
+  // const { setError } = useContext(ErrorContext);
   const [ingredients, setIngredients] = useState(demo);
 
   const [tags] = useState(["świeże", "suche", "mrożone"]);

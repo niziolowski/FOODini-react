@@ -438,50 +438,42 @@ export const PlanContextProvider = ({ children }) => {
 
   // Fetch the plan
   useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        console.log("fetching plan..."); //*: dev only line
-        const response = await fetchPlan(token);
-
-        // Update plan state
-        setPlan(response.data);
-
-        // Get current week from updated plan
-        let currentWeek = model.getCurrentWeek(response.data);
-
-        // If no currentWeek then create new
-        if (!currentWeek) currentWeek = await addWeek();
-
-        // Set current week
-        setCurrentWeek(currentWeek);
-
-        // Set current week as active
-        setActiveWeek(currentWeek);
-
-        setLoading(false);
-        return response.data;
-      } catch (error) {
-        setLoading(false);
-        console.error(error);
-
-        // set error message for the user
-        switch (error.response.status) {
-          case 429:
-            setError(
-              "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
-            );
-            break;
-          case 503:
-            setError("Nie można nawiązać połączenia z serwerem");
-            break;
-
-          default:
-            setError("Coś poszło nie tak :(");
-            break;
-        }
-      }
-    }
+    // async function fetchData() {
+    //   try {
+    //     setLoading(true);
+    //     console.log("fetching plan..."); //*: dev only line
+    //     const response = await fetchPlan(token);
+    //     // Update plan state
+    //     setPlan(response.data);
+    //     // Get current week from updated plan
+    //     let currentWeek = model.getCurrentWeek(response.data);
+    //     // If no currentWeek then create new
+    //     if (!currentWeek) currentWeek = await addWeek();
+    //     // Set current week
+    //     setCurrentWeek(currentWeek);
+    //     // Set current week as active
+    //     setActiveWeek(currentWeek);
+    //     setLoading(false);
+    //     return response.data;
+    //   } catch (error) {
+    //     setLoading(false);
+    //     console.error(error);
+    //     // set error message for the user
+    //     switch (error.response.status) {
+    //       case 429:
+    //         setError(
+    //           "Wykorzystano darmowy limit serwera. Odczekaj chwilę i spróbuj ponownie"
+    //         );
+    //         break;
+    //       case 503:
+    //         setError("Nie można nawiązać połączenia z serwerem");
+    //         break;
+    //       default:
+    //         setError("Coś poszło nie tak :(");
+    //         break;
+    //     }
+    //   }
+    // }
     // fetchData();
     // eslint-disable-next-line
   }, [token]);
